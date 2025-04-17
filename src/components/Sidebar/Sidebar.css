@@ -1,0 +1,6 @@
+.sidebar {
+  width: 365px;
+  background: #F7F1FF;
+  padding: 20px 0;
+  overflow-y: auto;
+}

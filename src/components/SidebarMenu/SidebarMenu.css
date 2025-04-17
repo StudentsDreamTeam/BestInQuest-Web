@@ -1,0 +1,14 @@
+.menu-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.menu-item:hover {
+  background: #E4CFFF;
+}
+
+.menu-item.active {
+  color: #9747FF;
+  background: #E4CFFF;
+}
