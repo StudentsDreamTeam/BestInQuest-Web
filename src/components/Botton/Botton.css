@@ -1,0 +1,26 @@
+.botton {
+  padding: 20px 20px;
+
+  cursor: pointer;
+  border: none;
+  border-radius: 20px;
+  transition: all 0.3s;
+  font-weight: bold;
+
+
+  background: #F7F1FF;
+}
+
+.botton:hover {
+  opacity: 0.8;
+  background: #E4CFFF;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+}
+
+.botton.active {
+  color: #9747FF;
+  background: #E4CFFF;
+}

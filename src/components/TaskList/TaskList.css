@@ -1,19 +1,6 @@
-.task-list-container {
-  flex: 1;
-  padding: 20px;
-  background: #ecf0f1;
-  overflow-y: auto;
-}
-
 .task-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.task {
-  background: white;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  gap: 16px; /* Расстояние между задачами */
+  margin-top: 16px;
 }
