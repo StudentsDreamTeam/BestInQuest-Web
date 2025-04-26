@@ -1,28 +1,33 @@
-import './Header.css';
-// import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
+import { styled } from 'styled-components'
+
+const HeaderComponent = styled.header`
+  background: #fff;
+  color: #434343;
+  display: flex;
+  justify-content: space-between;
+  height: 4rem;
+  border-bottom: 0.2rem solid #d9d9d9;
+  font-size: 24px;
+  font-weight: 600;
+`
 
 export default function Header() {
-//   const [ currentDate, setCurrentDate ] = useState('');
+  const [ currentDate, setCurrentDate ] = useState(new Date())
+  const options = { month: 'long', day: 'numeric' }
 
-//   useEffect(() => {
-//     const updateDate = () => {
-//         const now = new Date();
-//         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-//         setCurrentDate(now.toLocaleDateString('ru-RU', options));
-//     };
+  useEffect(() => {
+    const interval = setInterval(() => setCurrentDate(new Date()), 60000)
 
-//     updateDate();
-//     // Обновлять дату каждый день в 00:00
-//     const interval = setInterval(updateDate, 86400000);
-//     return () => clearInterval(interval);
-//   }, []);
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
 
   return (
-    <header className="header">
-      <div className="logo">BestInQuest</div>
-
-      <div className="current-date">Date : 1 May</div>
-      {/* <div className="current-date">{currentDate}</div> */}
-    </header>
-  );
-};
+    <HeaderComponent>
+      <div>BestInQuest</div>
+      <div>{currentDate.toLocaleDateString('en-US', options)}</div>
+    </HeaderComponent>
+  )
+}

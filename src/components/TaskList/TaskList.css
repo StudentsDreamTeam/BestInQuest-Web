@@ -1,6 +1,0 @@
-.task-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px; /* Расстояние между задачами */
-  margin-top: 16px;
-}

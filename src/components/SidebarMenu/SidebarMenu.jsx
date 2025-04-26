@@ -1,4 +1,4 @@
-import Botton from '../Botton/Botton'
+import Botton from '../Button/Button'
 import './SidebarMenu.css'
 
 export default function SidebarMenu({ active, onChange }) {

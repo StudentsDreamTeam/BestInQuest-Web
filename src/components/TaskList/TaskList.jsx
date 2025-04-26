@@ -1,12 +1,21 @@
-import './TaskList.css';
-import Task from '../Task/Task';
+import Task from '../Task/Task.jsx';
+import { tasks } from '../../data.js';
+import { styled } from 'styled-components';
 
-export default function TaskList({ tasks }) {
+const TaskListComponent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+`
+
+export default function TaskList() {
   return (
-    <div className="task-list">
+    <TaskListComponent>
       {tasks.map((task, index) => (
         <Task key={index} task={task} />
       ))}
-    </div>
+      Кнопка "добавить задачу"
+    </TaskListComponent>
   );
 };

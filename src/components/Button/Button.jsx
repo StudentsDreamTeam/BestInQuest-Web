@@ -1,5 +1,4 @@
-import './Botton.css'
-
+import './Button.css'
 
 export default function Botton({ children, isActive, onClick }) {
   return (

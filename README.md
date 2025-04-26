@@ -21,6 +21,9 @@ npm create vite@latest
     JavaScript
 cd BestInQuestWeb
 npm install
+
+npm install @svgr/rollup -D // for svg components
+npm install styled-components // for styled components
 ```
 
 ## How to run
