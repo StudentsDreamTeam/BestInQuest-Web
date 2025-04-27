@@ -1,0 +1,7 @@
+.sidebar {
+  width: 365px;
+  background: #F7F1FF;
+  /* background: chocolate; */
+  padding: 20px;
+  overflow-y: auto;
+}
