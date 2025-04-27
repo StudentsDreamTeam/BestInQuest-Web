@@ -9,8 +9,8 @@ import Main from "../Main/Main"
 export default function Layout() {
   const [ tab, setTab ] = useState('Сегодня')
 
-  const menuItems = [ 'Добавить задачу', 'Сегодня', 'Календарь', 'Проекты', 'Группы',
-                      'Награды', 'Инвентарь', 'Достижения', 'Соревнования', 'Рейтинг' ]
+  // const menuItems = [ 'Добавить задачу', 'Сегодня', 'Календарь', 'Проекты', 'Группы',
+  //                     'Награды', 'Инвентарь', 'Достижения', 'Соревнования', 'Рейтинг' ]
 
   const user = {
     avatar: avatar,
@@ -25,7 +25,7 @@ export default function Layout() {
         user={user}
         active={tab}
         onChange={current => setTab(current)}
-        menuItems={menuItems}
+        // menuItems={menuItems}
       />
       <Main active={tab}></Main>
     </div>

@@ -1,21 +1,21 @@
 import './Task.css'
-import me from '../../img/VasyaPupkin.png'
-import boss from '../../img/Boss.png'
-import sport from '../../img/Sport.png'
+import me from '../../../img/VasyaPupkin.png'
+import boss from '../../../img/Boss.png'
+import sport from '../../../img/Sport.png'
 import CheckButton from '../CheckButton/CheckButton'
 
 import { styled, css } from 'styled-components'
 import { useState } from 'react'
 
-import { ReactComponent as ActiveCheckIcon } from '../../icons/ActiveCheckIcon31.svg'
-import { ReactComponent as PassiveCheckIcon } from '../../icons/PassiveCheckPurple31.svg'
-import { ReactComponent as PassiveCheckImportantIcon } from '../../icons/PassiveCheckImportantIcon31.svg'
-import { ReactComponent as ActiveCheckImportantIcon } from '../../icons/ActiveCheckImportantIcon31.svg'
-import { ReactComponent as TrashIcon } from '../../icons/TrashIcon34.svg'
-import { ReactComponent as TimeIcon } from '../../icons/TimeIcon19.svg'
-import { ReactComponent as TimeImportantIcon } from '../../icons/TimeImportantIcon19.svg'
-import { ReactComponent as FolderIcon } from '../../icons/FolderIcon19.svg'
-import { ReactComponent as FolderImportantIcon } from '../../icons/FolderImportantIcon19.svg'
+import { ReactComponent as ActiveCheckIcon } from '../../../icons/ActiveCheckIcon31.svg'
+import { ReactComponent as PassiveCheckIcon } from '../../../icons/PassiveCheckPurple31.svg'
+import { ReactComponent as PassiveCheckImportantIcon } from '../../../icons/PassiveCheckImportantIcon31.svg'
+import { ReactComponent as ActiveCheckImportantIcon } from '../../../icons/ActiveCheckImportantIcon31.svg'
+import { ReactComponent as TrashIcon } from '../../../icons/TrashIcon34.svg'
+import { ReactComponent as TimeIcon } from '../../../icons/TimeIcon19.svg'
+import { ReactComponent as TimeImportantIcon } from '../../../icons/TimeImportantIcon19.svg'
+import { ReactComponent as FolderIcon } from '../../../icons/FolderIcon19.svg'
+import { ReactComponent as FolderImportantIcon } from '../../../icons/FolderImportantIcon19.svg'
 
 const TaskContainer = styled.div`
   display: flex;

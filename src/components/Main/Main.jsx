@@ -1,8 +1,8 @@
 import './Main.css'
 
-import Header from "../Header/Header"
-import TaskList from "../TaskList/TaskList"
-import ProjectList from "../ProjectList/ProjectList"
+import Header from "./Header/Header.jsx"
+import TaskList from "./TaskList/TaskList.jsx"
+import ProjectList from "./ProjectList/ProjectList.jsx"
 
 
 export default function Main({ active }) {
@@ -11,28 +11,28 @@ export default function Main({ active }) {
       <div className='main'>
         { active === 'Добавить задачу' && (
           <>
-            <Header />
+            <Header title={'Добавить задачу'}/>
             В разработке
           </>
         )}
 
         { active === 'Сегодня' && (
           <>
-            <Header />
+            <Header title={'Сегодня'}/>
             <TaskList />
           </>
         )}
 
         { active === 'Календарь' && (
           <>
-            <Header />
+            <Header title={'Календарь'}/>
             В разработке
           </>
         )}
 
         { active === 'Проекты' && (
           <>
-            <Header />
+            <Header title={'Проекты'}/>
             В разработке
             <ProjectList />
           </>
@@ -40,42 +40,42 @@ export default function Main({ active }) {
 
         { active === 'Группы' && (
           <>
-            <Header />
+            <Header title={'Группы'}/>
             В разработке
           </>
         )}
 
         { active === 'Награды' && (
           <>
-            <Header />
+            <Header title={'Награды'}/>
             В разработке
           </>
         )}
 
         { active === 'Инвентарь' && (
           <>
-            <Header />
+            <Header title={'Инвентарь'}/>
             В разработке
           </>
         )}
 
         { active === 'Достижения' && (
           <>
-            <Header />
+            <Header title={'Достижения'}/>
             В разработке
           </>
         )}
 
         { active === 'Соревнования' && (
           <>
-            <Header />
+            <Header title={'Соревнования'}/>
             В разработке
           </>
         )}
 
         { active === 'Рейтинг' && (
           <>
-            <Header />
+            <Header title={'Рейтинг'}/>
             В разработке
           </>
         )}

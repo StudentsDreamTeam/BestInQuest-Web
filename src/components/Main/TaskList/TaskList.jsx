@@ -1,5 +1,5 @@
 import Task from '../Task/Task.jsx';
-import { tasks } from '../../data.js';
+import { tasks } from '../../../data.js';
 import { styled } from 'styled-components';
 
 const TaskListComponent = styled.div`

@@ -12,7 +12,7 @@ const HeaderComponent = styled.header`
   font-weight: 600;
 `
 
-export default function Header() {
+export default function Header({ title }) {
   const [ currentDate, setCurrentDate ] = useState(new Date())
   const options = { month: 'long', day: 'numeric' }
 
@@ -26,7 +26,7 @@ export default function Header() {
 
   return (
     <HeaderComponent>
-      <div>BestInQuest</div>
+      <div>{title}</div>
       <div>{currentDate.toLocaleDateString('ru-RU', options)}</div>
     </HeaderComponent>
   )
