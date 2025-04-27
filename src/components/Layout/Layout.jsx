@@ -7,7 +7,10 @@ import Main from "../Main/Main"
 
 
 export default function Layout() {
-  const [ tab, setTab ] = useState('today')
+  const [ tab, setTab ] = useState('Сегодня')
+
+  const menuItems = [ 'Добавить задачу', 'Сегодня', 'Календарь', 'Проекты', 'Группы',
+                      'Награды', 'Инвентарь', 'Достижения', 'Соревнования', 'Рейтинг' ]
 
   const user = {
     avatar: avatar,
@@ -18,7 +21,12 @@ export default function Layout() {
 
   return (
     <div className="layout">
-      <Sidebar user={user} active={tab} onChange={current => setTab(current)}/>
+      <Sidebar
+        user={user}
+        active={tab}
+        onChange={current => setTab(current)}
+        menuItems={menuItems}
+      />
       <Main active={tab}></Main>
     </div>
   );

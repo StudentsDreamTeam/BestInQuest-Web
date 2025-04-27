@@ -27,7 +27,7 @@ export default function Header() {
   return (
     <HeaderComponent>
       <div>BestInQuest</div>
-      <div>{currentDate.toLocaleDateString('en-US', options)}</div>
+      <div>{currentDate.toLocaleDateString('ru-RU', options)}</div>
     </HeaderComponent>
   )
 }

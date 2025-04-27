@@ -15,6 +15,7 @@ export default function TaskList() {
       {tasks.map((task, index) => (
         <Task key={index} task={task} />
       ))}
+      
       Кнопка "добавить задачу"
     </TaskListComponent>
   );

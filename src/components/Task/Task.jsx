@@ -2,6 +2,7 @@ import './Task.css'
 import me from '../../img/VasyaPupkin.png'
 import boss from '../../img/Boss.png'
 import sport from '../../img/Sport.png'
+import CheckButton from '../CheckButton/CheckButton'
 
 import { styled, css } from 'styled-components'
 import { useState } from 'react'
@@ -15,8 +16,6 @@ import { ReactComponent as TimeIcon } from '../../icons/TimeIcon19.svg'
 import { ReactComponent as TimeImportantIcon } from '../../icons/TimeImportantIcon19.svg'
 import { ReactComponent as FolderIcon } from '../../icons/FolderIcon19.svg'
 import { ReactComponent as FolderImportantIcon } from '../../icons/FolderImportantIcon19.svg'
-
-import CheckButton from '../CheckButton/CheckButton'
 
 const TaskContainer = styled.div`
   display: flex;
@@ -37,6 +36,30 @@ const TaskContainer = styled.div`
       color: #f5f5f5;
     `}  
 `
+
+const TaskInfo = styled.div`
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+
+  height: 100%;
+  margin-left: 2rem;
+
+  color: #9747ff;
+  ${({ $important }) =>
+    $important &&
+    css`
+      color: #f5f5f5;
+    `}  
+`
+
+const TaskDataObject = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-right: 2rem;
+`
+
 
 export default function Task({ task }) {
   const [ isTaskCompleted, setIsTaskCompleted ] = useState(task.isCompleted)
@@ -65,32 +88,38 @@ export default function Task({ task }) {
           )}
         </CheckButton>
 
-        <div className="task-details" style={{marginLeft: '2rem'}}>
-          <div className="task-info">
+        <TaskInfo $important={isTaskImportant}>
+          <div className="task-rows">
             <div className="task-title">{task.title}</div>
 
-            <div className="task-meta">
-              { isTaskImportant ? <TimeImportantIcon/> : <TimeIcon/> }
-              { task.startTime }
-              &nbsp;&nbsp;
-              { isTaskImportant ? <TimeImportantIcon/> : <TimeIcon/> }
-              { task.duration }
-              &nbsp;&nbsp;
-              { isTaskImportant ? <FolderImportantIcon/> : <FolderIcon/> }
-              { task.projectName }
-              &nbsp;&nbsp;
-              <div className="avatar">
-                <img src={task.assignee === 'Я' ? me : boss} alt="User Avatar" />
-              </div>
-              {task.assignee}
-              &nbsp;&nbsp;
-              <div className="avatar">
+            <div className="task-data">
+              <TaskDataObject>
+                { isTaskImportant ? <TimeImportantIcon/> : <TimeIcon/> }
+                { task.startTime }
+              </TaskDataObject>
+              
+              <TaskDataObject>
+                { isTaskImportant ? <TimeImportantIcon/> : <TimeIcon/> }
+                { task.duration }
+              </TaskDataObject>
+              
+              <TaskDataObject>
+                { isTaskImportant ? <FolderImportantIcon/> : <FolderIcon/> }
+                { task.projectName }
+              </TaskDataObject>
+              
+              <TaskDataObject>
+                <img src={task.assignee === 'Вася Пупкин' ? me : boss} alt="User Avatar" />
+                {task.assignee}
+              </TaskDataObject>
+              
+              <TaskDataObject>
                 <img src={sport} alt="User Avatar" />
-              </div>
-              {task.sphere}
+                {task.sphere}
+              </TaskDataObject>
             </div>
           </div>
-        </div>
+        </TaskInfo>
 
         <div className="delete-container">
           <TrashIcon />

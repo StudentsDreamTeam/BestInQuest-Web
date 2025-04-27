@@ -9,17 +9,74 @@ export default function Main({ active }) {
   return (
     <>
       <div className='main'>
-        { active === 'today' && (
+        { active === 'Добавить задачу' && (
+          <>
+            <Header />
+            В разработке
+          </>
+        )}
+
+        { active === 'Сегодня' && (
           <>
             <Header />
             <TaskList />
           </>
         )}
 
-        { active === 'projects' && (
+        { active === 'Календарь' && (
           <>
             <Header />
+            В разработке
+          </>
+        )}
+
+        { active === 'Проекты' && (
+          <>
+            <Header />
+            В разработке
             <ProjectList />
+          </>
+        )}
+
+        { active === 'Группы' && (
+          <>
+            <Header />
+            В разработке
+          </>
+        )}
+
+        { active === 'Награды' && (
+          <>
+            <Header />
+            В разработке
+          </>
+        )}
+
+        { active === 'Инвентарь' && (
+          <>
+            <Header />
+            В разработке
+          </>
+        )}
+
+        { active === 'Достижения' && (
+          <>
+            <Header />
+            В разработке
+          </>
+        )}
+
+        { active === 'Соревнования' && (
+          <>
+            <Header />
+            В разработке
+          </>
+        )}
+
+        { active === 'Рейтинг' && (
+          <>
+            <Header />
+            В разработке
           </>
         )}
       </div>
