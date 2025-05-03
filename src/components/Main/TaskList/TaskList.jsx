@@ -1,6 +1,7 @@
 import Task from '../Task/Task.jsx';
-import { tasks } from '../../../data.js';
+// import { tasks } from '../../../data.js';
 import { styled } from 'styled-components';
+import { useEffect, useState } from 'react';
 
 const TaskListComponent = styled.div`
   display: flex;
@@ -10,9 +11,21 @@ const TaskListComponent = styled.div`
 `
 
 export default function TaskList() {
+  const [ data, setData ] = useState([])
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch('/task.json') // запрос к API
+      const data = await response.json()
+      setData(data)
+    }
+
+    fetchData()
+  }, [])
+
   return (
     <TaskListComponent>
-      {tasks.map((task, index) => (
+      {data.map((task, index) => (
         <Task key={index} task={task} />
       ))}
       

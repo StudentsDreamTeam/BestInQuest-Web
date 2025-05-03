@@ -1,5 +1,5 @@
 import './Layout.css'
-import avatar from '../../img/VasyaPupkin.png'
+import userAvatar from '../../img/userAvatar.png'
 
 import { useState } from 'react'
 import Sidebar from "../Sidebar/Sidebar"
@@ -13,7 +13,7 @@ export default function Layout() {
   //                     'Награды', 'Инвентарь', 'Достижения', 'Соревнования', 'Рейтинг' ]
 
   const user = {
-    avatar: avatar,
+    avatar: userAvatar,
     name: 'Василий Пупкин',
     level: 1,
     points: 200,

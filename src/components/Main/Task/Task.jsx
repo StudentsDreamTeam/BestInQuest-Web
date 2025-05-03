@@ -1,12 +1,12 @@
 import './Task.css'
-import me from '../../../img/VasyaPupkin.png'
-import boss from '../../../img/Boss.png'
-import sport from '../../../img/Sport.png'
 import CheckButton from '../CheckButton/CheckButton'
 
 import { styled, css } from 'styled-components'
 import { useState } from 'react'
 
+import userAvatar from '../../../img/userAvatar.png'
+import bossAvatar from '../../../img/bossAvatar.png'
+import sportAvatar from '../../../img/sportAvatar.png'
 import { ReactComponent as ActiveCheckIcon } from '../../../icons/ActiveCheckIcon31.svg'
 import { ReactComponent as PassiveCheckIcon } from '../../../icons/PassiveCheckPurple31.svg'
 import { ReactComponent as PassiveCheckImportantIcon } from '../../../icons/PassiveCheckImportantIcon31.svg'
@@ -29,8 +29,8 @@ const TaskContainer = styled.div`
   color: #9747ff;
   background-color: #f5f5f5;
 
-  ${({ $important }) =>
-    $important &&
+  ${({ $priority }) =>
+    $priority &&
     css`
       background-color: #9747ff;
       color: #f5f5f5;
@@ -46,8 +46,8 @@ const TaskInfo = styled.div`
   margin-left: 2rem;
 
   color: #9747ff;
-  ${({ $important }) =>
-    $important &&
+  ${({ $priority }) =>
+    $priority &&
     css`
       color: #f5f5f5;
     `}  
@@ -62,12 +62,12 @@ const TaskDataObject = styled.div`
 
 
 export default function Task({ task }) {
-  const [ isTaskCompleted, setIsTaskCompleted ] = useState(task.isCompleted)
-  const [ isTaskImportant, setIsTaskImportant ] = useState(task.isImportant)
+  const [ isTaskCompleted, setIsTaskCompleted ] = useState(task.status)
+  const [ isTaskImportant, setIsTaskImportant ] = useState(task.priority)
 
   return (
     <>
-      <TaskContainer $important={isTaskImportant}>
+      <TaskContainer $priority={isTaskImportant}>
 
         <CheckButton
           isImportant={isTaskImportant}
@@ -88,7 +88,7 @@ export default function Task({ task }) {
           )}
         </CheckButton>
 
-        <TaskInfo $important={isTaskImportant}>
+        <TaskInfo $priority={isTaskImportant}>
           <div className="task-rows">
             <div className="task-title">{task.title}</div>
 
@@ -109,12 +109,12 @@ export default function Task({ task }) {
               </TaskDataObject>
               
               <TaskDataObject>
-                <img src={task.assignee === 'Вася Пупкин' ? me : boss} alt="User Avatar" />
-                {task.assignee}
+                <img src={task.author === 'Вася Пупкин' ? userAvatar : bossAvatar} alt="User Avatar" />
+                {task.author}
               </TaskDataObject>
               
               <TaskDataObject>
-                <img src={sport} alt="User Avatar" />
+                <img src={sportAvatar} alt="User Avatar" />
                 {task.sphere}
               </TaskDataObject>
             </div>
