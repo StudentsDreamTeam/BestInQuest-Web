@@ -58,7 +58,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           target_branch: gh-pages
-          destination_dir: /
+          destination_dir: ''
 
       # Деплой develop -> стейдж (username.github.io/repo/dev)
       - name: Deploy Staging
@@ -68,4 +68,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           target_branch: gh-pages
-          destination_dir: /dev  # Отдельная папка для develop
+          destination_dir: 'dev'  # Отдельная папка для develop
