@@ -1,0 +1,59 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_BRANCH_NAME: ${{ github.ref_name }}
+          SONAR_ANALYSIS_MODE: ${{ github.ref_name == 'main' && 'publish' || 'preview' }}
+
+  deploy:
+    needs: analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      
+      - run: npm ci
+      - run: npm run build
+
+      # Деплой main -> прод (username.github.io/repo)
+      - name: Deploy Production
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          target_branch: gh-pages
+          destination_dir: /
+
+      # Деплой develop -> стейдж (username.github.io/repo/dev)
+      - name: Deploy Staging
+        if: github.ref == 'refs/heads/develop'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          target_branch: gh-pages
+          destination_dir: /dev  # Отдельная папка для develop
