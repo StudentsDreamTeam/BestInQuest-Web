@@ -61,6 +61,7 @@ jobs:
           publish_dir: ./dist
           publish_branch: gh-pages
           destination_dir: ''
+          force_orphan: true
 
       # Деплой develop -> стейдж (username.github.io/repo/dev)
       - name: Deploy Staging
@@ -71,3 +72,4 @@ jobs:
           publish_dir: ./dist
           publish_branch: gh-pages
           destination_dir: 'dev'  # Отдельная папка для develop
+          force_orphan: true
