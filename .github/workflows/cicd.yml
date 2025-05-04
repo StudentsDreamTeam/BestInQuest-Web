@@ -18,13 +18,19 @@ jobs:
       - run: npm ci
       # - run: npm run lint
       - run: npm run build
+      
+      - name: Cache SonarCloud
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: sonar-${{ github.ref }}
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: >
+          args: |
             -Dsonar.organization=studentsdreamteam
             -Dsonar.projectKey=StudentsDreamTeam_BestInQuest-Web
             -Dsonar.sources=src
