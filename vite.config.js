@@ -4,6 +4,7 @@ import svgr from '@svgr/rollup';
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/BestInQuest-Web/',
   plugins: [
     react(),
     svgr()
