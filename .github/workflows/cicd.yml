@@ -20,11 +20,17 @@ jobs:
       - run: npm run build
 
       - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_BRANCH_NAME: ${{ github.ref_name }}
-          SONAR_ANALYSIS_MODE: ${{ github.ref_name == 'main' && 'publish' || 'preview' }}
+        with:
+          args: >
+            -Dsonar.organization=studentsdreamteam
+            -Dsonar.projectKey=StudentsDreamTeam_BestInQuest-Web
+            -Dsonar.sources=src
+            -Dsonar.exclusions=**/__mocks__/**,**/public/**
+            -Dsonar.qualitygate.wait=true
+            ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
 
   deploy:
     needs: analyze
