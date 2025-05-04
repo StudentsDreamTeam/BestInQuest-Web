@@ -12,6 +12,7 @@ export default defineConfig({
   base: process.env.GITHUB_REF === 'refs/heads/main' ? '/' : '/dev/',
   build: {
     outDir: 'dist',          // явно указываем выходную папку
+    assetsDir: 'assets',
     emptyOutDir: true        // очищаем перед сборкой
   }
 })
