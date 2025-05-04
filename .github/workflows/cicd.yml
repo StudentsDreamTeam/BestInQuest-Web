@@ -29,10 +29,11 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_ORGANIZATION: studentsdreamteam
-          SONAR_PROJECT_KEY: StudentsDreamTeam_BestInQuest-Web
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: |
+          args: >
+            -Dsonar.organization=studentsdreamteam
+            -Dsonar.projectKey=StudentsDreamTeam_BestInQuest-Web
             -Dsonar.sources=src
             -Dsonar.exclusions=**/__mocks__/**,**/public/**
             ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
