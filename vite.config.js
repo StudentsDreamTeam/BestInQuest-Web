@@ -8,4 +8,9 @@ export default defineConfig({
     react(),
     svgr()
   ],
+  base: process.env.GITHUB_REF === 'refs/heads/main' ? '/' : '/dev/',
+  build: {
+    outDir: 'dist',          // явно указываем выходную папку
+    emptyOutDir: true        // очищаем перед сборкой
+  }
 })
