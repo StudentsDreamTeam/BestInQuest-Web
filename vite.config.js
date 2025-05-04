@@ -9,9 +9,7 @@ export default defineConfig({
     react(),
     svgr()
   ],
-  base: process.env.GITHUB_REF === 'refs/heads/main' 
-  ? '/BestInQuest-Web/' 
-  : '/BestInQuest-Web/dev/'
+  base: process.env.GITHUB_REF === 'refs/heads/main' ? '/' : '/dev/',
   build: {
     outDir: 'dist',          // явно указываем выходную папку
     assetsDir: 'assets',
