@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     svgr()
   ],
-  base: process.env.GITHUB_REF === 'refs/heads/main' ? '/' : '/dev/',
+  base: process.env.GITHUB_REF === 'refs/heads/develop' ? '/dev/' : '/',
   build: {
     outDir: 'dist',          // явно указываем выходную папку
     assetsDir: 'assets',
