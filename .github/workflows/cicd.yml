@@ -5,6 +5,9 @@ on:
   pull_request:
     branches: [main, develop]
 
+env:
+  DOCKER_IMAGE: ${{ secrets.DOCKER_HUB_USERNAME }}/frontend
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
@@ -37,37 +40,96 @@ jobs:
             -Dsonar.sources=src
             -Dsonar.exclusions=**/__mocks__/**,**/public/**
             ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
-
-  deploy:
-    needs: analyze
+          
+          
+  build-and-test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      # Линтинг Dockerfile (опционально)
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
         with:
-          node-version: 20
+          dockerfile: Dockerfile
+          ignore: DL3018
+
+      # Настройка Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: network=host
+
+      # Сборка образа (для всех событий)
+      - name: Build Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          tags: |
+            frontend-image:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          load: ${{ github.event_name == 'pull_request' }}
+          push: false
+
+      # Запуск тестов
+      # - name: Run tests
+      #   run: |
+      #     docker run --rm frontend-image:${{ github.sha }} \
+      #       sh -c "npm run test"
+
+      # Логин и пуш только для main/develop
+      - name: Login to Docker Hub
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      # Пуш образов с разными тегами
+      - name: Push to Docker Hub
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          tags: |
+            ${{ env.DOCKER_IMAGE }}:latest
+            ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
+            ${{ env.DOCKER_IMAGE }}:${{ github.ref_name == 'main' && 'stable' || 'staging' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: true
+  # deploy:
+  #   needs: analyze
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: write
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
       
-      - run: npm ci
-      - run: npm run build
+  #     - run: npm ci
+  #     - run: npm run build
 
-      # Деплой main -> прод (username.github.io/repo)
-      - name: Deploy Production
-        if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: gh-pages
-          destination_dir: ''
-          force_orphan: true
+  #     # Деплой main -> прод (username.github.io/repo)
+  #     - name: Deploy Production
+  #       if: github.ref == 'refs/heads/main'
+  #       uses: peaceiris/actions-gh-pages@v3
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         publish_dir: ./dist
+  #         publish_branch: gh-pages
+  #         destination_dir: ''
+  #         force_orphan: true
 
-      # Деплой develop -> стейдж (username.github.io/repo/dev)
-      - name: Deploy Staging
-        if: github.ref == 'refs/heads/develop'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
+  #     # Деплой develop -> стейдж (username.github.io/repo/dev)
+  #     - name: Deploy Staging
+  #       if: github.ref == 'refs/heads/develop'
+  #       uses: peaceiris/actions-gh-pages@v3
+  #       with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: gh-pages
