@@ -4,7 +4,6 @@ import svgr from '@svgr/rollup';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
   plugins: [
     react(),
     svgr()
