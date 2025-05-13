@@ -8,26 +8,15 @@ const SidebarMenuContainer = styled.div`
 `
 
 
-export default function SidebarMenu({ active, onChange }) {
-  const menuItems = [ 'Сегодня', 'Проекты', 'Группы',
-                      'Награды', 'Инвентарь', 'Достижения', 'Соревнования', 'Рейтинг' ]
-  const addTask = 'Добавить задачу'
-
+export default function SidebarMenu({ active, onChange, menuItems }) {
   return (
-    <SidebarMenuContainer>
-      <SidebarButton
-        isActive={active === addTask}
-        key={addTask}
-        onClick={active => onChange(addTask)}
-      >
-        {addTask}
-      </SidebarButton>
-      
+    <SidebarMenuContainer>     
       {menuItems.map((item, index) => (
         <SidebarButton
           isActive={active === item}
           key={index}
           onClick={active => onChange(item)}
+          buttonType={item === 'Добавить задачу' ? 'addTask' : 'menuItem'}
         >
           {item}
         </SidebarButton>

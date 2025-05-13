@@ -1,16 +1,38 @@
-import './Layout.css'
 import userAvatar from '../../img/userAvatar.png'
 
 import { useState } from 'react'
+import { styled } from 'styled-components'
+
 import Sidebar from "../Sidebar/Sidebar"
 import Main from "../Main/Main"
+import Modal from '../Modal/Modal'
+import Button from '../Button/Button'
+import CreateTaskForm from '../CreateTaskForm/CreateTaskForm'
 
+
+const LayoutContainer = styled.div`
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+`
 
 export default function Layout() {
-  const [ tab, setTab ] = useState('Сегодня')
+  const [ menuTab, setMenuTab ] = useState('Сегодня')
+  const [ sidebarTab, setSidebarTab ] = useState('Сегодня')
 
-  // const menuItems = [ 'Добавить задачу', 'Сегодня', 'Календарь', 'Проекты', 'Группы',
-  //                     'Награды', 'Инвентарь', 'Достижения', 'Соревнования', 'Рейтинг' ]
+  const [ isCreateTaskModalOpen, setIsCreateTaskModalOpen ] = useState(false)
+
+
+  function changeTab(current) {
+    (current !== 'Добавить задачу') ? (
+      setMenuTab(current)
+    ) : (
+      setIsCreateTaskModalOpen(true)
+    )
+    setSidebarTab(current)
+  }
+
+  const menuItems = [ 'Добавить задачу', 'Сегодня', 'Магазин', 'Награды', 'Инвентарь', 'Достижения' ]
 
   const user = {
     avatar: userAvatar,
@@ -20,14 +42,27 @@ export default function Layout() {
   };
 
   return (
-    <div className="layout">
+    <LayoutContainer>
+
       <Sidebar
         user={user}
-        active={tab}
-        onChange={current => setTab(current)}
-        // menuItems={menuItems}
+        active={sidebarTab}
+        onChange={changeTab}
+        menuItems={menuItems}
       />
-      <Main active={tab}></Main>
-    </div>
+
+      <Main active={menuTab}></Main>
+
+      <Modal
+        open={isCreateTaskModalOpen}
+        modelType={'default'}
+      >
+        <CreateTaskForm
+          onClose={() => setIsCreateTaskModalOpen(false)}
+        >
+        </CreateTaskForm>
+      </Modal>
+
+    </LayoutContainer>      
   );
 }

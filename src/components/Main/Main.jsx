@@ -2,20 +2,13 @@ import './Main.css'
 
 import Header from "./Header/Header.jsx"
 import TaskList from "./TaskList/TaskList.jsx"
-import ProjectList from "./ProjectList/ProjectList.jsx"
+// import ProjectList from "./ProjectList/ProjectList.jsx"
 
 
 export default function Main({ active }) {
   return (
     <>
       <div className='main'>
-        { active === 'Добавить задачу' && (
-          <>
-            <Header title={'Добавить задачу'}/>
-            В разработке
-          </>
-        )}
-
         { active === 'Сегодня' && (
           <>
             <Header title={'Сегодня'}/>
@@ -23,62 +16,69 @@ export default function Main({ active }) {
           </>
         )}
 
-        { active === 'Календарь' && (
+        { active === 'Магазин' && (
           <>
-            <Header title={'Календарь'}/>
-            В разработке
-          </>
-        )}
-
-        { active === 'Проекты' && (
-          <>
-            <Header title={'Проекты'}/>
-            В разработке
-            <ProjectList />
-          </>
-        )}
-
-        { active === 'Группы' && (
-          <>
-            <Header title={'Группы'}/>
-            В разработке
+            <Header title={'Магазин'}/>
+            In development
           </>
         )}
 
         { active === 'Награды' && (
           <>
             <Header title={'Награды'}/>
-            В разработке
+            In development
           </>
         )}
 
         { active === 'Инвентарь' && (
           <>
             <Header title={'Инвентарь'}/>
-            В разработке
+            In development
           </>
         )}
 
         { active === 'Достижения' && (
           <>
             <Header title={'Достижения'}/>
-            В разработке
+            In development
           </>
         )}
 
-        { active === 'Соревнования' && (
+        {/* { active === 'Календарь' && (
+          <>
+            <Header title={'Календарь'}/>
+            В разработке
+          </>
+        )} */}
+
+        {/* { active === 'Проекты' && (
+          <>
+            <Header title={'Проекты'}/>
+            В разработке
+            <ProjectList />
+          </>
+        )} */}
+
+        {/* { active === 'Группы' && (
+          <>
+            <Header title={'Группы'}/>
+            В разработке
+          </>
+        )} */}
+
+        {/* { active === 'Соревнования' && (
           <>
             <Header title={'Соревнования'}/>
             В разработке
           </>
-        )}
+        )} */}
 
-        { active === 'Рейтинг' && (
+        {/* { active === 'Рейтинг' && (
           <>
             <Header title={'Рейтинг'}/>
             В разработке
           </>
-        )}
+        )} */}
       </div>
     </>
   )
