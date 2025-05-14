@@ -1,71 +1,85 @@
+// src/components/CreateTaskForm/CreateTaskForm.jsx
 import { styled } from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../Button/Button';
+import {
+  STATUS_OPTIONS,
+  PRIORITY_OPTIONS,
+  DIFFICULTY_VALUES,
+  DIFFICULTY_LABELS,
+} from '../../constants'; // Предполагаем, что константы здесь
 
+// (Styled components остаются в основном без изменений, кроме, возможно, размеров)
 const CreateTaskFormContainer = styled.div`
   width: 100%;
   height: 100%;
-  padding: 4rem 6rem;
+  padding: 2rem 3rem; // Уменьшил паддинги для большего контента
   display: flex;
   flex-direction: column;
-  overflow-y: auto; // Added for scrollability if content overflows
+  overflow-y: auto;
 `;
 const FormColumns = styled.div`
   display: flex;
   gap: 2rem;
   flex: 1;
+  @media (max-width: 768px) { // Адаптивность для маленьких экранов
+    flex-direction: column;
+  }
 `;
 
 const LeftColumn = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 1rem; // Промежуток между группами полей
 `;
 
 const RightColumn = styled.div`
-  width: 300px;
+  width: 300px; // Можно сделать flex: 0.7; или подобное для адаптивности
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const FormField = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem; // Уменьшил margin
 `;
 
 const Label = styled.label`
-  font-size: 1rem;
+  font-size: 0.9rem; // Немного уменьшил
   font-weight: 500;
   color: #555;
 `;
 
 const Input = styled.input`
-  padding: 0.8rem;
+  padding: 0.7rem;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   background-color: #f9f9f9;
 `;
 
 const Textarea = styled.textarea`
-  padding: 0.8rem;
+  padding: 0.7rem;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 1rem;
-  min-height: 100px;
-  resize: vertical; // Allow vertical resize
+  font-size: 0.9rem;
+  min-height: 80px;
+  resize: vertical;
   background-color: #f9f9f9;
 `;
 
 const Select = styled.select`
-  padding: 0.8rem;
+  padding: 0.7rem;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   background-color: #f9f9f9;
 `;
 
@@ -75,26 +89,9 @@ const CheckboxContainer = styled.div`
   gap: 0.5rem;
 `;
 
-const CheckboxLabel = styled.label` // Changed from div to label for better semantics
-  font-size: 1rem;
-  cursor: pointer; // Make label clickable for checkbox
-`;
-
-const RewardContainer = styled.div`
-  display: flex;
-  align-items: center; // Align items vertically
-  gap: 1rem;
-  margin-top: auto; // Pushes to bottom if LeftColumn has space
-`;
-
-const RewardInput = styled.input`
-  width: 60px;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 1rem;
-  text-align: center;
-  background-color: #f9f9f9;
+const CheckboxLabel = styled.label`
+  font-size: 0.9rem;
+  cursor: pointer;
 `;
 
 const ActionsContainer = styled.div`
@@ -102,107 +99,119 @@ const ActionsContainer = styled.div`
   justify-content: flex-end;
   gap: 1rem;
   margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee; // Разделитель
 `;
 
-export default function CreateTaskForm({ onClose }) {
+
+export default function CreateTaskForm({ onClose, loggedInUser, onTaskCreated }) {
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
-    projectName: '', // Added project name
-    deadline: '',
-    isImportant: false,
-    difficulty: 'Легкотина', // Default difficulty
-    sphere: '',
-    rewards: [200, 200, 200, 200], // Example rewards
-    speedBonus: false
+    status: STATUS_OPTIONS[0], // Default: NEW
+    priority: PRIORITY_OPTIONS[2], // Default: NORMAL
+    difficulty: DIFFICULTY_VALUES[1], // Default: 1 (Легко)
+    // author будет установлен из loggedInUser
+    executorName: '', // Поле для ввода имени исполнителя
+    rewardXp: 0,
+    rewardCurrency: 0,
+    deadline: '', // ISO string YYYY-MM-DDTHH:MM
+    fastDoneBonus: 0,
+    combo: false,
+    linkedTaskId: '', // Пустая строка для ID, т.к. может быть числом
   });
+
+  // Устанавливаем автора при инициализации или изменении loggedInUser
+  useEffect(() => {
+    if (loggedInUser) {
+      // Не меняем setTaskData напрямую в рендере, используем useEffect
+      // Это поле не редактируется в форме, оно берется из loggedInUser
+    }
+  }, [loggedInUser]);
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setTaskData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
+    let processedValue = value;
+    if (name === "difficulty" || name === "rewardXp" || name === "rewardCurrency" || name === "fastDoneBonus") {
+      processedValue = parseInt(value, 10) || 0;
+    } else if (name === "linkedTaskId") {
+      processedValue = value === '' ? null : (parseInt(value, 10) || null); // null если пусто, иначе число
+    }
 
-  const handleRewardChange = (index, value) => {
-    const newRewards = [...taskData.rewards];
-    // Ensure value is a number, default to 0 if not
-    newRewards[index] = parseInt(value, 10) || 0; 
+
     setTaskData(prev => ({
       ...prev,
-      rewards: newRewards
+      [name]: type === 'checkbox' ? checked : processedValue
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Implement actual task creation logic (e.g., API call)
-    console.log('Task data to be submitted:', taskData);
-    // Example: map form data to backend structure if different
-    // const backendTaskData = {
-    //   ...taskData,
-    //   priority: taskData.isImportant ? 'HIGH' : 'LOW', // if backend expects string
-    //   difficulty: taskData.difficulty === 'Легкотина' ? 1 : (taskData.difficulty === 'Средняя' ? 2 : 3) // if backend expects number
-    // };
-    // console.log('Mapped task data for backend:', backendTaskData);
-    onClose(); // Close modal after submission
+    
+    const finalTaskData = {
+      ...taskData,
+      id: Date.now(), // Временный ID для фронтенда, бэкенд должен генерировать свой
+      author: { // Формируем объект автора
+        id: loggedInUser?.id || null,
+        name: loggedInUser?.name || 'Система',
+        email: loggedInUser?.email || '',
+        // ... другие поля из loggedInUser, если они нужны в структуре author
+      },
+      executor: { // Формируем объект исполнителя
+        id: null, // ID исполнителя, если бы выбирали из списка
+        name: taskData.executorName || 'Не назначен',
+        email: '', // email исполнителя, если бы был
+      },
+      updateDate: new Date().toISOString(),
+      // Удаляем временное поле executorName
+    };
+    delete finalTaskData.executorName;
+
+
+    console.log('Task data to be submitted:', finalTaskData);
+    // if (onTaskCreated) {
+    //   onTaskCreated(finalTaskData); // Передать созданную задачу наверх для обновления UI
+    // }
+    onClose();
   };
 
   return (
     <CreateTaskFormContainer>
       <form onSubmit={handleSubmit}>
         <FormColumns>
-
           <LeftColumn>
-            <div> {/* Wrapper for top content in LeftColumn */}
-              <FormField>
-                <Label htmlFor="taskTitle">Название задачи</Label>
-                <Input
-                  id="taskTitle"
-                  name="title"
-                  value={taskData.title}
-                  onChange={handleChange}
-                  placeholder="Сделать зарядку"
-                  required // Example: make title required
-                />
-              </FormField>
-
-              <FormField>
-                <Label htmlFor="taskDescription">Описание</Label>
-                <Textarea
-                  id="taskDescription"
-                  name="description"
-                  value={taskData.description}
-                  onChange={handleChange}
-                  placeholder="Подробное описание задачи..."
-                />
-              </FormField>
-            </div>
-
-            <RewardContainer>
-              <Label>Награда:</Label> {/* No htmlFor needed as it's a general label for the group */}
-              {taskData.rewards.map((reward, index) => (
-                <RewardInput
-                  key={index}
-                  type="number"
-                  value={reward}
-                  onChange={(e) => handleRewardChange(index, e.target.value)}
-                  aria-label={`Reward ${index + 1}`} // Accessibility for screen readers
-                />
-              ))}
-            </RewardContainer>
-          </LeftColumn>
-
-          <RightColumn>
             <FormField>
-              <Label htmlFor="projectName">Проект</Label>
+              <Label htmlFor="taskTitle">Название задачи *</Label>
               <Input
-                id="projectName"
-                name="projectName"
-                value={taskData.projectName}
+                id="taskTitle"
+                name="title"
+                value={taskData.title}
                 onChange={handleChange}
-                placeholder="Название проекта"
+                placeholder="Например, прочитать главу книги"
+                required
+              />
+            </FormField>
+
+            <FormField>
+              <Label htmlFor="taskDescription">Описание</Label>
+              <Textarea
+                id="taskDescription"
+                name="description"
+                value={taskData.description}
+                onChange={handleChange}
+                placeholder="Детали задачи..."
+              />
+            </FormField>
+            
+            <FormField>
+              <Label htmlFor="executorName">Исполнитель</Label>
+              <Input
+                id="executorName"
+                name="executorName"
+                value={taskData.executorName}
+                onChange={handleChange}
+                placeholder="Имя исполнителя"
               />
             </FormField>
 
@@ -210,67 +219,69 @@ export default function CreateTaskForm({ onClose }) {
               <Label htmlFor="taskDeadline">Дедлайн</Label>
               <Input
                 id="taskDeadline"
-                type="date"
+                type="datetime-local" // Для даты и времени
                 name="deadline"
                 value={taskData.deadline}
                 onChange={handleChange}
               />
             </FormField>
+          </LeftColumn>
 
-            <CheckboxContainer>
-              <Input // Changed to Input for consistency, can be styled as checkbox
-                type="checkbox"
-                id="isImportant"
-                name="isImportant"
-                checked={taskData.isImportant}
-                onChange={handleChange}
-              />
-              <CheckboxLabel htmlFor="isImportant">Важная</CheckboxLabel>
-            </CheckboxContainer>
-
+          <RightColumn>
             <FormField>
-              <Label htmlFor="taskDifficulty">Сложность</Label>
-              <Select
-                id="taskDifficulty"
-                name="difficulty"
-                value={taskData.difficulty}
-                onChange={handleChange}
-              >
-                <option value="Легкотина">Легкотина</option>
-                <option value="Средняя">Средняя</option>
-                <option value="Сложная">Сложная</option>
+              <Label htmlFor="taskStatus">Статус</Label>
+              <Select id="taskStatus" name="status" value={taskData.status} onChange={handleChange}>
+                {STATUS_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
               </Select>
             </FormField>
 
             <FormField>
-              <Label htmlFor="taskSphere">Сфера</Label>
-              <Input
-                id="taskSphere"
-                name="sphere"
-                value={taskData.sphere}
-                onChange={handleChange}
-                placeholder="Выбрать сферу"
-              />
+              <Label htmlFor="taskPriority">Приоритет</Label>
+              <Select id="taskPriority" name="priority" value={taskData.priority} onChange={handleChange}>
+                {PRIORITY_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+              </Select>
             </FormField>
 
+            <FormField>
+              <Label htmlFor="taskDifficulty">Сложность</Label>
+              <Select id="taskDifficulty" name="difficulty" value={taskData.difficulty} onChange={handleChange}>
+                {DIFFICULTY_VALUES.map(val => (
+                  <option key={val} value={val}>{DIFFICULTY_LABELS[val]}</option>
+                ))}
+              </Select>
+            </FormField>
+            
+            <FormField>
+              <Label htmlFor="rewardXp">Награда XP</Label>
+              <Input type="number" id="rewardXp" name="rewardXp" value={taskData.rewardXp} onChange={handleChange} min="0" />
+            </FormField>
+
+            <FormField>
+              <Label htmlFor="rewardCurrency">Награда (валюта)</Label>
+              <Input type="number" id="rewardCurrency" name="rewardCurrency" value={taskData.rewardCurrency} onChange={handleChange} min="0" />
+            </FormField>
+
+            <FormField>
+              <Label htmlFor="fastDoneBonus">Бонус за скорость (XP)</Label>
+              <Input type="number" id="fastDoneBonus" name="fastDoneBonus" value={taskData.fastDoneBonus} onChange={handleChange} min="0" />
+            </FormField>
+            
             <CheckboxContainer>
-              <Input
-                type="checkbox"
-                id="speedBonus"
-                name="speedBonus"
-                checked={taskData.speedBonus}
-                onChange={handleChange}
-              />
-              <CheckboxLabel htmlFor="speedBonus">Бонус за скорость</CheckboxLabel>
+              <Input type="checkbox" id="combo" name="combo" checked={taskData.combo} onChange={handleChange} />
+              <CheckboxLabel htmlFor="combo">Комбо задача</CheckboxLabel>
             </CheckboxContainer>
 
-            <ActionsContainer>
-              <Button type="button" onClick={onClose} variant="secondary">Отмена</Button>
-              <Button type="submit" isActive>Создать</Button> {/* Added isActive for primary action style */}
-            </ActionsContainer>
+            <FormField>
+              <Label htmlFor="linkedTaskId">Связанная задача (ID)</Label>
+              <Input type="text" id="linkedTaskId" name="linkedTaskId" value={taskData.linkedTaskId === null ? '' : taskData.linkedTaskId} onChange={handleChange} placeholder="ID предыдущей задачи"/>
+            </FormField>
+
           </RightColumn>
-          
         </FormColumns>
+        <ActionsContainer>
+          <Button type="button" onClick={onClose} variant="secondary">Отмена</Button>
+          <Button type="submit" isActive>Создать задачу</Button>
+        </ActionsContainer>
       </form>
     </CreateTaskFormContainer>
   );

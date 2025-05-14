@@ -1,4 +1,5 @@
 import './SidebarUserProfile.css';
+import defaultUserAvatar from '../../../img/userAvatar.png';
 import { styled } from 'styled-components'
 
 const UserProfileContainer = styled.div`
@@ -16,7 +17,7 @@ export default function SidebarUserProfile({ user }) {
   return (
     <UserProfileContainer>
       <div className="avatar">
-        <img src={user.avatar} alt="User Avatar" />
+        <img src={defaultUserAvatar} alt="User Avatar" />
       </div>
 
       <div className="user-info">

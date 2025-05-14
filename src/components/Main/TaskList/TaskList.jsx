@@ -1,14 +1,16 @@
+// src/components/Main/TaskList/TaskList.jsx
 import Task from '../Task/Task.jsx';
 import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';
 
+// (Константы для стилизации LoadingMessage, ErrorMessage, TaskListComponent остаются без изменений)
 const TaskListComponent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin-top: 2rem;
-  overflow-y: auto; // For scrollability if list is long
-  padding-bottom: 1rem; // Some padding at the bottom
+  overflow-y: auto; 
+  padding-bottom: 1rem; 
 `;
 
 const LoadingMessage = styled.p`
@@ -25,8 +27,9 @@ const ErrorMessage = styled.p`
   margin-top: 2rem;
 `;
 
+
 export default function TaskList() {
-  const [tasks, setTasks] = useState([]); // Renamed data to tasks for clarity
+  const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -35,7 +38,7 @@ export default function TaskList() {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch('/task.json'); // Path relative to public folder
+        const response = await fetch('tasks.json');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -48,45 +51,42 @@ export default function TaskList() {
         setIsLoading(false);
       }
     }
-
     fetchData();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
-  // Placeholder handlers - these would typically involve API calls
   const handleDeleteTask = (taskId) => {
     console.log("Deleting task:", taskId);
     setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
-    // In a real app: await api.deleteTask(taskId);
+    // TODO: вызывать API для удаление task на бэкэнде
   };
 
-  const handleToggleStatus = (taskId, newStatus) => {
-    console.log("Toggling status for task:", taskId, "to", newStatus);
+  const handleToggleStatus = (taskId, currentStatus) => {
+    // Пример: переключение на 'DONE' если не 'DONE', и на 'NEW' если 'DONE'
+    const newStatus = currentStatus === 'DONE' ? 'NEW' : 'DONE';
+    console.log("Toggling status for task:", taskId, "from", currentStatus, "to", newStatus);
     setTasks(prevTasks =>
       prevTasks.map(task =>
         task.id === taskId ? { ...task, status: newStatus } : task
       )
     );
-    // In a real app: await api.updateTask(taskId, { status: newStatus });
+    // TODO: вызывать API для обновления task на бэкэнде
   };
-
 
   if (isLoading) {
     return <LoadingMessage>Загрузка задач...</LoadingMessage>;
   }
-
   if (error) {
     return <ErrorMessage>Ошибка при загрузке задач: {error}</ErrorMessage>;
   }
-
   if (tasks.length === 0) {
-    return <LoadingMessage>Задач пока нет.</LoadingMessage>
+    return <LoadingMessage>Задач пока нет.</LoadingMessage>;
   }
 
   return (
     <TaskListComponent>
       {tasks.map((task) => (
-        <Task 
-          key={task.id} // Use unique ID for key
+        <Task
+          key={task.id}
           task={task}
           onDeleteTask={handleDeleteTask}
           onToggleStatus={handleToggleStatus}
