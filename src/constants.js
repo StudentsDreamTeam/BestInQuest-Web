@@ -23,3 +23,11 @@ export const SPHERE_LABELS = {
   "Work": "Работа",
   "Self-Development": "Саморазвитие"
 };
+
+export const PRIORITY_SLIDER_LABELS = {
+  0: "Опционально",
+  1: "Низкая",
+  2: "Обычная",
+  3: "Высокая",
+  4: "Критическая"
+};
