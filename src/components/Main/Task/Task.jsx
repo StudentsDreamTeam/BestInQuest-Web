@@ -1,32 +1,35 @@
 import './Task.css';
 import CheckButton from '../CheckButton/CheckButton';
 import { styled, css } from 'styled-components';
-// Removed useState and useEffect for local state, status/priority now derived from props
-// import { useState, useEffect } from 'react';
 
-import defaultUserAvatar from '../../../img/userAvatar.png'; // Placeholder
-import defaultBossAvatar from '../../../img/bossAvatar.png'; // Placeholder
-import sportAvatar from '../../../img/sportAvatar.png'; // Placeholder
+import defaultUserAvatar from '../../../img/userAvatar.png';
+import defaultBossAvatar from '../../../img/bossAvatar.png';
+import sportAvatar from '../../../img/sportAvatar.png';
+import workAvatar from '../../../img/workAvatar.png';
+// import studyAvatar from '../../../img/studyAvatar.png'; // Пример
+// import householdAvatar from '../../../img/householdAvatar.png'; // Пример
+import selfDevelopmentAvatar from '../../../img/selfDevelopmentAvatar.png'; // Пример
+
 
 import { ReactComponent as ActiveCheckIcon } from '../../../icons/ActiveCheckIcon31.svg';
-import { ReactComponent as PassiveCheckIcon } from '../../../icons/PassiveCheckPurple31.svg';
-import { ReactComponent as PassiveCheckImportantIcon } from '../../../icons/PassiveCheckImportantIcon31.svg';
 import { ReactComponent as ActiveCheckImportantIcon } from '../../../icons/ActiveCheckImportantIcon31.svg';
+
+import { ReactComponent as PassiveCheckIcon } from '../../../icons/PassiveCheckIcon31.svg';
+import { ReactComponent as PassiveCheckPurpleIcon } from '../../../icons/PassiveCheckImportantIcon31.svg';
+
 import { ReactComponent as TrashIcon } from '../../../icons/TrashIcon34.svg';
+import { ReactComponent as TrashImportantIcon } from '../../../icons/TrashImportantIcon34.svg';
+
 import { ReactComponent as TimeIcon } from '../../../icons/TimeIcon19.svg';
 import { ReactComponent as TimeImportantIcon } from '../../../icons/TimeImportantIcon19.svg';
-import { ReactComponent as FolderIcon } from '../../../icons/FolderIcon19.svg';
-import { ReactComponent as FolderImportantIcon } from '../../../icons/FolderImportantIcon19.svg';
 
-// Импорт констант
 import { IMPORTANT_PRIORITIES, DIFFICULTY_LABELS } from '../../../constants';
 
-// (Styled components TaskContainer, TaskInfo, TaskDataObject остаются в основном те же)
 const TaskContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: auto; // Сделаем авто, т.к. данных может быть больше
+  height: auto;
   min-height: 5.8rem;
   padding: 1.2rem 1rem;
   border-radius: 16px;
@@ -34,7 +37,7 @@ const TaskContainer = styled.div`
   background-color: #f5f5f5;
   transition: background-color 0.3s, color 0.3s;
 
-  ${({ $isImportant }) => // Изменено с $priority на $isImportant для ясности
+  ${({ $isImportant }) =>
     $isImportant &&
     css`
       background-color: #9747ff;
@@ -60,7 +63,7 @@ const TaskInfo = styled.div`
 const TaskDataGrid = styled.div`
   display: flex;
   align-items: center;
-
+  flex-wrap: wrap;
   font-size: 0.75rem;
   font-weight: 600;
   gap: 0.5rem 1rem;
@@ -79,23 +82,26 @@ const TaskDataObject = styled.div`
     object-fit: cover;
   }
   svg {
-    flex-shrink: 0; // Предотвратить сжатие иконок
+    flex-shrink: 0;
   }
   span {
-    word-break: break-word; // Перенос длинных слов
+    word-break: break-word;
   }
 `;
 
-const getDynamicAvatar = (object) => {
-  if (object === "boss") return defaultBossAvatar;
-  if (object === "sport") return sportAvatar;
-  // Здесь могла бы быть логика для выбора аватара по ID пользователя или другим данным
-  // Пока просто плейсхолдер
-  return object?.avatar || defaultUserAvatar;
+const getSphereAvatar = (sphere) => {
+  switch (sphere?.toLowerCase()) {
+    case 'sport': return sportAvatar;
+    case 'work': return workAvatar;
+    // case 'study': return studyAvatar; // Предполагаем, что 'Учеба' будет 'study'
+    // case 'household': return householdAvatar; // 'Быт'
+    case 'self-development': return selfDevelopmentAvatar; // 'Саморазвитие'
+    default: return sportAvatar; // Фолбэк
+  }
 };
 
+
 export default function Task({ task, onDeleteTask, onToggleStatus }) {
-  // Определяем "важность" и "завершенность" на основе пропсов
   const isTaskImportant = IMPORTANT_PRIORITIES.includes(task.priority?.toUpperCase());
   const isTaskCompleted = task.status?.toUpperCase() === 'DONE';
 
@@ -112,34 +118,51 @@ export default function Task({ task, onDeleteTask, onToggleStatus }) {
   };
 
   const CurrentTimeIcon = isTaskImportant ? TimeImportantIcon : TimeIcon;
-  const CurrentFolderIcon = isTaskImportant ? FolderImportantIcon : FolderIcon;
-  const CheckIconToShow = isTaskCompleted
-    ? (isTaskImportant ? ActiveCheckImportantIcon : ActiveCheckIcon)
-    : (isTaskImportant ? PassiveCheckImportantIcon : PassiveCheckIcon);
 
-  const difficultyText = DIFFICULTY_LABELS[task.difficulty] || `Уровень ${task.difficulty}`;
+  let CheckIconToShow;
+  if (isTaskCompleted) {
+    CheckIconToShow = isTaskImportant ? ActiveCheckImportantIcon : ActiveCheckIcon;
+  } else {
+    CheckIconToShow = isTaskImportant ? PassiveCheckPurpleIcon : PassiveCheckIcon;
+  }
+
+  const CurrentTrashIcon = isTaskImportant ? TrashImportantIcon : TrashIcon;
   const authorName = task.author?.name || 'Неизвестный автор';
   const executorName = task.executor?.name || 'Не назначен';
 
-  const formatDate = (dateString) => {
-    if (!dateString) return 'Нет';
-    try {
-      return new Date(dateString).toLocaleDateString('ru-RU', {
-        year: 'numeric', month: 'short', day: 'numeric'
-      });
-    } catch (e) {
-      return dateString;
-    }
-  };
-  
   const formatDateTime = (dateString) => {
-    if (!dateString) return 'Нет';
+    if (!dateString) return 'Нет дедлайна';
     try {
       return new Date(dateString).toLocaleString('ru-RU', {
         month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
       });
     } catch (e) {
-      return dateString;
+      console.error("Error formatting date:", e);
+      return dateString; // Возвращаем исходную строку в случае ошибки
+    }
+  };
+
+  const formatDurationTime = (seconds) => {
+    if (typeof seconds !== 'number' || isNaN(seconds) || seconds < 0) {
+      seconds = 0;
+    }
+
+    if (seconds < 60) {
+      return `${seconds} сек`;
+    }
+
+    const hours = Math.floor(seconds / 3600);
+    const remainingSeconds = seconds % 3600;
+    const minutes = Math.floor(remainingSeconds / 60);
+
+    if (hours > 0) {
+      if (minutes > 0) {
+        return `${hours} ч ${minutes} мин`;
+      } else {
+        return `${hours} ч`;
+      }
+    } else {
+      return `${minutes} мин`;
     }
   };
 
@@ -153,52 +176,40 @@ export default function Task({ task, onDeleteTask, onToggleStatus }) {
       </CheckButton>
 
       <TaskInfo $isImportant={isTaskImportant}>
-        <div className="task-rows"> {/* .task-rows и .task-title из Task.css */}
+        <div className="task-rows">
           <div className="task-title">{task.title || 'Без названия'}</div>
 
           <TaskDataGrid>
-
             <TaskDataObject title={`Дедлайн: ${formatDateTime(task.deadline)}`}>
               <CurrentTimeIcon />
               <span>{formatDateTime(task.deadline)}</span>
             </TaskDataObject>
 
-            {/* <TaskDataObject title={`Статус: ${task.status}`}>
-              <CurrentFolderIcon />
-              <span>{task.status || 'N/A'}</span>
-            </TaskDataObject> */}
-
-            {/* <TaskDataObject title={`Приоритет: ${task.priority}`}>
-              <CurrentFolderIcon />
-              <span>{task.priority || 'N/A'}</span>
-            </TaskDataObject> */}
+            <TaskDataObject title={`Продолжительность: ${formatDateTime(task.duration)}`}>
+              <CurrentTimeIcon />
+              <span>{formatDurationTime(task.duration)}</span>
+            </TaskDataObject>
             
-            {/* <TaskDataObject title={`Сложность: ${difficultyText}`}>
-              <CurrentFolderIcon />
-              <span>{difficultyText}</span>
-            </TaskDataObject> */}
-          
             <TaskDataObject title={`Автор: ${authorName}`}>
-              <img src={getDynamicAvatar("boss")} alt="author" />
+              <img src={task.author?.avatar || defaultBossAvatar} alt="author" />
               <span>{authorName}</span>
             </TaskDataObject>
 
             <TaskDataObject title={`Исполнитель: ${executorName}`}>
-              <img src={getDynamicAvatar(task.executor)} alt="executor" />
+              <img src={task.executor?.avatar || defaultUserAvatar} alt="executor" />
               <span>{executorName}</span>
             </TaskDataObject>
 
-            <TaskDataObject>
-              <img src={getDynamicAvatar("sport")} alt="sphere" />
+            <TaskDataObject title={`Сфера: ${task.sphere}`}>
+              <img src={getSphereAvatar(task.sphere)} alt={task.sphere} />
               <span>{task.sphere}</span>
-            </TaskDataObject>
-            
+            </TaskDataObject>       
           </TaskDataGrid>
         </div>
       </TaskInfo>
 
       <div className="delete-container" onClick={handleDelete} style={{ cursor: 'pointer' }}>
-        <TrashIcon />
+        <CurrentTrashIcon />
       </div>
     </TaskContainer>
   );

@@ -12,3 +12,14 @@ export const DIFFICULTY_LABELS = {
 
 // Используется для определения "важности" для стилизации
 export const IMPORTANT_PRIORITIES = ["HIGH", "CRITICAL"];
+
+
+export const SPHERE_OPTIONS = ["Sport", "Study", "Household", "Work", "Self-Development"];
+
+export const SPHERE_LABELS = {
+  "Sport": "Спорт",
+  "Study": "Учеба",
+  "Household": "Быт",
+  "Work": "Работа",
+  "Self-Development": "Саморазвитие"
+};

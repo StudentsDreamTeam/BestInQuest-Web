@@ -1,6 +1,6 @@
 [
 	{
-    "id": 3,
+    "id": 6,
     "linkedTaskId": 3,
 
     "title": "Тренировка",
@@ -46,7 +46,7 @@
 
     "updateDate": "2025-05-15T08:00:00.000Z",
     "deadline": "2025-05-15T09:00:00.000Z",
-    "duration": 60,
+    "duration": 80,
 
     "fastDoneBonus": 50,
     "combo": false,
@@ -78,7 +78,7 @@
     
     "updateDate": "2025-05-14T10:00:00.000Z",
     "deadline": "2025-05-18T17:00:00.000Z",
-    "duration": 1200,
+    "duration": 1260,
 
     "fastDoneBonus": 100,
     "combo": true,
@@ -110,7 +110,7 @@
 
     "updateDate": "2025-05-13T18:54:28.432Z",
     "deadline": "2025-05-13T21:00:00.000Z",
-    "duration": 90,
+    "duration": 3600,
 
     "fastDoneBonus": 20,
     "combo": false,
@@ -142,7 +142,7 @@
 
     "updateDate": "2025-05-15T12:00:00.000Z",
     "deadline": "2025-05-16T23:59:00.000Z",
-    "duration": 45,
+    "duration": 5400,
 
     "fastDoneBonus": 0,
     "combo": false,
@@ -174,13 +174,13 @@
 
     "updateDate": "2025-05-15T14:00:00.000Z",
     "deadline": "2025-05-15T19:00:00.000Z",
-    "duration": 60,
+    "duration": 5,
 
     "fastDoneBonus": 10,
     "combo": false,
     "rewardXp": 30,
     "rewardCurrency": 0,
-    
+
     "author": {
       "id": 3,
       "name": "Анна С.",

@@ -1,106 +1,254 @@
-// src/components/CreateTaskForm/CreateTaskForm.jsx
-import { styled } from 'styled-components';
+import { styled, css } from 'styled-components';
 import { useState, useEffect } from 'react';
-import Button from '../Button/Button';
+import Button from '../Button/Button'
 import {
-  STATUS_OPTIONS,
-  PRIORITY_OPTIONS,
+  // STATUS_OPTIONS, // Статус не выбирается в новой форме явно
+  // PRIORITY_OPTIONS, // Приоритет не выбирается в новой форме явно
   DIFFICULTY_VALUES,
   DIFFICULTY_LABELS,
-} from '../../constants'; // Предполагаем, что константы здесь
+  SPHERE_OPTIONS,
+  SPHERE_LABELS
+} from '../../constants';
 
-// (Styled components остаются в основном без изменений, кроме, возможно, размеров)
-const CreateTaskFormContainer = styled.div`
-  width: 100%;
+const FormWrapper = styled.div`
+  background-color: #fff; // Фон всей модалки будет белым
+  padding: 2rem;
+  border-radius: 20px; // Скругление как на дизайне
   height: 100%;
-  padding: 2rem 3rem; // Уменьшил паддинги для большего контента
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: auto; // Если контента много
 `;
-const FormColumns = styled.div`
+
+const FormContent = styled.div`
   display: flex;
-  gap: 2rem;
-  flex: 1;
-  @media (max-width: 768px) { // Адаптивность для маленьких экранов
+  gap: 2.5rem; // Расстояние между левой и правой колонкой
+  flex-grow: 1;
+  @media (max-width: 768px) {
     flex-direction: column;
   }
 `;
 
-const LeftColumn = styled.div`
-  flex: 1;
+const FormColumn = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem; // Промежуток между группами полей
-`;
+  gap: 1.5rem; // Расстояние между блоками в колонке
+  ${props => props.left && css`flex: 2;`} // Левая колонка шире
+  ${props => props.right && css`flex: 1;`} // Правая колонка уже
 
-const RightColumn = styled.div`
-  width: 300px; // Можно сделать flex: 0.7; или подобное для адаптивности
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
   @media (max-width: 768px) {
-    width: 100%;
+    flex: 1;
   }
 `;
 
-const FormField = styled.div`
+const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 1rem; // Уменьшил margin
 `;
 
-const Label = styled.label`
-  font-size: 0.9rem; // Немного уменьшил
+const FormLabel = styled.label`
+  font-size: 0.9rem;
   font-weight: 500;
-  color: #555;
+  color: #555; // Стандартный цвет для лейблов
 `;
 
-const Input = styled.input`
-  padding: 0.7rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  background-color: #f9f9f9;
+const TitleInput = styled.input`
+  font-size: 1.8rem; // Большой шрифт для заголовка задачи
+  font-weight: 600;
+  padding: 0.5rem 0;
+  border: none;
+  border-bottom: 1px solid #eee;
+  outline: none;
+  width: 100%;
+  &::placeholder {
+    color: #ccc;
+  }
 `;
 
-const Textarea = styled.textarea`
-  padding: 0.7rem;
+const DescriptionTextarea = styled.textarea`
+  font-size: 1rem;
+  padding: 0.75rem;
   border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  min-height: 80px;
+  border-radius: 8px;
+  min-height: 120px;
   resize: vertical;
+  outline: none;
+  width: 100%;
   background-color: #f9f9f9;
 `;
 
-const Select = styled.select`
-  padding: 0.7rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  background-color: #f9f9f9;
-`;
-
-const CheckboxContainer = styled.div`
+const SectionTitle = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
 `;
 
-const CheckboxLabel = styled.label`
-  font-size: 0.9rem;
-  cursor: pointer;
-`;
-
-const ActionsContainer = styled.div`
+const ToggleContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+`;
+
+const ToggleLabel = styled.span`
+  font-size: 0.9rem;
+  color: #333;
+`;
+
+const ToggleSwitch = styled.label` // Стилизованный переключатель
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  span { // Slider
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
+    &:before { // Knob
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+  }
+  input:checked + span {
+    background-color: #9747FF; // Фиолетовый, когда активен
+  }
+  input:checked + span:before {
+    transform: translateX(20px);
+  }
+`;
+
+const DateTimeInput = styled.input`
+  padding: 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: #f9f9f9;
+  margin-top: 0.5rem;
+  width: 100%;
+`;
+
+const DifficultySlider = styled.input`
+  width: 100%;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  accent-color: #9747FF; // Цвет ползунка
+`;
+const DifficultyLabel = styled.span`
+  font-size: 0.9rem;
+  color: #777;
+  text-align: right;
+`;
+
+const SphereButton = styled(Button)` // Наследуем от существующей кнопки
+  width: 100%;
+  justify-content: space-between; // Для текста и шеврона
+  background-color: #f0f0f0;
+  color: #333;
+  &:hover {
+    background-color: #e0e0e0;
+  }
+  // Добавьте сюда стили для шеврона, если он будет частью кнопки
+`;
+
+const RewardGroup = styled.div`
+  margin-top: 1.5rem;
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+`;
+
+const RewardItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
   gap: 1rem;
-  margin-top: 2rem;
+`;
+
+const RewardLabel = styled.span`
+  font-size: 0.9rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; // Расстояние между иконкой и текстом
+`;
+
+const RewardIconPlaceholder = styled.div`
+  width: 20px; height: 20px;
+  /* background-color: #ccc; // Временный плейсхолдер для иконки */
+  display: inline-block;
+`;
+
+const RewardInput = styled.input`
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  width: 80px; // Фиксированная ширина для поля ввода награды
+  text-align: right;
+  background-color: #f9f9f9;
+`;
+
+const SaveButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end; // Кнопка справа
+  margin-top: auto; // Прижимает кнопку вниз, если есть место
   padding-top: 1rem;
-  border-top: 1px solid #eee; // Разделитель
+`;
+
+const SaveButton = styled.button`
+  background-color: #9747FF;
+  color: white;
+  border: none;
+  border-radius: 50%; // Круглая кнопка
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(151, 71, 255, 0.3);
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: #823cdf;
+  }
+  // Сюда нужно будет вставить SVG галочки
+  // Временная галочка текстом:
+  font-size: 1.5rem; 
+`;
+
+// Календарь (очень упрощенный, для примера, если решите делать кастомный)
+const CalendarModalContent = styled.div`
+  padding: 1rem;
+  h4 { margin-bottom: 1rem; }
+  input[type="date"], input[type="time"] {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+  }
 `;
 
 
@@ -108,181 +256,191 @@ export default function CreateTaskForm({ onClose, loggedInUser, onTaskCreated })
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
-    status: STATUS_OPTIONS[0], // Default: NEW
-    priority: PRIORITY_OPTIONS[2], // Default: NORMAL
+    deadline: '', // ISO string YYYY-MM-DDTHH:mm
+    hasDeadline: false,
     difficulty: DIFFICULTY_VALUES[1], // Default: 1 (Легко)
-    // author будет установлен из loggedInUser
-    executorName: '', // Поле для ввода имени исполнителя
+    sphere: SPHERE_OPTIONS[0],
     rewardXp: 0,
-    rewardCurrency: 0,
-    deadline: '', // ISO string YYYY-MM-DDTHH:MM
-    fastDoneBonus: 0,
-    combo: false,
-    linkedTaskId: '', // Пустая строка для ID, т.к. может быть числом
+    fastDoneBonus: 0, // Раньше было rewardCurrency, теперь это бонус за скорость
+    // Дополнительные поля из старой формы, если нужны, можно вернуть
+    // status: STATUS_OPTIONS[0],
+    // priority: PRIORITY_OPTIONS[2],
   });
 
-  // Устанавливаем автора при инициализации или изменении loggedInUser
-  useEffect(() => {
-    if (loggedInUser) {
-      // Не меняем setTaskData напрямую в рендере, используем useEffect
-      // Это поле не редактируется в форме, оно берется из loggedInUser
-    }
-  }, [loggedInUser]);
-
+  const [showCalendar, setShowCalendar] = useState(false); // Для кастомного календаря
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     let processedValue = value;
-    if (name === "difficulty" || name === "rewardXp" || name === "rewardCurrency" || name === "fastDoneBonus") {
+
+    if (["difficulty", "rewardXp", "fastDoneBonus"].includes(name)) {
       processedValue = parseInt(value, 10) || 0;
-    } else if (name === "linkedTaskId") {
-      processedValue = value === '' ? null : (parseInt(value, 10) || null); // null если пусто, иначе число
     }
-
-
+    
     setTaskData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : processedValue
     }));
   };
+  
+  const handleDeadlineChange = (e) => {
+    // Если используется datetime-local, он уже в нужном формате
+    // Если раздельные date и time, их нужно будет объединить
+    setTaskData(prev => ({ ...prev, deadline: e.target.value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
     const finalTaskData = {
       ...taskData,
-      id: Date.now(), // Временный ID для фронтенда, бэкенд должен генерировать свой
-      author: { // Формируем объект автора
-        id: loggedInUser?.id || null,
-        name: loggedInUser?.name || 'Система',
-        email: loggedInUser?.email || '',
-        // ... другие поля из loggedInUser, если они нужны в структуре author
-      },
-      executor: { // Формируем объект исполнителя
-        id: null, // ID исполнителя, если бы выбирали из списка
-        name: taskData.executorName || 'Не назначен',
-        email: '', // email исполнителя, если бы был
-      },
+      id: Date.now(), // Временный ID
+      author: { id: loggedInUser?.id, name: loggedInUser?.name },
+      // executor: { id: null, name: 'Не назначен' }, // Исполнитель не задается в этой форме
       updateDate: new Date().toISOString(),
-      // Удаляем временное поле executorName
+      status: 'new', // По умолчанию для новых задач
+      priority: 'normal', // По умолчанию
+      // Удаляем hasDeadline, т.к. он только для UI
     };
-    delete finalTaskData.executorName;
-
+    if (!taskData.hasDeadline) {
+        finalTaskData.deadline = null; // Если дедлайн не выбран, ставим null
+    }
+    delete finalTaskData.hasDeadline;
 
     console.log('Task data to be submitted:', finalTaskData);
     // if (onTaskCreated) {
-    //   onTaskCreated(finalTaskData); // Передать созданную задачу наверх для обновления UI
+    //   onTaskCreated(finalTaskData);
     // }
     onClose();
   };
+  
+  // Для кастомного календаря (если решите делать сложнее)
+  // const openCalendar = () => setShowCalendar(true);
+  // const closeCalendar = () => setShowCalendar(false);
+  // const handleDateSelect = (selectedDate) => {
+  //   setTaskData(prev => ({ ...prev, deadline: selectedDate, hasDeadline: true }));
+  //   closeCalendar();
+  // };
 
   return (
-    <CreateTaskFormContainer>
-      <form onSubmit={handleSubmit}>
-        <FormColumns>
-          <LeftColumn>
-            <FormField>
-              <Label htmlFor="taskTitle">Название задачи *</Label>
-              <Input
+    <FormWrapper>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <FormContent>
+          <FormColumn left>
+            <FormGroup>
+              {/* <FormLabel htmlFor="taskTitle">Название задачи</FormLabel> */}
+              <TitleInput
                 id="taskTitle"
                 name="title"
                 value={taskData.title}
                 onChange={handleChange}
-                placeholder="Например, прочитать главу книги"
+                placeholder="Сделать зарядку"
                 required
               />
-            </FormField>
-
-            <FormField>
-              <Label htmlFor="taskDescription">Описание</Label>
-              <Textarea
+            </FormGroup>
+            <FormGroup>
+              <FormLabel htmlFor="taskDescription">Описание</FormLabel>
+              <DescriptionTextarea
                 id="taskDescription"
                 name="description"
                 value={taskData.description}
                 onChange={handleChange}
-                placeholder="Детали задачи..."
+                placeholder="Например: 1. Отжимания 2. Приседания"
               />
-            </FormField>
-            
-            <FormField>
-              <Label htmlFor="executorName">Исполнитель</Label>
-              <Input
-                id="executorName"
-                name="executorName"
-                value={taskData.executorName}
+            </FormGroup>
+          </FormColumn>
+
+          <FormColumn right>
+            <FormGroup>
+              <SectionTitle>
+                Дедлайн
+                {/* <Button type="button" onClick={openCalendar} variant="icon">+</Button> // Для кастомного календаря */}
+              </SectionTitle>
+              <ToggleContainer>
+                <ToggleLabel>Выбрано</ToggleLabel>
+                <ToggleSwitch>
+                  <input type="checkbox" name="hasDeadline" checked={taskData.hasDeadline} onChange={handleChange} />
+                  <span></span>
+                </ToggleSwitch>
+              </ToggleContainer>
+              {taskData.hasDeadline && (
+                <DateTimeInput
+                  type="datetime-local"
+                  name="deadline"
+                  value={taskData.deadline}
+                  onChange={handleDeadlineChange}
+                />
+              )}
+            </FormGroup>
+
+            <FormGroup>
+              <SectionTitle>
+                Сложность
+                <DifficultyLabel>{DIFFICULTY_LABELS[taskData.difficulty]}</DifficultyLabel>
+              </SectionTitle>
+              <DifficultySlider
+                type="range"
+                name="difficulty"
+                min={DIFFICULTY_VALUES[0]}
+                max={DIFFICULTY_VALUES[DIFFICULTY_VALUES.length - 1]}
+                value={taskData.difficulty}
                 onChange={handleChange}
-                placeholder="Имя исполнителя"
               />
-            </FormField>
+            </FormGroup>
 
-            <FormField>
-              <Label htmlFor="taskDeadline">Дедлайн</Label>
-              <Input
-                id="taskDeadline"
-                type="datetime-local" // Для даты и времени
-                name="deadline"
-                value={taskData.deadline}
-                onChange={handleChange}
-              />
-            </FormField>
-          </LeftColumn>
+            <FormGroup>
+               <FormLabel htmlFor="taskSphere">Сфера</FormLabel>
+                <select // Используем обычный select, его можно стилизовать или заменить на кастомный компонент
+                    id="taskSphere"
+                    name="sphere"
+                    value={taskData.sphere}
+                    onChange={handleChange}
+                    style={{ padding: '0.7rem', border: '1px solid #ddd', borderRadius: '6px', fontSize: '0.9rem', backgroundColor: '#f9f9f9' }}
+                >
+                    {SPHERE_OPTIONS.map(opt => (
+                    <option key={opt} value={opt}>{SPHERE_LABELS[opt] || opt}</option>
+                    ))}
+                </select>
+              {/* <SphereButton type="button" variant="secondary" onClick={() => alert('Выбор сферы (в разработке)')}>
+                {SPHERE_LABELS[taskData.sphere] || taskData.sphere}
+                <span>></span> 
+              </SphereButton> */}
+            </FormGroup>
+          </FormColumn>
+        </FormContent>
 
-          <RightColumn>
-            <FormField>
-              <Label htmlFor="taskStatus">Статус</Label>
-              <Select id="taskStatus" name="status" value={taskData.status} onChange={handleChange}>
-                {STATUS_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-              </Select>
-            </FormField>
+        <RewardGroup>
+          <RewardItem>
+            <RewardLabel>
+              <RewardIconPlaceholder>{/* XP Icon */}</RewardIconPlaceholder>
+              Награда
+            </RewardLabel>
+            <RewardInput type="number" name="rewardXp" value={taskData.rewardXp} onChange={handleChange} min="0" />
+          </RewardItem>
+          <RewardItem>
+            <RewardLabel>
+              <RewardIconPlaceholder>{/* Star Icon */}</RewardIconPlaceholder>
+              Бонус за скорость
+            </RewardLabel>
+            <RewardInput type="number" name="fastDoneBonus" value={taskData.fastDoneBonus} onChange={handleChange} min="0" />
+          </RewardItem>
+        </RewardGroup>
 
-            <FormField>
-              <Label htmlFor="taskPriority">Приоритет</Label>
-              <Select id="taskPriority" name="priority" value={taskData.priority} onChange={handleChange}>
-                {PRIORITY_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-              </Select>
-            </FormField>
-
-            <FormField>
-              <Label htmlFor="taskDifficulty">Сложность</Label>
-              <Select id="taskDifficulty" name="difficulty" value={taskData.difficulty} onChange={handleChange}>
-                {DIFFICULTY_VALUES.map(val => (
-                  <option key={val} value={val}>{DIFFICULTY_LABELS[val]}</option>
-                ))}
-              </Select>
-            </FormField>
-            
-            <FormField>
-              <Label htmlFor="rewardXp">Награда XP</Label>
-              <Input type="number" id="rewardXp" name="rewardXp" value={taskData.rewardXp} onChange={handleChange} min="0" />
-            </FormField>
-
-            <FormField>
-              <Label htmlFor="rewardCurrency">Награда (валюта)</Label>
-              <Input type="number" id="rewardCurrency" name="rewardCurrency" value={taskData.rewardCurrency} onChange={handleChange} min="0" />
-            </FormField>
-
-            <FormField>
-              <Label htmlFor="fastDoneBonus">Бонус за скорость (XP)</Label>
-              <Input type="number" id="fastDoneBonus" name="fastDoneBonus" value={taskData.fastDoneBonus} onChange={handleChange} min="0" />
-            </FormField>
-            
-            <CheckboxContainer>
-              <Input type="checkbox" id="combo" name="combo" checked={taskData.combo} onChange={handleChange} />
-              <CheckboxLabel htmlFor="combo">Комбо задача</CheckboxLabel>
-            </CheckboxContainer>
-
-            <FormField>
-              <Label htmlFor="linkedTaskId">Связанная задача (ID)</Label>
-              <Input type="text" id="linkedTaskId" name="linkedTaskId" value={taskData.linkedTaskId === null ? '' : taskData.linkedTaskId} onChange={handleChange} placeholder="ID предыдущей задачи"/>
-            </FormField>
-
-          </RightColumn>
-        </FormColumns>
-        <ActionsContainer>
-          <Button type="button" onClick={onClose} variant="secondary">Отмена</Button>
-          <Button type="submit" isActive>Создать задачу</Button>
-        </ActionsContainer>
+        <SaveButtonContainer>
+          <SaveButton type="submit" title="Сохранить задачу">
+            ✓ {/* Замените на SVG галочку */}
+          </SaveButton>
+        </SaveButtonContainer>
       </form>
-    </CreateTaskFormContainer>
+      {/* {showCalendar && (
+        <Modal open={showCalendar} onClose={closeCalendar} modelType="default">
+          <CalendarModalContent>
+            <h4>Выберите дату и время</h4>
+            <input type="date" onChange={(e) => handleDateSelect(e.target.value + (taskData.deadline ? taskData.deadline.substring(10) : 'T00:00'))} />
+            <input type="time" onChange={(e) => handleDateSelect((taskData.deadline ? taskData.deadline.substring(0,10) : new Date().toISOString().substring(0,10)) + 'T' + e.target.value)} />
+            <Button onClick={closeCalendar}>Закрыть</Button>
+          </CalendarModalContent>
+        </Modal>
+      )} */}
+    </FormWrapper>
   );
 }
