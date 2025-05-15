@@ -6,7 +6,6 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - NODE_ENV=production
       - API_BASE_URL="http://api:15614"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5173"]
