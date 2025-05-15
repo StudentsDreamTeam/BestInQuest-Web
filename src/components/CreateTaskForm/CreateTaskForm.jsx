@@ -15,7 +15,6 @@ import {
   SPHERE_LABELS,
   PRIORITY_OPTIONS,
   PRIORITY_SLIDER_LABELS,
-  // DIFFICULTY_OPTIONS, // Not used directly in current form logic, DIFFICULTY_VALUES is used
   STATUS_OPTIONS,
 } from '../../constants';
 
@@ -345,8 +344,6 @@ const RewardIconPlaceholder = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  // background-color: #f0f0f0; // Optional: for visual debugging
-  // border-radius: 4px; // Optional
   
   svg { // Ensure SVGs scale correctly
     height: 100%;
@@ -412,10 +409,18 @@ const SaveButton = styled.button`
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.3s;
+  padding: 0;
   
   .icon-placeholder { 
     width: 52px; 
-    height: 52spx;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    svg {
+        width: 100%;
+        height: 100%;
+    }
   }
 `;
 
@@ -433,16 +438,8 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
     duration: 3600,
 
     fastDoneBonus: 200,
-    combo: false,
     rewardXp: 200,
     rewardCurrency: 200,
-
-    author: {
-        id: loggedInUser?.id,
-    },
-    executor: {
-        id: loggedInUser?.id,
-    }
   });
 
   const [showDeadlinePicker, setShowDeadlinePicker] = useState(false);
@@ -490,7 +487,6 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
     }
   };
 
-  // --- Duration Helper Functions ---
   const secondsToHHMM = (totalSeconds) => {
     if (totalSeconds === null || totalSeconds === undefined || totalSeconds < 0) return "00:00";
     const hours = Math.floor(totalSeconds / 3600);
@@ -501,7 +497,7 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
   const hhMMToSeconds = (hhmmString) => {
     if (!hhmmString) return 0;
     const parts = hhmmString.split(':');
-    if (parts.length !== 2) return 0; // Invalid format
+    if (parts.length !== 2) return 0;
     const hours = parseInt(parts[0], 10);
     const minutes = parseInt(parts[1], 10);
     if (isNaN(hours) || isNaN(minutes)) return 0;
@@ -531,20 +527,71 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
   };
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const finalTaskData = {
-      ...taskData,
-      priority: PRIORITY_OPTIONS[taskData.priority].toLowerCase(),
-      // difficulty is already a number
-      updateDate: new Date().toISOString(),
-      status: STATUS_OPTIONS[0].toLowerCase(),
-      deadline: taskData.deadline || null,
+
+    if (!loggedInUser || !loggedInUser.id) {
+        console.error("Ошибка: Пользователь не определен. Невозможно создать задачу.");
+        return;
+    }
+
+    const authorAndExecutorDetails = {
+        id: loggedInUser.id,
+        name: loggedInUser.name,
+        email: loggedInUser.email,
     };
 
-    console.log('Task data to be submitted:', finalTaskData);
-    // POST ЗАПРОС К API <--------------------------------------------------------------------POST API---------------------------
-    onClose();
+    const finalTaskData = {
+      // id: будет присвоен бэкендом
+      linkedTaskId: 0,
+      title: taskData.title,
+      description: taskData.description,
+      sphere: taskData.sphere,
+      
+      status: STATUS_OPTIONS[0].toLowerCase(), // new always
+      priority: PRIORITY_OPTIONS[taskData.priority].toLowerCase(),
+      difficulty: taskData.difficulty,
+      
+      updateDate: new Date().toISOString(),
+      deadline: taskData.deadline || null,
+      duration: taskData.duration,
+
+      fastDoneBonus: taskData.fastDoneBonus,
+      combo: taskData.combo, // false по умолчанию
+      rewardXp: taskData.rewardXp,
+      rewardCurrency: taskData.rewardCurrency,
+      
+      author: authorAndExecutorDetails,
+      executor: authorAndExecutorDetails,
+    };
+    console.log('Данные задачи для отправки:', finalTaskData);
+
+    const apiUrl = `http://localhost:15614/tasks/create?authorId=${loggedInUser.id}&executorId=${loggedInUser.id}`;
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(finalTaskData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(`Ошибка API: ${response.status} - ${errorData}`);
+      }
+
+      // const createdTask = await response.json();
+      // console.log('Задача успешно создана (API):', createdTask);
+
+      // Здесь можно добавить логику для обновления списка задач в UI,
+      // например, через вызов onTaskCreated(createdTask)
+      onClose(); // Закрываем форму после успешного создания
+    } catch (error) {
+      console.error('Не удалось создать задачу через API:', error);
+      // Здесь можно показать пользователю сообщение об ошибке
+      onClose();
+    }
   };
   
   const handleDeleteClick = () => {
@@ -606,7 +653,7 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
               </ControlContainer>
               {showDurationPicker && (
                 <TimeInput
-                  name="duration_time_picker" // Temporary name, actual update is via taskData.duration
+                  name="duration_time_picker" 
                   value={secondsToHHMM(taskData.duration)}
                   onChange={handleDurationInputChange}
                 />
