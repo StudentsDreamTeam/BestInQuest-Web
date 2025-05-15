@@ -7,11 +7,14 @@ services:
       - "5173:5173"
     environment:
       - NODE_ENV=production
-      - API_BASE_URL=${API_BASE_URL}
+      - API_BASE_URL="http://api:15614"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5173"]
       interval: 30s
       timeout: 5s
       retries: 10
     networks:
-      - app-network
+      - app_network
+networks:
+  app_network:
+    external: true
