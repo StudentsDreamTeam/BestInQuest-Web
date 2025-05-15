@@ -1,4 +1,3 @@
-// src/components/Main/TaskList/TaskList.jsx
 import Task from '../Task/Task.jsx';
 import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';

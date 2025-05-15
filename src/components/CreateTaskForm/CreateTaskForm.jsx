@@ -5,6 +5,7 @@ import { ReactComponent as XPIcon } from '../../icons/XPIcon52x28.svg'
 import { ReactComponent as StarIcon } from '../../icons/StarIcon41x37.svg'
 import { ReactComponent as TrashIcon } from '../../icons/TrashIcon34.svg'
 import { ReactComponent as CheckIcon } from '../../icons/CheckIcon52.svg'
+// import { ReactComponent as PlusIcon } from '../../icons/PlusIcon19.svg'; // For Add buttons
 
 
 import {
@@ -12,22 +13,20 @@ import {
   DIFFICULTY_LABELS,
   SPHERE_OPTIONS,
   SPHERE_LABELS,
-  PRIORITY_OPTIONS, // Импортируем для конвертации при сабмите
-  PRIORITY_SLIDER_LABELS, // Импортируем новые метки
+  PRIORITY_OPTIONS,
+  PRIORITY_SLIDER_LABELS,
+  // DIFFICULTY_OPTIONS, // Not used directly in current form logic, DIFFICULTY_VALUES is used
+  STATUS_OPTIONS,
 } from '../../constants';
 
 // --- Основные контейнеры формы ---
 const FormWrapper = styled.div`
-  background-color: #fff; 
-  padding: 3rem 4rem;
+  background-color: white; 
+  padding: 3rem 5rem;
   border-radius: 20px;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
 `;
 
-// Контейнер для верхнего контента (колонки) и нижнего контента (награды, кнопки)
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -35,11 +34,10 @@ const StyledForm = styled.form`
   flex-grow: 1;
 `;
 
-// Контейнер для двух верхних колонок (левая: название/описание, правая: дедлайн/сложность/сфера)
 const FormMainContent = styled.div`
   display: flex;
-  gap: 2.5rem;
-  flex-grow: 1; /* Занимает доступное пространство перед BottomContent */
+  gap: 1.5rem;
+  flex-grow: 1;
   @media (max-width: 768px) {
     flex-direction: column;
   }
@@ -48,20 +46,20 @@ const FormMainContent = styled.div`
 const FormColumn = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; 
+  gap: 0.5rem; 
   ${props => props.$left && css`flex: 2;`} 
   ${props => props.$right && css`flex: 1;`} 
-
   @media (max-width: 768px) {
     flex: 1;
   }
 `;
 
-// Контейнер для нижней части (награды и кнопки)
-const FormBottomContent = styled.div`
-  margin-top: 2rem; // Отступ от верхней части
-  border-top: 1px solid #F0F0F0;
-  padding-top: 1.5rem;
+// Renamed from FormBottomContent
+const FromFooterContent = styled.div`
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; /* Aligns items to the bottom of the flex line, useful if heights differ */
 `;
 
 
@@ -69,13 +67,14 @@ const FormBottomContent = styled.div`
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 1rem; /* Added margin for spacing between form groups */
 `;
 
 const SectionTitle = styled.h3`
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #333;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -92,14 +91,12 @@ const TitleInput = styled.input`
   padding-bottom: 0.5rem;
   &::placeholder {
     color: #D9D9D9;
-    font-size: 1.5rem;
-    font-weight: 600;
   }
 `;
 
 const DescriptionTextarea = styled.textarea`
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   border: none;
   min-height: 120px; 
   resize: vertical; 
@@ -109,39 +106,36 @@ const DescriptionTextarea = styled.textarea`
   line-height: 1.5;
   &::placeholder {
      color: #D9D9D9;
-     font-size: 1rem;
-     font-weight: 500;
   }
 `;
 
 // --- Элементы правой колонки ---
-
-// Дедлайн
-const DeadlineControlContainer = styled.div`
-  background-color: #F0F0F0;
+// Общий стиль для контролов типа Дедлайн, Продолжительность
+const ControlContainer = styled.div`
+  background-color: #F5F5F5;
   border-radius: 8px;
   padding: 0.8rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 40px; // Чтобы соответствовать другим полям
+  min-height: 40px;
 `;
 
-const DeadlineStaticText = styled.span`
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #333;
-  margin-right: auto; // Отодвигает дату и кнопку вправо
+const ControlStaticText = styled.span`
+  font-size: 1.25rem; /* Adjusted to match DeadlineStaticText original size if needed, or keep smaller */
+  font-weight: 600;
+  color: black;
+  margin-right: auto; 
 `;
 
-const DeadlineDateDisplay = styled.span`
+const ControlValueDisplay = styled.span`
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #777;
   margin-right: 0.75rem;
 `;
 
-const AddDeadlineButton = styled.button`
+const AddControlButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -149,10 +143,11 @@ const AddDeadlineButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9747FF; // Цвет плюсика
+  color: #9747FF; 
   .icon-placeholder {
     width: 20px;
     height: 20px;
+    font-size: 1.5rem; /* Larger plus icon */
   }
   &:hover {
     opacity: 0.8;
@@ -160,7 +155,7 @@ const AddDeadlineButton = styled.button`
 `;
 
 const DateTimeInput = styled.input`
-  margin-top: 0.5rem; // Отображается под серым блоком дедлайна
+  margin-top: 0.5rem; 
   padding: 0.7rem 1rem;
   border: 1px solid #E0E0E0;
   border-radius: 8px;
@@ -169,6 +164,18 @@ const DateTimeInput = styled.input`
   width: 100%;
   color: #333;
 `;
+
+const TimeInput = styled.input.attrs({ type: 'time' })`
+  margin-top: 0.5rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background-color: #F9F9F9;
+  width: 100%;
+  color: #333;
+`;
+
 
 // Общие стили для слайдеров (Сложность и Важность)
 const SliderContainer = styled.div`
@@ -184,22 +191,22 @@ const SliderTrackVisual = styled.div`
   position: absolute;
   width: calc(100% - 16px); 
   left: 8px; 
-  height: 6px; // Увеличенная толщина трека
+  height: 6px; 
   background-color: #F0F0F0; 
-  border-radius: 3px; // Скругление для толстого трека
+  border-radius: 3px; 
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   justify-content: space-between; 
   align-items: center;
-  padding: 0; // Убрал padding, чтобы точки были по всей ширине
+  padding: 0; 
 `;
 
 const SliderDotVisual = styled.div`
-  width: 8px; // Размер квадратной точки
-  height: 8px; // Размер квадратной точки
+  width: 8px; 
+  height: 8px; 
   background-color: #D0D0D0; 
-  border-radius: 1px; // Слегка скругленные углы для "мягкого" квадрата
+  border-radius: 1px; 
 `;
 
 const SliderInput = styled.input.attrs({ type: 'range' })`
@@ -213,22 +220,22 @@ const SliderInput = styled.input.attrs({ type: 'range' })`
   z-index: 2; 
 
   &::-webkit-slider-runnable-track {
-    height: 6px; // Увеличенная толщина трека
+    height: 6px; 
     background: linear-gradient(to right, 
       #9747FF 0%, 
       #9747FF ${props => ((props.value - props.min) / (props.max - props.min)) * 100}%, 
       transparent ${props => ((props.value - props.min) / (props.max - props.min)) * 100}%, 
-      transparent 100%); // Фон трека теперь от SliderTrackVisual
+      transparent 100%); 
     border-radius: 3px;
   }
   &::-moz-range-track {
-    height: 6px; // Увеличенная толщина трека
-    background: #F0F0F0;  // Базовый фон для Firefox
+    height: 6px; 
+    background: #F0F0F0;  
     border-radius: 3px;
   }
    &::-moz-range-progress { 
     background-color: #9747FF;
-    height: 6px; // Увеличенная толщина трека
+    height: 6px; 
     border-radius: 3px;
   }
 
@@ -240,7 +247,7 @@ const SliderInput = styled.input.attrs({ type: 'range' })`
     background: #9747FF;
     border-radius: 2px; 
     cursor: pointer;
-    margin-top: -5px; // (thumbHeight - trackHeight) / 2 = (16 - 6) / 2 = 5
+    margin-top: -5px; 
     position: relative;
     z-index: 3; 
   }
@@ -264,7 +271,6 @@ const SliderLabel = styled.span`
 `;
 
 // Сфера
-const SPHERE_PLACEHOLDER_VALUE = ""; // Специальное значение для плейсхолдера
 const SphereSelectContainer = styled.div`
   position: relative;
   background-color: #F0F0F0; 
@@ -291,7 +297,7 @@ const ActualStyledSelect = styled.select`
   border-radius: 8px; 
   font-size: 0.9rem;
   font-weight: 500;
-  color: ${props => props.value === SPHERE_PLACEHOLDER_VALUE ? '#777' : '#333'}; // Цвет для плейсхолдера
+  color: ${props => props.value === "" ? '#777' : '#333'}; 
   background-color: transparent; 
   appearance: none;
   -webkit-appearance: none;
@@ -300,34 +306,52 @@ const ActualStyledSelect = styled.select`
   outline: none;
 `;
 
-// --- Элементы нижней части ---
-const RewardGroup = styled.div`
-  /* Стили для RewardGroup не менялись, но теперь он будет частью FormBottomContent */
-`;
-
-const RewardItem = styled.div`
+// --- Элементы футера (бывший FormBottomContent) ---
+const RewardsMainContainer = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  gap: 1rem;
+  gap: 2rem; /* Gap between "Награда" block and "Бонус" block */
+  align-items: flex-start; 
 `;
 
-const RewardLabel = styled.span`
-  font-size: 0.9rem;
-  font-weight: 500;
+const RewardCategoryBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+`;
+
+const RewardCategoryTitle = styled.p`
+  font-size: 0.95rem; /* Slightly larger for category title */
+  font-weight: 600; /* Bolder */
   color: #333;
+  margin-bottom: 0.75rem;
+  text-align: center;
+`;
+
+const RewardItemsGroup = styled.div` 
   display: flex;
+  gap: 1rem; 
+`;
+
+const IndividualRewardItem = styled.div`
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem; 
+  gap: 0.6rem; /* Gap between icon and input */
 `;
 
 const RewardIconPlaceholder = styled.div`
-  width: 24px; 
-  height: 24px;
+  width: auto; // Auto width to fit icon
+  height: 40px; // Standard height for icons like XP, Star
   display: flex;
   align-items: center;
   justify-content: center;
+  // background-color: #f0f0f0; // Optional: for visual debugging
+  // border-radius: 4px; // Optional
+  
+  svg { // Ensure SVGs scale correctly
+    height: 100%;
+    width: auto;
+  }
 `;
 
 const RewardInput = styled.input`
@@ -350,11 +374,8 @@ const RewardInput = styled.input`
 
 const FooterActionsContainer = styled.div`
   display: flex;
-  justify-content: space-between; 
-  align-items: center;
-  margin-top: 1.5rem; // Отступ от наград, если награды и кнопки в одном потоке
-  /* Если RewardGroup и FooterActionsContainer будут flex-children в FormBottomContent, 
-     то этот margin-top может быть не нужен или его нужно будет отрегулировать */
+  align-items: center; /* Vertically align buttons if they have different heights */
+  gap: 1rem; /* Gap between delete and save buttons */
 `;
 
 const DeleteButton = styled.button`
@@ -364,8 +385,8 @@ const DeleteButton = styled.button`
   background-color: transparent;
   border: none;
   color: #B0B0B0; 
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
   padding: 0.5rem; 
   
@@ -374,8 +395,8 @@ const DeleteButton = styled.button`
   }
 
   .icon-placeholder { 
-    width: 24px; 
-    height: 24px;
+    width: 34px; 
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -383,25 +404,18 @@ const DeleteButton = styled.button`
 `;
 
 const SaveButton = styled.button`
-  background-color: #9747FF;
-  color: white;
   border: none;
-  border-radius: 50%; 
-  width: 56px;
-  height: 56px;
+  border-radius: 20px;
+
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(151, 71, 255, 0.3);
   transition: background-color 0.3s;
-  &:hover {
-    background-color: #823cdf;
-  }
   
   .icon-placeholder { 
-    width: 28px; 
-    height: 28px;
+    width: 52px; 
+    height: 52spx;
   }
 `;
 
@@ -410,15 +424,29 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
-    deadline: '', // ISO string YYYY-MM-DDTHH:mm or empty
-    priority: 2, // Индекс для "NORMAL" (0: Optional, 1: Low, 2: Normal, 3: High, 4: Critical)
-    difficulty: DIFFICULTY_VALUES[1], // Default: 1 (Легко)
-    sphere: SPHERE_PLACEHOLDER_VALUE, // Пустое значение для плейсхолдера "Выбрать сферу"
-    rewardXp: 200,
+    sphere: '',
+
+    priority: 2,
+    difficulty: 2,
+    
+    deadline: '', 
+    duration: 3600,
+
     fastDoneBonus: 200,
+    combo: false,
+    rewardXp: 200,
+    rewardCurrency: 200,
+
+    author: {
+        id: loggedInUser?.id,
+    },
+    executor: {
+        id: loggedInUser?.id,
+    }
   });
 
   const [showDeadlinePicker, setShowDeadlinePicker] = useState(false);
+  const [showDurationPicker, setShowDurationPicker] = useState(false);
   const [isSphereSelectOpen, setIsSphereSelectOpen] = useState(false);
 
 
@@ -426,21 +454,19 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
     const { name, value } = e.target;
     let processedValue = value;
 
-    if (["difficulty", "rewardXp", "fastDoneBonus", "priority"].includes(name)) {
+    if (["difficulty", "rewardXp", "fastDoneBonus", "priority", "rewardCurrency"].includes(name)) {
       processedValue = parseInt(value, 10);
       if (isNaN(processedValue)) processedValue = 0;
     }
     
-    if (name === "difficulty" || name === "priority" ) {
-        const numValue = parseInt(value, 10);
-        const maxVal = name === "difficulty" ? DIFFICULTY_VALUES[DIFFICULTY_VALUES.length -1] : PRIORITY_OPTIONS.length -1;
-        if (numValue >= 0 && numValue <= maxVal) {
-             processedValue = numValue;
-        } else if (numValue < 0) {
-            processedValue = 0;
-        } else {
-            processedValue = maxVal;
-        }
+    if (name === "difficulty") {
+        const maxVal = DIFFICULTY_VALUES[DIFFICULTY_VALUES.length -1];
+        if (processedValue < DIFFICULTY_VALUES[0]) processedValue = DIFFICULTY_VALUES[0];
+        if (processedValue > maxVal) processedValue = maxVal;
+    } else if (name === "priority") {
+        const maxVal = PRIORITY_OPTIONS.length - 1;
+        if (processedValue < 0) processedValue = 0;
+        if (processedValue > maxVal) processedValue = maxVal;
     }
 
     setTaskData(prev => ({
@@ -451,7 +477,7 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
 
   const handleDeadlineInputChange = (e) => {
     setTaskData(prev => ({ ...prev, deadline: e.target.value }));
-    setShowDeadlinePicker(false); // Скрываем календарь после выбора
+    setShowDeadlinePicker(false); 
   };
   
   const formatDeadlineDisplay = (deadlineISO) => {
@@ -464,26 +490,66 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
     }
   };
 
+  // --- Duration Helper Functions ---
+  const secondsToHHMM = (totalSeconds) => {
+    if (totalSeconds === null || totalSeconds === undefined || totalSeconds < 0) return "00:00";
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  };
+
+  const hhMMToSeconds = (hhmmString) => {
+    if (!hhmmString) return 0;
+    const parts = hhmmString.split(':');
+    if (parts.length !== 2) return 0; // Invalid format
+    const hours = parseInt(parts[0], 10);
+    const minutes = parseInt(parts[1], 10);
+    if (isNaN(hours) || isNaN(minutes)) return 0;
+    return hours * 3600 + minutes * 60;
+  };
+
+  const formatDurationForDisplay = (totalSeconds) => {
+    if (typeof totalSeconds !== 'number' || isNaN(totalSeconds) || totalSeconds < 0) {
+      return "Не выбрана";
+    }
+    if (totalSeconds === 0) return "0 мин";
+
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+    let parts = [];
+    if (hours > 0) parts.push(`${hours} ч`);
+    if (minutes > 0) parts.push(`${minutes} мин`);
+    
+    return parts.length > 0 ? parts.join(' ') : "0 мин";
+  };
+
+  const handleDurationInputChange = (e) => {
+    const newDurationInSeconds = hhMMToSeconds(e.target.value);
+    setTaskData(prev => ({ ...prev, duration: newDurationInSeconds }));
+    setShowDurationPicker(false);
+  };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const finalTaskData = {
       ...taskData,
-      id: Date.now(), 
-      author: { id: loggedInUser?.id, name: loggedInUser?.name },
+      priority: PRIORITY_OPTIONS[taskData.priority].toLowerCase(),
+      // difficulty is already a number
       updateDate: new Date().toISOString(),
-      status: 'new', 
-      priority: PRIORITY_OPTIONS[taskData.priority], // Конвертируем индекс в строку
-      deadline: taskData.deadline || null, // Отправляем null если дедлайн не задан
+      status: STATUS_OPTIONS[0].toLowerCase(),
+      deadline: taskData.deadline || null,
     };
 
     console.log('Task data to be submitted:', finalTaskData);
+    // POST ЗАПРОС К API <--------------------------------------------------------------------POST API---------------------------
     onClose();
   };
   
   const handleDeleteClick = () => {
     console.log("Delete task button clicked.");
-    // onClose(); // Возможно, просто закрыть форму или показать модальное окно подтверждения
+    onClose(); 
   };
 
   return (
@@ -497,7 +563,7 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
                 name="title"
                 value={taskData.title}
                 onChange={handleChange}
-                placeholder="Сделать зарядку"
+                placeholder="Заголовок"
                 required
               />
             </FormGroup>
@@ -506,31 +572,47 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
                 name="description"
                 value={taskData.description}
                 onChange={handleChange}
-                placeholder="Описание"
+                placeholder="Описание задачи"
               />
             </FormGroup>
           </FormColumn>
 
           <FormColumn $right>
             <FormGroup>
-              {/* <SectionTitle>Дедлайн</SectionTitle>  Убрали, т.к. текст теперь в самом контроле */}
-              <DeadlineControlContainer>
-                <DeadlineStaticText>Дедлайн</DeadlineStaticText>
-                <DeadlineDateDisplay>{formatDeadlineDisplay(taskData.deadline)}</DeadlineDateDisplay>
-                <AddDeadlineButton type="button" onClick={() => setShowDeadlinePicker(!showDeadlinePicker)}>
-                  <span className="icon-placeholder">{/* <PlusIcon /> */} +</span>
-                </AddDeadlineButton>
-              </DeadlineControlContainer>
+              <ControlContainer>
+                <ControlStaticText>Дедлайн</ControlStaticText>
+                <ControlValueDisplay>{formatDeadlineDisplay(taskData.deadline)}</ControlValueDisplay>
+                <AddControlButton type="button" onClick={() => setShowDeadlinePicker(!showDeadlinePicker)}>
+                  <span className="icon-placeholder">+</span>
+                </AddControlButton>
+              </ControlContainer>
               {showDeadlinePicker && (
                 <DateTimeInput
                   type="datetime-local"
                   name="deadline"
                   value={taskData.deadline}
                   onChange={handleDeadlineInputChange}
-                  // onBlur={() => setShowDeadlinePicker(false)} // Можно скрывать по блюру
                 />
               )}
             </FormGroup>
+
+            <FormGroup>
+              <ControlContainer>
+                <ControlStaticText>Продолжительность</ControlStaticText>
+                <ControlValueDisplay>{formatDurationForDisplay(taskData.duration)}</ControlValueDisplay>
+                <AddControlButton type="button" onClick={() => setShowDurationPicker(!showDurationPicker)}>
+                   <span className="icon-placeholder">+</span>
+                </AddControlButton>
+              </ControlContainer>
+              {showDurationPicker && (
+                <TimeInput
+                  name="duration_time_picker" // Temporary name, actual update is via taskData.duration
+                  value={secondsToHHMM(taskData.duration)}
+                  onChange={handleDurationInputChange}
+                />
+              )}
+            </FormGroup>
+
 
             <FormGroup>
               <SectionTitle>
@@ -539,7 +621,7 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
               </SectionTitle>
               <SliderContainer>
                 <SliderTrackVisual>
-                  {PRIORITY_OPTIONS.map((_, index) => ( // Используем PRIORITY_OPTIONS для кол-ва точек
+                  {PRIORITY_OPTIONS.map((_, index) => ( 
                     <SliderDotVisual key={index} />
                   ))}
                 </SliderTrackVisual>
@@ -586,7 +668,7 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
                   onBlur={() => setIsSphereSelectOpen(false)}
                   onClick={() => setIsSphereSelectOpen(!isSphereSelectOpen)}
                 >
-                  <option value={SPHERE_PLACEHOLDER_VALUE} disabled={taskData.sphere !== SPHERE_PLACEHOLDER_VALUE}>
+                  <option value={""} disabled={taskData.sphere !== ""}>
                     Выбрать сферу
                   </option>
                   {SPHERE_OPTIONS.map(opt => (
@@ -598,28 +680,33 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
           </FormColumn>
         </FormMainContent>
 
-        <FormBottomContent>
-          <RewardGroup>
-            <RewardItem>
-              <RewardLabel>
-                <RewardIconPlaceholder>
-                  <XPIcon />
-                </RewardIconPlaceholder>
-                Награда
-              </RewardLabel>
-              <RewardInput type="number" name="rewardXp" value={taskData.rewardXp} onChange={handleChange} min="0" />
-            </RewardItem>
-            <RewardItem>
-              <RewardLabel>
-                <RewardIconPlaceholder>
-                  <StarIcon />
-                </RewardIconPlaceholder>
-                Бонус за скорость
-              </RewardLabel>
-              <RewardInput type="number" name="fastDoneBonus" value={taskData.fastDoneBonus} onChange={handleChange} min="0" />
-            </RewardItem>
-          </RewardGroup>
+        <FromFooterContent>
+          <RewardsMainContainer>
+            <RewardCategoryBlock>
+              <RewardCategoryTitle>Награда</RewardCategoryTitle>
+              <RewardItemsGroup>
+                <IndividualRewardItem>
+                  <RewardIconPlaceholder><XPIcon /></RewardIconPlaceholder>
+                  <RewardInput type="number" name="rewardXp" value={taskData.rewardXp} onChange={handleChange} min="0" />
+                </IndividualRewardItem>
+                <IndividualRewardItem>
+                  <RewardIconPlaceholder><StarIcon /></RewardIconPlaceholder>
+                  <RewardInput type="number" name="rewardCurrency" value={taskData.rewardCurrency} onChange={handleChange} min="0" />
+                </IndividualRewardItem>
+              </RewardItemsGroup>
+            </RewardCategoryBlock>
 
+            <RewardCategoryBlock>
+              <RewardCategoryTitle>Бонус за скорость</RewardCategoryTitle>
+              <RewardItemsGroup> 
+                <IndividualRewardItem>
+                  <RewardIconPlaceholder><XPIcon /></RewardIconPlaceholder>
+                  <RewardInput type="number" name="fastDoneBonus" value={taskData.fastDoneBonus} onChange={handleChange} min="0" />
+                </IndividualRewardItem>
+              </RewardItemsGroup>
+            </RewardCategoryBlock>
+          </RewardsMainContainer>
+          
           <FooterActionsContainer>
             <DeleteButton type="button" onClick={handleDeleteClick} title="Удалить задачу">
               <span className="icon-placeholder">
@@ -627,13 +714,14 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
               </span>
               Удалить задачу
             </DeleteButton>
+            
             <SaveButton type="submit" title="Сохранить задачу">
               <span className="icon-placeholder">
                 <CheckIcon />
               </span>
             </SaveButton>
           </FooterActionsContainer>
-        </FormBottomContent>
+        </FromFooterContent>
       </StyledForm>
     </FormWrapper>
   );
