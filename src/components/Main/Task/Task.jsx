@@ -6,9 +6,7 @@ import defaultUserAvatar from '../../../img/userAvatar.png';
 import defaultBossAvatar from '../../../img/bossAvatar.png';
 import sportAvatar from '../../../img/sportAvatar.png';
 import workAvatar from '../../../img/workAvatar.png';
-// import studyAvatar from '../../../img/studyAvatar.png'; // Пример
-// import householdAvatar from '../../../img/householdAvatar.png'; // Пример
-import selfDevelopmentAvatar from '../../../img/selfDevelopmentAvatar.png'; // Пример
+import selfDevelopmentAvatar from '../../../img/selfDevelopmentAvatar.png';
 
 
 import { ReactComponent as ActiveCheckIcon } from '../../../icons/ActiveCheckIcon31.svg';
@@ -23,7 +21,7 @@ import { ReactComponent as TrashImportantIcon } from '../../../icons/TrashImport
 import { ReactComponent as TimeIcon } from '../../../icons/TimeIcon19.svg';
 import { ReactComponent as TimeImportantIcon } from '../../../icons/TimeImportantIcon19.svg';
 
-import { IMPORTANT_PRIORITIES, DIFFICULTY_LABELS } from '../../../constants';
+import { IMPORTANT_PRIORITIES } from '../../../constants'; // DIFFICULTY_LABELS не используется здесь
 
 const TaskContainer = styled.div`
   display: flex;
@@ -52,12 +50,17 @@ const TaskInfo = styled.div`
   height: 100%;
   margin-left: 2rem;
   color: #9747ff;
+  cursor: pointer; // Делаем TaskInfo кликабельным для редактирования
 
   ${({ $isImportant }) =>
     $isImportant &&
     css`
       color: #f5f5f5;
     `}
+  
+  &:hover {
+    opacity: 0.8; // Небольшой эффект при наведении
+  }
 `;
 
 const TaskDataGrid = styled.div`
@@ -93,27 +96,36 @@ const getSphereAvatar = (sphere) => {
   switch (sphere?.toLowerCase()) {
     case 'sport': return sportAvatar;
     case 'work': return workAvatar;
-    // case 'study': return studyAvatar; // Предполагаем, что 'Учеба' будет 'study'
-    // case 'household': return householdAvatar; // 'Быт'
-    case 'self-development': return selfDevelopmentAvatar; // 'Саморазвитие'
-    default: return sportAvatar; // Фолбэк
+    case 'self-development': return selfDevelopmentAvatar;
+    // Добавьте другие кейсы при необходимости
+    // case 'study': return studyAvatar;
+    // case 'household': return householdAvatar;
+    default: return sportAvatar; 
   }
 };
 
 
-export default function Task({ task, onDeleteTask, onToggleStatus }) {
+export default function Task({ task, onDeleteTask, onToggleStatus, onTaskClick }) {
   const isTaskImportant = IMPORTANT_PRIORITIES.includes(task.priority?.toUpperCase());
   const isTaskCompleted = task.status?.toUpperCase() === 'DONE';
 
-  const handleToggleComplete = () => {
+  const handleToggleComplete = (e) => {
+    e.stopPropagation(); // Предотвращаем всплытие события на TaskInfo
     if (onToggleStatus) {
       onToggleStatus(task.id, task.status);
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (e) => {
+    e.stopPropagation(); // Предотвращаем всплытие события на TaskInfo
     if (onDeleteTask) {
       onDeleteTask(task.id);
+    }
+  };
+
+  const handleTaskInfoClick = () => {
+    if (onTaskClick) {
+      onTaskClick(task); // Передаем всю задачу в обработчик
     }
   };
 
@@ -138,7 +150,7 @@ export default function Task({ task, onDeleteTask, onToggleStatus }) {
       });
     } catch (e) {
       console.error("Error formatting date:", e);
-      return dateString; // Возвращаем исходную строку в случае ошибки
+      return dateString;
     }
   };
 
@@ -175,7 +187,7 @@ export default function Task({ task, onDeleteTask, onToggleStatus }) {
         <CheckIconToShow />
       </CheckButton>
 
-      <TaskInfo $isImportant={isTaskImportant}>
+      <TaskInfo $isImportant={isTaskImportant} onClick={handleTaskInfoClick}>
         <div className="task-rows">
           <div className="task-title">{task.title || 'Без названия'}</div>
 
@@ -185,7 +197,7 @@ export default function Task({ task, onDeleteTask, onToggleStatus }) {
               <span>{formatDateTime(task.deadline)}</span>
             </TaskDataObject>
 
-            <TaskDataObject title={`Продолжительность: ${formatDateTime(task.duration)}`}>
+            <TaskDataObject title={`Продолжительность: ${formatDurationTime(task.duration)}`}>
               <CurrentTimeIcon />
               <span>{formatDurationTime(task.duration)}</span>
             </TaskDataObject>
@@ -201,8 +213,8 @@ export default function Task({ task, onDeleteTask, onToggleStatus }) {
             </TaskDataObject>
 
             <TaskDataObject title={`Сфера: ${task.sphere}`}>
-              <img src={getSphereAvatar(task.sphere)} alt={task.sphere} />
-              <span>{task.sphere}</span>
+              <img src={getSphereAvatar(task.sphere)} alt={task.sphere || 'сфера'} />
+              <span>{task.sphere || 'Не указана'}</span>
             </TaskDataObject>       
           </TaskDataGrid>
         </div>

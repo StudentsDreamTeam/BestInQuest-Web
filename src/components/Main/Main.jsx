@@ -5,14 +5,19 @@ import TaskList from "./TaskList/TaskList.jsx"
 // import ProjectList from "./ProjectList/ProjectList.jsx"
 
 
-export default function Main({ active }) {
+export default function Main({ active, tasks, setTasks, onOpenUpdateTaskModal, fetchTasks }) {
   return (
     <>
       <div className='main'>
         { active === 'Сегодня' && (
           <>
             <Header title={'Сегодня'}/>
-            <TaskList />
+            <TaskList
+              tasks={tasks} // Передаем задачи из Layout
+              setTasks={setTasks} // Передаем функцию обновления задач из Layout
+              onOpenUpdateTaskModal={onOpenUpdateTaskModal} // Пробрасываем дальше
+              fetchTasks={fetchTasks} // Пробрасываем дальше
+            />
           </>
         )}
 
@@ -43,42 +48,6 @@ export default function Main({ active }) {
             In development
           </>
         )}
-
-        {/* { active === 'Календарь' && (
-          <>
-            <Header title={'Календарь'}/>
-            В разработке
-          </>
-        )} */}
-
-        {/* { active === 'Проекты' && (
-          <>
-            <Header title={'Проекты'}/>
-            В разработке
-            <ProjectList />
-          </>
-        )} */}
-
-        {/* { active === 'Группы' && (
-          <>
-            <Header title={'Группы'}/>
-            В разработке
-          </>
-        )} */}
-
-        {/* { active === 'Соревнования' && (
-          <>
-            <Header title={'Соревнования'}/>
-            В разработке
-          </>
-        )} */}
-
-        {/* { active === 'Рейтинг' && (
-          <>
-            <Header title={'Рейтинг'}/>
-            В разработке
-          </>
-        )} */}
       </div>
     </>
   )
