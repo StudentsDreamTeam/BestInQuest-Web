@@ -16,13 +16,13 @@ import {
   PRIORITY_SLIDER_LABELS,
 } from '../../constants';
 
-// --- Основные контейнеры формы ---
+// --- Стили остаются без изменений ---
 const FormWrapper = styled.div`
   background-color: white; 
   padding: 3rem 5rem;
   border-radius: 20px;
   height: 100%;
-  overflow-y: auto; // Добавлено для случая, если форма станет слишком высокой
+  overflow-y: auto;
 `;
 
 const StyledForm = styled.form`
@@ -60,8 +60,6 @@ const FromFooterContent = styled.div`
   position: relative; 
 `;
 
-
-// --- Общие элементы формы ---
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
@@ -78,7 +76,6 @@ const SectionTitle = styled.h3`
   justify-content: space-between;
 `;
 
-// --- Элементы левой колонки ---
 const TitleInput = styled.input`
   font-size: 1.5rem;
   font-weight: 600;
@@ -107,7 +104,6 @@ const DescriptionTextarea = styled.textarea`
   }
 `;
 
-// --- Элементы правой колонки ---
 const ControlContainer = styled.div`
   background-color: #F5F5F5;
   border-radius: 8px;
@@ -300,7 +296,6 @@ const ActualStyledSelect = styled.select`
   outline: none;
 `;
 
-// --- Элементы футера ---
 const RewardsMainContainer = styled.div`
   display: flex;
   gap: 2rem; 
@@ -373,7 +368,7 @@ const CreationDateDisplay = styled.div`
   margin: 0 1rem; 
   align-self: flex-end; 
   padding-bottom: 0.5rem; 
-  flex-grow: 1; // Позволяет занять доступное пространство между наградами и кнопками
+  flex-grow: 1; 
 `;
 
 const FooterActionsContainer = styled.div`
@@ -436,7 +431,7 @@ const SaveButton = styled.button`
   }
 `;
 
-// --- Helper Functions ---
+// --- Helper Functions (без изменений) ---
 const formatDateTimeForInput = (isoString) => {
     if (!isoString) return '';
     try {
@@ -471,7 +466,7 @@ const hhMMToSeconds = (hhmmString) => {
 };
 
 
-export default function UpdateTaskForm({ taskToEdit, loggedInUser, onClose, onTaskUpdated }) {
+export default function UpdateTaskForm({ taskToEdit, loggedInUser, onClose, onTaskUpdated, onInitiateDelete }) {
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
@@ -542,12 +537,11 @@ export default function UpdateTaskForm({ taskToEdit, loggedInUser, onClose, onTa
     setShowDeadlinePicker(false); 
   };
   
-  const formatDeadlineDisplay = (deadlineISOOrInput) => { // Может принимать как ISO, так и формат инпута
+  const formatDeadlineDisplay = (deadlineISOOrInput) => { 
     if (!deadlineISOOrInput) return "Не выбран";
     try {
-      // Пытаемся создать дату. Если это уже формат инпута YYYY-MM-DDTHH:MM, он тоже распарсится
       const date = new Date(deadlineISOOrInput);
-      if (isNaN(date.getTime())) return "Ошибка даты"; // Проверка на валидность даты
+      if (isNaN(date.getTime())) return "Ошибка даты"; 
       return date.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '');
     } catch (e) {
       return "Ошибка даты";
@@ -593,38 +587,31 @@ export default function UpdateTaskForm({ taskToEdit, loggedInUser, onClose, onTa
 
     if (!taskToEdit || !taskToEdit.id) {
         console.error("Ошибка: Задача для редактирования не определена.");
+        onClose(); // Закрываем форму, если нет задачи для редактирования
         return;
     }
     if (!loggedInUser || !loggedInUser.id) {
         console.error("Ошибка: Пользователь не определен. Невозможно обновить задачу.");
+        onClose(); // Закрываем форму, если пользователь не определен
         return;
     }
 
     const finalTaskDataForApi = {
-      // Передаем только те поля, которые API ожидает для обновления
-      // id и linkedTaskId обычно не меняются или управляются отдельно
-      // author и executor также обычно не меняются через простое редактирование задачи
-      // status может меняться, но не через эту форму (из TaskList)
-      
-      id: taskToEdit.id, // ID нужен для идентификации задачи на бэкенде
+      id: taskToEdit.id, 
       linkedTaskId: taskData.linkedTaskId, 
       title: taskData.title,
       description: taskData.description,
       sphere: taskData.sphere,
-      
-      status: taskToEdit.status, // Статус берем из оригинальной задачи, т.к. форма его не меняет
+      status: taskToEdit.status, 
       priority: PRIORITY_OPTIONS[taskData.priority].toLowerCase(),
       difficulty: taskData.difficulty,
-      
       updateDate: new Date().toISOString(), 
       deadline: taskData.deadline ? new Date(taskData.deadline).toISOString() : null, 
       duration: taskData.duration,
-
       fastDoneBonus: taskData.fastDoneBonus,
       combo: taskData.combo, 
       rewardXp: taskData.rewardXp,
       rewardCurrency: taskData.rewardCurrency,
-      
       author: taskToEdit.author, 
       executor: taskToEdit.executor,
     };
@@ -651,35 +638,24 @@ export default function UpdateTaskForm({ taskToEdit, loggedInUser, onClose, onTa
       if (onTaskUpdated) {
         onTaskUpdated(updatedTaskFromApi); 
       }
-      onClose(); 
     } catch (error) {
       console.error('Не удалось обновить задачу через API:', error);
-      // onClose(); // Можно не закрывать, чтобы пользователь видел ошибку или мог исправить
+    } finally {
+        onClose(); // Закрываем форму в любом случае после попытки отправки
     }
   };
   
-  const handleDeleteClick = async () => {
-    if (!taskToEdit || !taskToEdit.id || !loggedInUser || !loggedInUser.id) {
-      console.error("Недостаточно данных для удаления задачи.");
+  const handleDeleteClick = () => {
+    if (!taskToEdit || !taskToEdit.id) {
+      console.error("Невозможно инициировать удаление: задача не определена.");
       return;
     }
-    console.log("Кнопка 'Удалить задачу' нажата для задачи ID:", taskToEdit.id);
-    
-    const apiUrl = `http://localhost:15614/tasks/${taskToEdit.id}?userID=${loggedInUser.id}`;
-    try {
-      const response = await fetch(apiUrl, { method: 'DELETE' });
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`API Error при удалении: ${response.status} - ${errorText}`);
-      }
-      console.log(`Задача ${taskToEdit.id} успешно удалена через API из формы редактирования.`);
-      if (onTaskUpdated) { // Используем onTaskUpdated для сигнализации об изменении (удалении)
-        // Передаем null или специальный объект, чтобы Layout/TaskList поняли, что задача удалена
-        onTaskUpdated({ ...taskToEdit, _deleted: true }); 
-      }
-      onClose();
-    } catch (error) {
-      console.error("Не удалось удалить задачу через API из формы редактирования:", error);
+    if (onInitiateDelete) {
+      onInitiateDelete(taskToEdit.id);
+      // Не вызываем onClose() здесь, так как закрытие UpdateTaskForm произойдет
+      // после подтверждения удаления в Layout.jsx -> confirmDeleteTaskInLayout
+    } else {
+      console.error("Обработчик onInitiateDelete не передан в UpdateTaskForm");
     }
   };
 

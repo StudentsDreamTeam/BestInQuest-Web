@@ -5,8 +5,6 @@ import { ReactComponent as XPIcon } from '../../icons/XPIcon52x28.svg'
 import { ReactComponent as StarIcon } from '../../icons/StarIcon41x37.svg'
 import { ReactComponent as TrashIcon } from '../../icons/TrashIcon34.svg'
 import { ReactComponent as CheckIcon } from '../../icons/CheckIcon52.svg'
-// import { ReactComponent as PlusIcon } from '../../icons/PlusIcon19.svg'; // For Add buttons
-
 
 import {
   DIFFICULTY_VALUES,
@@ -24,6 +22,7 @@ const FormWrapper = styled.div`
   padding: 3rem 5rem;
   border-radius: 20px;
   height: 100%;
+  overflow-y: auto;
 `;
 
 const StyledForm = styled.form`
@@ -53,12 +52,11 @@ const FormColumn = styled.div`
   }
 `;
 
-// Renamed from FormBottomContent
 const FromFooterContent = styled.div`
   margin-top: 1rem;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end; /* Aligns items to the bottom of the flex line, useful if heights differ */
+  align-items: flex-end; 
 `;
 
 
@@ -66,7 +64,7 @@ const FromFooterContent = styled.div`
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem; /* Added margin for spacing between form groups */
+  margin-bottom: 1rem; 
 `;
 
 const SectionTitle = styled.h3`
@@ -109,7 +107,6 @@ const DescriptionTextarea = styled.textarea`
 `;
 
 // --- Элементы правой колонки ---
-// Общий стиль для контролов типа Дедлайн, Продолжительность
 const ControlContainer = styled.div`
   background-color: #F5F5F5;
   border-radius: 8px;
@@ -121,7 +118,7 @@ const ControlContainer = styled.div`
 `;
 
 const ControlStaticText = styled.span`
-  font-size: 1.25rem; /* Adjusted to match DeadlineStaticText original size if needed, or keep smaller */
+  font-size: 1.25rem; 
   font-weight: 600;
   color: black;
   margin-right: auto; 
@@ -146,7 +143,7 @@ const AddControlButton = styled.button`
   .icon-placeholder {
     width: 20px;
     height: 20px;
-    font-size: 1.5rem; /* Larger plus icon */
+    font-size: 1.5rem; 
   }
   &:hover {
     opacity: 0.8;
@@ -175,8 +172,6 @@ const TimeInput = styled.input.attrs({ type: 'time' })`
   color: #333;
 `;
 
-
-// Общие стили для слайдеров (Сложность и Важность)
 const SliderContainer = styled.div`
   position: relative;
   width: 100%;
@@ -269,7 +264,6 @@ const SliderLabel = styled.span`
   font-weight: 500;
 `;
 
-// Сфера
 const SphereSelectContainer = styled.div`
   position: relative;
   background-color: #F0F0F0; 
@@ -305,10 +299,10 @@ const ActualStyledSelect = styled.select`
   outline: none;
 `;
 
-// --- Элементы футера (бывший FormBottomContent) ---
+// --- Элементы футера ---
 const RewardsMainContainer = styled.div`
   display: flex;
-  gap: 2rem; /* Gap between "Награда" block and "Бонус" block */
+  gap: 2rem; 
   align-items: flex-start; 
 `;
 
@@ -319,8 +313,8 @@ const RewardCategoryBlock = styled.div`
 `;
 
 const RewardCategoryTitle = styled.p`
-  font-size: 0.95rem; /* Slightly larger for category title */
-  font-weight: 600; /* Bolder */
+  font-size: 0.95rem; 
+  font-weight: 600; 
   color: #333;
   margin-bottom: 0.75rem;
   text-align: center;
@@ -335,17 +329,17 @@ const IndividualRewardItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem; /* Gap between icon and input */
+  gap: 0.6rem; 
 `;
 
 const RewardIconPlaceholder = styled.div`
-  width: auto; // Auto width to fit icon
-  height: 40px; // Standard height for icons like XP, Star
+  width: auto; 
+  height: 40px; 
   display: flex;
   align-items: center;
   justify-content: center;
   
-  svg { // Ensure SVGs scale correctly
+  svg { 
     height: 100%;
     width: auto;
   }
@@ -371,8 +365,8 @@ const RewardInput = styled.input`
 
 const FooterActionsContainer = styled.div`
   display: flex;
-  align-items: center; /* Vertically align buttons if they have different heights */
-  gap: 1rem; /* Gap between delete and save buttons */
+  align-items: center; 
+  gap: 1rem; 
 `;
 
 const DeleteButton = styled.button`
@@ -401,15 +395,20 @@ const DeleteButton = styled.button`
 `;
 
 const SaveButton = styled.button`
+  background-color: #9747FF;
+  color: white;
   border: none;
   border-radius: 20px;
-
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.3s;
   padding: 0;
+  
+  &:hover {
+    background-color: #823cdf;
+  }
   
   .icon-placeholder { 
     width: 52px; 
@@ -425,19 +424,17 @@ const SaveButton = styled.button`
 `;
 
 
-export default function CreateTaskForm({ onClose, loggedInUser }) {
+export default function CreateTaskForm({ onClose, loggedInUser, onTaskCreated }) {
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
     sphere: '',
-
     priority: 2,
     difficulty: 2,
-    
     deadline: '', 
     duration: 3600,
-
     fastDoneBonus: 200,
+    combo: false, // Добавлено поле combo в начальное состояние
     rewardXp: 200,
     rewardCurrency: 200,
   });
@@ -542,25 +539,20 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
     };
 
     const finalTaskData = {
-      // id: будет присвоен бэкендом
-      linkedTaskId: 0,
+      linkedTaskId: 0, // или taskData.linkedTaskId если бы оно было в форме
       title: taskData.title,
       description: taskData.description,
       sphere: taskData.sphere,
-      
-      status: STATUS_OPTIONS[0].toLowerCase(), // new always
+      status: STATUS_OPTIONS[0].toLowerCase(), 
       priority: PRIORITY_OPTIONS[taskData.priority].toLowerCase(),
       difficulty: taskData.difficulty,
-      
       updateDate: new Date().toISOString(),
-      deadline: taskData.deadline || null,
+      deadline: taskData.deadline ? new Date(taskData.deadline).toISOString() : null,
       duration: taskData.duration,
-
       fastDoneBonus: taskData.fastDoneBonus,
-      combo: taskData.combo, // false по умолчанию
+      combo: taskData.combo, 
       rewardXp: taskData.rewardXp,
       rewardCurrency: taskData.rewardCurrency,
-      
       author: authorAndExecutorDetails,
       executor: authorAndExecutorDetails,
     };
@@ -581,21 +573,22 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
         throw new Error(`Ошибка API: ${response.status} - ${errorData}`);
       }
 
-      // const createdTask = await response.json();
-      // console.log('Задача успешно создана (API):', createdTask);
-
-      // Здесь можно добавить логику для обновления списка задач в UI,
-      // например, через вызов onTaskCreated(createdTask)
-      onClose(); // Закрываем форму после успешного создания
+      const createdTask = await response.json();
+      console.log('Задача успешно создана (API):', createdTask);
+      if (onTaskCreated) {
+        onTaskCreated(createdTask); // Передаем созданную задачу обратно в Layout
+      }
+      // onClose(); // onClose вызывается из onTaskCreated в Layout
     } catch (error) {
       console.error('Не удалось создать задачу через API:', error);
-      // Здесь можно показать пользователю сообщение об ошибке
-      onClose();
+      onClose(); // Закрываем в случае ошибки, чтобы пользователь не остался с "зависшей" формой
     }
   };
   
+  // Кнопка "Удалить задачу" в CreateTaskForm просто закрывает модальное окно,
+  // так как задача еще не создана и удалять нечего.
   const handleDeleteClick = () => {
-    console.log("Delete task button clicked.");
+    console.log("Кнопка 'Удалить задачу' (отмена) в форме создания нажата.");
     onClose(); 
   };
 
@@ -755,11 +748,11 @@ export default function CreateTaskForm({ onClose, loggedInUser }) {
           </RewardsMainContainer>
           
           <FooterActionsContainer>
-            <DeleteButton type="button" onClick={handleDeleteClick} title="Удалить задачу">
+            <DeleteButton type="button" onClick={handleDeleteClick} title="Отменить создание">
               <span className="icon-placeholder">
                 <TrashIcon />
               </span>
-              Удалить задачу
+              Отменить
             </DeleteButton>
             
             <SaveButton type="submit" title="Сохранить задачу">

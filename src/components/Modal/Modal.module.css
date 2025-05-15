@@ -4,9 +4,9 @@ dialog {
 
   margin: 10rem auto;
   border: none;
-  border-radius: 50px;
+  border-radius: 20px; 
 
-  z-index: 100;
+  z-index: 1001;
 }
 
 dialog.delete {

@@ -1,47 +1,27 @@
 // src/components/DeleteTaskConfirmationModal/DeleteTaskConfirmationModal.jsx
 import { styled } from 'styled-components';
-import Button from '../Button/Button'; // Предполагаем, что Button.jsx подходит
+import Button from '../Button/Button';
 
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000; // Поверх всего
-`;
-
-const ModalContent = styled.div`
-  background: white;
-  padding: 2.5rem; // Больше паддинг
-  border-radius: 25px; // Больше скругление
-  text-align: center;
-  width: 400px; // Фиксированная ширина
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-`;
+// ModalOverlay и ModalContent убраны, так как их роль выполняет Modal.jsx и его CSS
 
 const ModalTitle = styled.h2`
-  font-size: 1.5rem; // Крупнее шрифт
+  font-size: 1.5rem;
   font-weight: 600;
   color: #333;
-  margin-bottom: 2rem; // Больше отступ снизу
+  margin-bottom: 2rem;
+  text-align: center; // Добавлено для центрирования заголовка
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
-  justify-content: space-between; // Кнопки по краям
-  gap: 1rem; // Расстояние между кнопками
+  justify-content: space-between;
+  gap: 1rem;
 `;
 
-// Стили для кнопок, чтобы соответствовать дизайну
 const ConfirmButton = styled(Button)`
-  background-color: #E9D8FF; // Светло-фиолетовый
-  color: #9747FF; // Фиолетовый текст
-  flex: 1; // Занимают равное место
+  background-color: #E9D8FF;
+  color: #9747FF;
+  flex: 1;
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
   border-radius: 10px;
@@ -51,9 +31,9 @@ const ConfirmButton = styled(Button)`
 `;
 
 const CancelButton = styled(Button)`
-  background-color: #fff; // Белый фон
-  color: #9747FF; // Фиолетовый текст
-  border: 1px solid #E9D8FF; // Фиолетовая рамка (или #9747FF для более яркой)
+  background-color: #fff;
+  color: #9747FF;
+  border: 1px solid #E9D8FF;
   flex: 1;
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
@@ -65,17 +45,18 @@ const CancelButton = styled(Button)`
 
 
 export default function DeleteTaskConfirmationModal({ isOpen, onClose, onConfirmDelete }) {
-  if (!isOpen) return null;
+  // isOpen проп больше не нужен здесь, если модалка рендерится условно в Layout
+  // Но если мы хотим сохранить компонент универсальным, то можно оставить.
+  // Для текущей реализации с Modal в Layout, isOpen здесь не используется.
+  // if (!isOpen) return null; // Эта проверка теперь делается в Layout для <Modal>
 
   return (
-    <ModalOverlay onClick={onClose}> {/* Закрытие по клику на фон */}
-      <ModalContent onClick={(e) => e.stopPropagation()}> {/* Предотвращение закрытия по клику на само окно */}
-        <ModalTitle>Точно удалить задачу?</ModalTitle>
-        <ButtonGroup>
-          <ConfirmButton onClick={onConfirmDelete} isActive>Да, удалить</ConfirmButton>
-          <CancelButton onClick={onClose} variant="secondary">Нет, оставить</CancelButton>
-        </ButtonGroup>
-      </ModalContent>
-    </ModalOverlay>
+    <> {/* Обертка в фрагмент, так как ModalOverlay и ModalContent убраны */}
+      <ModalTitle>Точно удалить задачу?</ModalTitle>
+      <ButtonGroup>
+        <ConfirmButton onClick={onConfirmDelete} isActive>Да, удалить</ConfirmButton>
+        <CancelButton onClick={onClose} variant="secondary">Нет, оставить</CancelButton>
+      </ButtonGroup>
+    </>
   );
 }

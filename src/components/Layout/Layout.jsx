@@ -1,3 +1,4 @@
+// === FILE: .\src\components\Layout\Layout.jsx ===
 import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import Sidebar from "../Sidebar/Sidebar";
@@ -5,6 +6,7 @@ import Main from "../Main/Main";
 import Modal from '../Modal/Modal';
 import CreateTaskForm from '../CreateTaskForm/CreateTaskForm';
 import UpdateTaskForm from '../UpdateTaskForm/UpdateTaskForm';
+import DeleteTaskConfirmationModal from '../DeleteTaskComfirmationModal/DeleteTaskComfirmationModal';
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -13,6 +15,7 @@ const LayoutContainer = styled.div`
 `;
 
 export default function Layout() {
+  // console.log("Layout RENDER START"); // Отладка (можно убрать, если не нужны)
   const menuItems = ['Добавить задачу', 'Сегодня', 'Магазин', 'Награды', 'Инвентарь', 'Достижения'];
 
   const [menuTab, setMenuTab] = useState('Сегодня');
@@ -26,16 +29,21 @@ export default function Layout() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState();
 
+  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
+  const [taskToDeleteIdForConfirmation, setTaskToDeleteIdForConfirmation] = useState(null);
+
   function changeTab(current) {
     if (current !== 'Добавить задачу') {
       setMenuTab(current);
     } else {
+      // console.log("Layout: Opening Create Task Modal via changeTab");
       setIsCreateTaskModalOpen(true);
     }
     setSidebarTab(current);
   }
 
   useEffect(() => {
+    // console.log("Layout: useEffect for fetchUser RUNNING");
     async function fetchUser() {
       setIsLoading(true);
       setError(null);
@@ -57,6 +65,7 @@ export default function Layout() {
   }, []);
 
   const fetchTasks = async () => {
+    // console.log("Layout: fetchTasks RUNNING");
     try {
       const response = await fetch('tasks.json');
       if (!response.ok) {
@@ -70,8 +79,13 @@ export default function Layout() {
   };
 
   useEffect(() => {
+    // console.log("Layout: useEffect for fetchTasks RUNNING");
     fetchTasks();
   }, []);
+
+  // useEffect(() => {
+  //   console.log("Layout: isDeleteConfirmModalOpen CHANGED to:", isDeleteConfirmModalOpen);
+  // }, [isDeleteConfirmModalOpen]);
 
 
   if (isLoading) {
@@ -82,50 +96,89 @@ export default function Layout() {
   }
 
   const handleCloseCreateTaskModal = () => {
+    // console.log("Layout: handleCloseCreateTaskModal CALLED");
     setIsCreateTaskModalOpen(false);
-    if (sidebarTab === 'Добавить задачу') { // Возвращаем активный таб на сайдбаре, если был "Добавить задачу"
-        // Проверяем, какой таб был активен в Main до открытия модалки,
-        // если menuTab не "Добавить задачу", то его и ставим.
-        // Если menuTab тоже был "Добавить задачу" (маловероятно, но для полноты),
-        // то ставим дефолтный, например, "Сегодня".
+    if (sidebarTab === 'Добавить задачу') {
         setSidebarTab(menuTab !== 'Добавить задачу' ? menuTab : 'Сегодня');
     }
   };
 
-  const handleTaskCreated = async (newTaskFromApi) => { // Предполагаем, что API возвращает созданную задачу
-    // Оптимистичное обновление (если API не возвращает созданную задачу или для локального режима)
-    // setTasks(prevTasks => [{...newTaskFromForm, id: Date.now()}, ...prevTasks]);
-    // fetchTasks(); // Перезагружаем задачи, чтобы увидеть новую
-    // Если API возвращает созданную задачу, то лучше использовать ее:
+  const handleTaskCreated = (newTaskFromApi) => {
+    // console.log("Layout: handleTaskCreated CALLED");
     if (newTaskFromApi) {
         setTasks(prevTasks => [newTaskFromApi, ...prevTasks.filter(t => t.id !== newTaskFromApi.id)]);
-    } else {
-        await fetchTasks(); // Если API не вернул задачу, перезагружаем все
     }
-    handleCloseCreateTaskModal();
   };
 
 
   const handleOpenUpdateTaskModal = (task) => {
+    // console.log("Layout: handleOpenUpdateTaskModal CALLED for task:", task?.id);
     setTaskToEdit(task);
     setIsUpdateTaskModalOpen(true);
   };
 
   const handleCloseUpdateTaskModal = () => {
+    // console.log("Layout: handleCloseUpdateTaskModal CALLED");
     setIsUpdateTaskModalOpen(false);
     setTaskToEdit(null);
   };
 
-  const handleTaskUpdated = (updatedTask) => {
-    if (updatedTask._deleted) { // Обработка удаления
-        setTasks(prevTasks => prevTasks.filter(task => task.id !== updatedTask.id));
-    } else { // Обработка обновления
-        setTasks(prevTasks => prevTasks.map(task => task.id === updatedTask.id ? updatedTask : task));
+  const handleTaskUpdatedOrDeleted = (updatedOrDeletedTask) => {
+    // console.log("Layout: handleTaskUpdatedOrDeleted CALLED for task:", updatedOrDeletedTask?.id);
+    if (updatedOrDeletedTask._deleted) { // Если пришел сигнал об удалении
+        setTasks(prevTasks => prevTasks.filter(task => task.id !== updatedOrDeletedTask.id));
+    } else { // Иначе это обновление
+        setTasks(prevTasks => prevTasks.map(task => task.id === updatedOrDeletedTask.id ? updatedOrDeletedTask : task));
     }
-    handleCloseUpdateTaskModal();
+    // onClose вызывается из finally в UpdateTaskForm, так что модалка формы закроется сама
   };
 
+  const openDeleteConfirmationModal = (taskId) => {
+    // console.log("Layout: openDeleteConfirmationModal CALLED for taskId:", taskId);
+    setTaskToDeleteIdForConfirmation(taskId);
+    setIsDeleteConfirmModalOpen(true);
+  };
 
+  const closeDeleteConfirmationModal = () => {
+    // console.log("Layout: closeDeleteConfirmationModal CALLED");
+    setTaskToDeleteIdForConfirmation(null);
+    setIsDeleteConfirmModalOpen(false);
+  };
+
+  const confirmDeleteTaskInLayout = async () => {
+    // console.log("Layout: confirmDeleteTaskInLayout CALLED for taskId:", taskToDeleteIdForConfirmation);
+    if (taskToDeleteIdForConfirmation === null || !user || !user.id) {
+      console.error("Нет ID задачи для удаления или ID пользователя.");
+      closeDeleteConfirmationModal();
+      return;
+    }
+
+    const apiUrl = `http://localhost:15614/tasks/${taskToDeleteIdForConfirmation}?userID=${user.id}`;
+    let success = false;
+    try {
+      const response = await fetch(apiUrl, { method: 'DELETE' });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`API Error при удалении: ${response.status} - ${errorText}`);
+      }
+      console.log(`Задача ${taskToDeleteIdForConfirmation} успешно удалена через API.`);
+      setTasks(prevTasks => prevTasks.filter(task => task.id !== taskToDeleteIdForConfirmation));
+      success = true;
+    } catch (error) {
+      console.error("Не удалось удалить задачу:", error);
+    } finally {
+      // Сначала закрываем модальное окно подтверждения
+      closeDeleteConfirmationModal();
+      
+      // Затем, если удаление было успешным И модальное окно редактирования
+      // было открыто именно для удаляемой задачи, закрываем и его.
+      if (success && taskToEdit && taskToEdit.id === taskToDeleteIdForConfirmation) {
+        handleCloseUpdateTaskModal();
+      }
+    }
+  };
+
+  // console.log("Layout RENDER END, isDeleteConfirmModalOpen:", isDeleteConfirmModalOpen);
   return (
     <LayoutContainer>
       <Sidebar
@@ -140,17 +193,18 @@ export default function Layout() {
         tasks={tasks}
         setTasks={setTasks}
         onOpenUpdateTaskModal={handleOpenUpdateTaskModal}
+        onOpenDeleteConfirmModal={openDeleteConfirmationModal}
         fetchTasks={fetchTasks}
       />
 
       <Modal
         open={isCreateTaskModalOpen}
         modelType={'default'}
-        onCloseModal={handleCloseCreateTaskModal} // Передаем обработчик закрытия
+        onCloseModal={handleCloseCreateTaskModal}
       >
         <CreateTaskForm
           loggedInUser={user}
-          onClose={handleCloseCreateTaskModal} // Этот onClose вызывается из самой формы (кнопки)
+          onClose={handleCloseCreateTaskModal}
           onTaskCreated={handleTaskCreated}
         />
       </Modal>
@@ -158,16 +212,28 @@ export default function Layout() {
       <Modal
         open={isUpdateTaskModalOpen}
         modelType={'default'}
-        onCloseModal={handleCloseUpdateTaskModal} // Передаем обработчик закрытия
+        onCloseModal={handleCloseUpdateTaskModal}
       >
         {taskToEdit && user && (
           <UpdateTaskForm
             taskToEdit={taskToEdit}
             loggedInUser={user}
-            onClose={handleCloseUpdateTaskModal} // Этот onClose вызывается из самой формы (кнопки)
-            onTaskUpdated={handleTaskUpdated}
+            onClose={handleCloseUpdateTaskModal} // onClose вызывается из UpdateTaskForm.handleSubmit.finally
+            onTaskUpdated={handleTaskUpdatedOrDeleted}
+            onInitiateDelete={openDeleteConfirmationModal}
           />
         )}
+      </Modal>
+
+      <Modal
+        open={isDeleteConfirmModalOpen}
+        modelType={'delete'}
+        onCloseModal={closeDeleteConfirmationModal}
+      >
+        <DeleteTaskConfirmationModal
+          onClose={closeDeleteConfirmationModal}
+          onConfirmDelete={confirmDeleteTaskInLayout}
+        />
       </Modal>
     </LayoutContainer>
   );
