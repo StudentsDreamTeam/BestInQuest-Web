@@ -467,24 +467,27 @@ const hhMMToSeconds = (hhmmString) => {
 
 
 export default function UpdateTaskForm({ taskToEdit, loggedInUser, onClose, onTaskUpdated, onInitiateDelete }) {
-  const [taskData, setTaskData] = useState({
-    title: '',
-    description: '',
-    sphere: '',
-    priority: 2, 
-    difficulty: 2, 
-    deadline: '', 
-    duration: 3600, 
-    fastDoneBonus: 0,
-    rewardXp: 0,
-    rewardCurrency: 0,
-    linkedTaskId: null,
-    combo: false,
-  });
-
   const [showDeadlinePicker, setShowDeadlinePicker] = useState(false);
   const [showDurationPicker, setShowDurationPicker] = useState(false);
   const [isSphereSelectOpen, setIsSphereSelectOpen] = useState(false);
+  const [taskData, setTaskData] = useState({
+    linkedTaskId: null,
+
+    title: '',
+    description: '',
+    sphere: '',
+
+    priority: 2, 
+    difficulty: 2, 
+
+    deadline: '', 
+    duration: 3600, 
+
+    rewardXp: 0,
+    rewardCurrency: 0,
+    combo: false,
+    fastDoneBonus: 0,
+  });
 
   useEffect(() => {
     if (taskToEdit) {
@@ -599,19 +602,24 @@ export default function UpdateTaskForm({ taskToEdit, loggedInUser, onClose, onTa
     const finalTaskDataForApi = {
       id: taskToEdit.id, 
       linkedTaskId: taskData.linkedTaskId, 
+
       title: taskData.title,
       description: taskData.description,
       sphere: taskData.sphere,
+
       status: taskToEdit.status, 
       priority: PRIORITY_OPTIONS[taskData.priority].toLowerCase(),
       difficulty: taskData.difficulty,
+
       updateDate: new Date().toISOString(), 
       deadline: taskData.deadline ? new Date(taskData.deadline).toISOString() : null, 
       duration: taskData.duration,
+
       fastDoneBonus: taskData.fastDoneBonus,
       combo: taskData.combo, 
       rewardXp: taskData.rewardXp,
       rewardCurrency: taskData.rewardCurrency,
+
       author: taskToEdit.author, 
       executor: taskToEdit.executor,
     };

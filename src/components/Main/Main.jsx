@@ -3,7 +3,7 @@ import './Main.css'
 import Header from "./Header/Header.jsx"
 import TaskList from "./TaskList/TaskList.jsx"
 
-export default function Main({ active, tasks, setTasks, onOpenUpdateTaskModal, onOpenDeleteConfirmModal, fetchTasks }) {
+export default function Main({ active, tasks, setTasks, onOpenUpdateTaskModal, onOpenDeleteConfirmModal }) {
   return (
     <>
       <div className='main'>
@@ -15,7 +15,6 @@ export default function Main({ active, tasks, setTasks, onOpenUpdateTaskModal, o
               setTasks={setTasks}
               onOpenUpdateTaskModal={onOpenUpdateTaskModal}
               onOpenDeleteConfirmModal={onOpenDeleteConfirmModal} // Пробрасываем дальше
-              fetchTasks={fetchTasks}
             />
           </>
         )}

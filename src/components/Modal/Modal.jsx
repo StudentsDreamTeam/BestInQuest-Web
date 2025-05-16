@@ -38,10 +38,7 @@ export default function Modal({ children, open, modelType, onCloseModal }) {
   let dialogClasses = classes.dialog;
   if (modelType === 'delete') {
     dialogClasses += ` ${classes.delete}`;
-  } else if (modelType === 'default') { // Можно добавить для явности или если будут другие типы
-    dialogClasses += ` ${classes.default}`;
   }
-
 
   return(
     createPortal(

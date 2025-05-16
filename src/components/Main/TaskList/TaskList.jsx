@@ -18,7 +18,7 @@ const LoadingMessage = styled.p`
   margin-top: 2rem;
 `;
 
-export default function TaskList({ tasks, setTasks, onOpenUpdateTaskModal, onOpenDeleteConfirmModal, fetchTasks }) {
+export default function TaskList({ tasks, setTasks, onOpenUpdateTaskModal, onOpenDeleteConfirmModal }) {
   // Состояния isDeleteModalOpen и taskToDeleteId убраны, теперь управляются в Layout
 
   const handleDeleteRequest = (taskId) => {
