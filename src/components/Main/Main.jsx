@@ -1,6 +1,7 @@
 import './Main.css';
 import Header from "./Header/Header.jsx";
 import TaskList from "../../features/tasks/components/TaskList";
+import UserProfilePage from '../../features/user/components/UserProfilePage'; // Импортируем страницу профиля
 
 export default function Main({ active, onOpenUpdateTaskModal, onOpenDeleteConfirmModal }) {
   return (
@@ -14,25 +15,28 @@ export default function Main({ active, onOpenUpdateTaskModal, onOpenDeleteConfir
           />
         </>
       )}
-      { active === 'Магазин' && (
+      {active === 'Профиль' && ( // Новое условие для отображения профиля
+        <UserProfilePage />
+      )}
+      {active === 'Магазин' && (
         <>
           <Header title={'Магазин'}/>
           In development
         </>
       )}
-      { active === 'Награды' && (
+      {active === 'Награды' && (
         <>
           <Header title={'Награды'}/>
           In development
         </>
       )}
-      { active === 'Инвентарь' && (
+      {active === 'Инвентарь' && (
         <>
           <Header title={'Инвентарь'}/>
           In development
         </>
       )}
-      { active === 'Достижения' && (
+      {active === 'Достижения' && (
         <>
           <Header title={'Достижения'}/>
           In development

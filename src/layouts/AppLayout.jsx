@@ -1,3 +1,4 @@
+// === FILE: src/layouts/AppLayout.jsx ===
 import { useState } from 'react';
 import { styled } from 'styled-components';
 
@@ -7,7 +8,8 @@ import Modal from '../components/Modal/Modal';
 
 import CreateTaskForm from '../features/tasks/components/CreateTaskForm';
 import UpdateTaskForm from '../features/tasks/components/UpdateTaskForm';
-import DeleteTaskConfirmationModal from '../features/tasks/components/DeleteTaskComfirmationModal.jsx';
+import DeleteTaskConfirmationModal from '../features/tasks/components/DeleteTaskComfirmationModal'; // Исправлен путь, если был .jsx
+import UserProfilePage from '../features/user/components/UserProfilePage'; // Новый импорт
 
 import { useUser } from '../contexts/UserContext';
 import { useTasks } from '../contexts/TasksContext';
@@ -18,7 +20,7 @@ const LayoutContainer = styled.div`
   overflow: hidden;
 `;
 
-const LoadingOverlay = styled.div` // Простой оверлей для загрузки
+const LoadingOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -29,17 +31,16 @@ const LoadingOverlay = styled.div` // Простой оверлей для за�
   justify-content: center;
   align-items: center;
   font-size: 1.5rem;
-  z-index: 2000; // Выше модалок
+  z-index: 2000;
 `;
-
 
 export default function AppLayout() {
   const { user, isLoadingUser, userError } = useUser();
-  const { deleteTask: deleteTaskFromContext, isLoadingTasks, tasksError: contextTasksError } = useTasks();
+  const { deleteTask: deleteTaskFromContext } = useTasks(); // isLoadingTasks, tasksError можно использовать при необходимости
 
   const menuItems = ['Добавить задачу', 'Сегодня', 'Магазин', 'Награды', 'Инвентарь', 'Достижения'];
-  const [sidebarTab, setSidebarTab] = useState('Сегодня');
-  const [currentMainView, setCurrentMainView] = useState('Сегодня');
+  // 'Профиль' не будет частью menuItems, а будет управляться отдельно
+  const [activeView, setActiveView] = useState('Сегодня'); // Что отображается в Main
 
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const [isUpdateTaskModalOpen, setIsUpdateTaskModalOpen] = useState(false);
@@ -48,21 +49,24 @@ export default function AppLayout() {
   const [taskToEdit, setTaskToEdit] = useState(null);
   const [taskToDeleteId, setTaskToDeleteId] = useState(null);
 
-
-  function changeTab(tabName) {
-    setSidebarTab(tabName);
-    if (tabName !== 'Добавить задачу') {
-      setCurrentMainView(tabName);
-    } else {
+  function handleSidebarItemClick(itemName) {
+    if (itemName === 'Добавить задачу') {
       setIsCreateTaskModalOpen(true);
+      // activeView не меняется, чтобы фон остался на предыдущей активной вкладке
+    } else if (itemName === 'Профиль') {
+      setActiveView('Профиль');
+    }
+    else {
+      setActiveView(itemName);
     }
   }
 
-  const handleOpenCreateTaskModal = () => setIsCreateTaskModalOpen(true);
   const handleCloseCreateTaskModal = () => {
     setIsCreateTaskModalOpen(false);
-    if (sidebarTab === 'Добавить задачу') {
-        setSidebarTab(currentMainView !== 'Добавить задачу' ? currentMainView : 'Сегодня');
+    // Если до открытия модалки "Добавить задачу" была активна сама "Добавить задачу" (маловероятно, но для полноты),
+    // то после закрытия возвращаемся на "Сегодня"
+    if (activeView === 'Добавить задачу') { // Это условие может не понадобиться, если 'Добавить задачу' не устанавливается в activeView
+        setActiveView('Сегодня');
     }
   };
 
@@ -99,20 +103,21 @@ export default function AppLayout() {
     }
   };
 
-  if (isLoadingUser)  return <LoadingOverlay>Загрузка пользователя...</LoadingOverlay>;
-  if (userError)      return <LoadingOverlay>Ошибка загрузки пользователя: {userError}</LoadingOverlay>;
-  if (!user)          return <LoadingOverlay>Пользователь не найден.</LoadingOverlay>;
+  if (isLoadingUser) return <LoadingOverlay>Загрузка пользователя...</LoadingOverlay>;
+  if (userError) return <LoadingOverlay>Ошибка загрузки пользователя: {userError}</LoadingOverlay>;
+  if (!user) return <LoadingOverlay>Пользователь не найден.</LoadingOverlay>;
 
   return (
     <LayoutContainer>
       <Sidebar
-        active={sidebarTab}
-        onChange={changeTab}
+        activeMenuItem={activeView}
+        onMenuItemChange={handleSidebarItemClick}
+        onProfileClick={() => handleSidebarItemClick('Профиль')}
         menuItems={menuItems}
       />
 
       <Main
-        active={currentMainView}
+        active={activeView}
         onOpenUpdateTaskModal={handleOpenUpdateTaskModal}
         onOpenDeleteConfirmModal={handleOpenDeleteConfirmModal}
       />
@@ -122,9 +127,7 @@ export default function AppLayout() {
         modelType={'create'}
         onCloseModal={handleCloseCreateTaskModal}
       >
-        <CreateTaskForm
-          onClose={handleCloseCreateTaskModal}
-        />
+        <CreateTaskForm onClose={handleCloseCreateTaskModal} />
       </Modal>
 
       <Modal
