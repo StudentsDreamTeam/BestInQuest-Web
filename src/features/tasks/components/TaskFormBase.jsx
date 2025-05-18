@@ -7,9 +7,13 @@ import { ReactComponent as TrashIcon } from '../../../assets/icons/TrashIcon34.s
 import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckIcon52.svg';
 
 import {
-  DIFFICULTY_VALUES, DIFFICULTY_LABELS,
-  SPHERE_OPTIONS, SPHERE_LABELS,
-  PRIORITY_OPTIONS_KEYS, PRIORITY_SLIDER_LABELS, PRIORITY_OPTIONS_MAP, // Добавлены PRIORITY_OPTIONS_MAP и PRIORITY_OPTIONS_KEYS
+  DIFFICULTY_VALUES,
+  DIFFICULTY_LABELS,
+  SPHERE_OPTIONS,
+  SPHERE_LABELS,
+  PRIORITY_OPTIONS_KEYS,
+  PRIORITY_SLIDER_LABELS,
+  PRIORITY_OPTIONS_MAP, // Добавлены PRIORITY_OPTIONS_MAP и PRIORITY_OPTIONS_KEYS
   // STATUS_OPTIONS_MAP - не используется напрямую здесь, но может быть нужен для других целей
 } from '../../../constants';
 
@@ -442,6 +446,7 @@ export default function TaskFormBase({
   loggedInUser,
   taskToEdit,
 }) {
+  
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',

@@ -55,8 +55,10 @@ export function TasksProvider ({ children }) {
     // setIsLoading(true);
     try {
       const newTask = await createTaskApi(taskDataFromForm, user.id);
-      setTasks(newTask);
-      // setTasks(prevTasks => [newTask, ...prevTasks].sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate))); // Сортировка по дате обновления
+      // setTasks(newTask);
+      setTasks(prevTasks => [newTask, ...prevTasks]
+        // .sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate))// Сортировка по дате обновления
+      );
       console.log("Task created:", newTask);
       return newTask;
     } catch (e) {
