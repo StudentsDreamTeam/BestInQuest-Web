@@ -13,8 +13,8 @@ export default function SidebarMenu({ active, onChange, menuItems }) {
       {menuItems.map((item, index) => (
         <SidebarButton
           isActive={active === item}
-          key={index} // index is okay here if menuItems is static and doesn't reorder
-          onClick={() => onChange(item)} // Corrected onClick handler
+          key={index}
+          onClick={() => onChange(item)}
           buttonType={item === 'Добавить задачу' ? 'addTask' : 'menuItem'}
         >
           {item}

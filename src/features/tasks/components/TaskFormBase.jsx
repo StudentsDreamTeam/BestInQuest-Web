@@ -1,22 +1,23 @@
 import { styled, css } from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-import { ReactComponent as XPIcon } from '../../icons/XPIcon52x28.svg'
-import { ReactComponent as StarIcon } from '../../icons/StarIcon41x37.svg'
-import { ReactComponent as TrashIcon } from '../../icons/TrashIcon34.svg'
-import { ReactComponent as CheckIcon } from '../../icons/CheckIcon52.svg'
+import { ReactComponent as XPIcon } from '../../../assets/icons/XPIcon52x28.svg';
+import { ReactComponent as StarIcon } from '../../../assets/icons/StarIcon41x37.svg';
+import { ReactComponent as TrashIcon } from '../../../assets/icons/TrashIcon34.svg';
+import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckIcon52.svg';
 
 import {
-  DIFFICULTY_VALUES,
-  DIFFICULTY_LABELS,
-  SPHERE_OPTIONS,
-  SPHERE_LABELS,
-  PRIORITY_OPTIONS,
-  PRIORITY_SLIDER_LABELS,
-  STATUS_OPTIONS,
-} from '../../constants';
+  DIFFICULTY_VALUES, DIFFICULTY_LABELS,
+  SPHERE_OPTIONS, SPHERE_LABELS,
+  PRIORITY_OPTIONS_KEYS, PRIORITY_SLIDER_LABELS, PRIORITY_OPTIONS_MAP, // Добавлены PRIORITY_OPTIONS_MAP и PRIORITY_OPTIONS_KEYS
+  // STATUS_OPTIONS_MAP - не используется напрямую здесь, но может быть нужен для других целей
+} from '../../../constants';
 
-// --- Основные контейнеры формы ---
+import {
+  formatDeadlineForDisplay, formatDateTimeForInput,
+  secondsToHHMM, hhMMToSeconds, formatDurationForDisplay, formatFullDateTime
+} from '../../../utils/dateTimeUtils';
+
 const FormWrapper = styled.div`
   background-color: white; 
   padding: 3rem 5rem;
@@ -57,10 +58,9 @@ const FromFooterContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end; 
+  position: relative; 
 `;
 
-
-// --- Общие элементы формы ---
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
@@ -77,7 +77,6 @@ const SectionTitle = styled.h3`
   justify-content: space-between;
 `;
 
-// --- Элементы левой колонки ---
 const TitleInput = styled.input`
   font-size: 1.5rem;
   font-weight: 600;
@@ -106,7 +105,6 @@ const DescriptionTextarea = styled.textarea`
   }
 `;
 
-// --- Элементы правой колонки ---
 const ControlContainer = styled.div`
   background-color: #F5F5F5;
   border-radius: 8px;
@@ -299,7 +297,6 @@ const ActualStyledSelect = styled.select`
   outline: none;
 `;
 
-// --- Элементы футера ---
 const RewardsMainContainer = styled.div`
   display: flex;
   gap: 2rem; 
@@ -423,98 +420,98 @@ const SaveButton = styled.button`
   }
 `;
 
+const CreationDateDisplay = styled.div`
+  color: #777;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  margin: 0 1rem; 
+  align-self: flex-end; 
+  padding-bottom: 0.5rem; 
+  flex-grow: 1; 
+`;
+// --- Конец Styled Components ---
 
-export default function CreateTaskForm({ onClose, loggedInUser, onTaskCreated }) {
+export default function TaskFormBase({
+  initialTaskData,
+  onSubmitForm,
+  onCloseForm,
+  isUpdateForm = false,
+  onInitiateDelete,
+  loggedInUser,
+  taskToEdit,
+}) {
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
     sphere: '',
-    priority: 2,
-    difficulty: 2,
-    deadline: '', 
-    duration: 3600,
-    fastDoneBonus: 200,
-    combo: false, // Добавлено поле combo в начальное состояние
-    rewardXp: 200,
-    rewardCurrency: 200,
+    priority: PRIORITY_OPTIONS_KEYS.indexOf('NORMAL'), // Индекс для 'NORMAL'
+    difficulty: 2, // normal
+    deadline: '',
+    duration: 3600, // 1 час
+    fastDoneBonus: 0,
+    combo: false,
+    rewardXp: 100,
+    rewardCurrency: 10,
+    linkedTaskId: null,
   });
 
   const [showDeadlinePicker, setShowDeadlinePicker] = useState(false);
   const [showDurationPicker, setShowDurationPicker] = useState(false);
   const [isSphereSelectOpen, setIsSphereSelectOpen] = useState(false);
 
+  useEffect(() => {
+    if (initialTaskData) {
+      let priorityIndex = PRIORITY_OPTIONS_KEYS.findIndex(
+        key => PRIORITY_OPTIONS_MAP[key] === initialTaskData.priority?.toLowerCase()
+      );
+      if (priorityIndex === -1) {
+        priorityIndex = PRIORITY_OPTIONS_KEYS.indexOf('NORMAL');
+      }
+
+      setTaskData({
+        title: initialTaskData.title || '',
+        description: initialTaskData.description || '',
+        sphere: initialTaskData.sphere || '',
+        priority: priorityIndex,
+        difficulty: typeof initialTaskData.difficulty === 'number' ? initialTaskData.difficulty : 2,
+        deadline: initialTaskData.deadline ? formatDateTimeForInput(initialTaskData.deadline) : '',
+        duration: typeof initialTaskData.duration === 'number' ? initialTaskData.duration : 3600,
+        fastDoneBonus: typeof initialTaskData.fastDoneBonus === 'number' ? initialTaskData.fastDoneBonus : 0,
+        combo: typeof initialTaskData.combo === 'boolean' ? initialTaskData.combo : false,
+        rewardXp: typeof initialTaskData.rewardXp === 'number' ? initialTaskData.rewardXp : 0,
+        rewardCurrency: typeof initialTaskData.rewardCurrency === 'number' ? initialTaskData.rewardCurrency : 0,
+        linkedTaskId: initialTaskData.linkedTaskId !== undefined ? initialTaskData.linkedTaskId : (isUpdateForm ? null : 0),
+      });
+    }
+  }, [initialTaskData, isUpdateForm]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    let processedValue = value;
+    const { name, value, type, checked } = e.target;
+    let processedValue = type === 'checkbox' ? checked : value;
 
     if (["difficulty", "rewardXp", "fastDoneBonus", "priority", "rewardCurrency"].includes(name)) {
       processedValue = parseInt(value, 10);
       if (isNaN(processedValue)) processedValue = 0;
     }
-    
+
     if (name === "difficulty") {
-        const maxVal = DIFFICULTY_VALUES[DIFFICULTY_VALUES.length -1];
-        if (processedValue < DIFFICULTY_VALUES[0]) processedValue = DIFFICULTY_VALUES[0];
-        if (processedValue > maxVal) processedValue = maxVal;
+      const maxVal = DIFFICULTY_VALUES[DIFFICULTY_VALUES.length - 1];
+      if (processedValue < DIFFICULTY_VALUES[0]) processedValue = DIFFICULTY_VALUES[0];
+      if (processedValue > maxVal) processedValue = maxVal;
     } else if (name === "priority") {
-        const maxVal = PRIORITY_OPTIONS.length - 1;
-        if (processedValue < 0) processedValue = 0;
-        if (processedValue > maxVal) processedValue = maxVal;
+      const maxVal = PRIORITY_OPTIONS_KEYS.length - 1;
+      if (processedValue < 0) processedValue = 0;
+      if (processedValue > maxVal) processedValue = maxVal;
     }
 
-    setTaskData(prev => ({
-      ...prev,
-      [name]: processedValue
-    }));
+    setTaskData(prev => ({ ...prev, [name]: processedValue }));
   };
 
   const handleDeadlineInputChange = (e) => {
     setTaskData(prev => ({ ...prev, deadline: e.target.value }));
-    setShowDeadlinePicker(false); 
-  };
-  
-  const formatDeadlineDisplay = (deadlineISO) => {
-    if (!deadlineISO) return "Не выбран";
-    try {
-      const date = new Date(deadlineISO);
-      return date.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '');
-    } catch (e) {
-      return "Ошибка даты";
-    }
-  };
-
-  const secondsToHHMM = (totalSeconds) => {
-    if (totalSeconds === null || totalSeconds === undefined || totalSeconds < 0) return "00:00";
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-  };
-
-  const hhMMToSeconds = (hhmmString) => {
-    if (!hhmmString) return 0;
-    const parts = hhmmString.split(':');
-    if (parts.length !== 2) return 0;
-    const hours = parseInt(parts[0], 10);
-    const minutes = parseInt(parts[1], 10);
-    if (isNaN(hours) || isNaN(minutes)) return 0;
-    return hours * 3600 + minutes * 60;
-  };
-
-  const formatDurationForDisplay = (totalSeconds) => {
-    if (typeof totalSeconds !== 'number' || isNaN(totalSeconds) || totalSeconds < 0) {
-      return "Не выбрана";
-    }
-    if (totalSeconds === 0) return "0 мин";
-
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-
-    let parts = [];
-    if (hours > 0) parts.push(`${hours} ч`);
-    if (minutes > 0) parts.push(`${minutes} мин`);
-    
-    return parts.length > 0 ? parts.join(' ') : "0 мин";
+    setShowDeadlinePicker(false);
   };
 
   const handleDurationInputChange = (e) => {
@@ -523,79 +520,61 @@ export default function CreateTaskForm({ onClose, loggedInUser, onTaskCreated })
     setShowDurationPicker(false);
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!loggedInUser || !loggedInUser.id) {
-        console.error("Ошибка: Пользователь не определен. Невозможно создать задачу.");
+      console.error("User not defined. Cannot submit form.");
+      return;
+    }
+    if (!taskData.sphere) {
+        alert("Пожалуйста, выберите сферу задачи.");
         return;
     }
 
-    const authorAndExecutorDetails = {
-        id: loggedInUser.id,
-        name: loggedInUser.name,
-        email: loggedInUser.email,
-    };
 
-    const finalTaskData = {
-      linkedTaskId: 0, // или taskData.linkedTaskId если бы оно было в форме
+    const priorityKey = PRIORITY_OPTIONS_KEYS[taskData.priority];
+    const priorityValueForApi = PRIORITY_OPTIONS_MAP[priorityKey];
+
+    const finalPayload = {
       title: taskData.title,
       description: taskData.description,
       sphere: taskData.sphere,
-      status: STATUS_OPTIONS[0].toLowerCase(), 
-      priority: PRIORITY_OPTIONS[taskData.priority].toLowerCase(),
+      priority: priorityValueForApi,
       difficulty: taskData.difficulty,
-      updateDate: new Date().toISOString(),
       deadline: taskData.deadline ? new Date(taskData.deadline).toISOString() : null,
       duration: taskData.duration,
       fastDoneBonus: taskData.fastDoneBonus,
-      combo: taskData.combo, 
+      combo: taskData.combo,
       rewardXp: taskData.rewardXp,
       rewardCurrency: taskData.rewardCurrency,
-      author: authorAndExecutorDetails,
-      executor: authorAndExecutorDetails,
+      linkedTaskId: taskData.linkedTaskId,
     };
-    console.log('Данные задачи для отправки:', finalTaskData);
 
-    const apiUrl = `http://localhost:15614/tasks/create?authorId=${loggedInUser.id}&executorId=${loggedInUser.id}`;
     try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(finalTaskData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(`Ошибка API: ${response.status} - ${errorData}`);
-      }
-
-      const createdTask = await response.json();
-      console.log('Задача успешно создана (API):', createdTask);
-      if (onTaskCreated) {
-        onTaskCreated(createdTask); // Передаем созданную задачу обратно в Layout
-      }
-      // onClose(); // onClose вызывается из onTaskCreated в Layout
+      await onSubmitForm(finalPayload);
     } catch (error) {
-      console.error('Не удалось создать задачу через API:', error);
-      onClose(); // Закрываем в случае ошибки, чтобы пользователь не остался с "зависшей" формой
+      console.error("Error submitting task form:", error);
     }
   };
-  
-  // Кнопка "Удалить задачу" в CreateTaskForm просто закрывает модальное окно,
-  // так как задача еще не создана и удалять нечего.
+
   const handleDeleteClick = () => {
-    console.log("Кнопка 'Удалить задачу' (отмена) в форме создания нажата.");
-    onClose(); 
+    if (isUpdateForm && onInitiateDelete && taskToEdit) {
+      onInitiateDelete(taskToEdit.id);
+    } else {
+      onCloseForm();
+    }
   };
+
+  if (!loggedInUser && !isUpdateForm) {
+      return <FormWrapper><p>Загрузка данных пользователя...</p></FormWrapper>;
+  }
+  if (isUpdateForm && !taskToEdit) {
+      return <FormWrapper><p>Загрузка данных задачи...</p></FormWrapper>;
+  }
 
   return (
     <FormWrapper>
       <StyledForm onSubmit={handleSubmit}>
-
         <FormMainContent>
           <FormColumn $left>
             <FormGroup>
@@ -621,7 +600,7 @@ export default function CreateTaskForm({ onClose, loggedInUser, onTaskCreated })
             <FormGroup>
               <ControlContainer>
                 <ControlStaticText>Дедлайн</ControlStaticText>
-                <ControlValueDisplay>{formatDeadlineDisplay(taskData.deadline)}</ControlValueDisplay>
+                <ControlValueDisplay>{formatDeadlineForDisplay(taskData.deadline)}</ControlValueDisplay>
                 <AddControlButton type="button" onClick={() => setShowDeadlinePicker(!showDeadlinePicker)}>
                   <span className="icon-placeholder">+</span>
                 </AddControlButton>
@@ -641,18 +620,17 @@ export default function CreateTaskForm({ onClose, loggedInUser, onTaskCreated })
                 <ControlStaticText>Продолжительность</ControlStaticText>
                 <ControlValueDisplay>{formatDurationForDisplay(taskData.duration)}</ControlValueDisplay>
                 <AddControlButton type="button" onClick={() => setShowDurationPicker(!showDurationPicker)}>
-                   <span className="icon-placeholder">+</span>
+                  <span className="icon-placeholder">+</span>
                 </AddControlButton>
               </ControlContainer>
               {showDurationPicker && (
                 <TimeInput
-                  name="duration_time_picker" 
+                  name="duration_time_picker"
                   value={secondsToHHMM(taskData.duration)}
                   onChange={handleDurationInputChange}
                 />
               )}
             </FormGroup>
-
 
             <FormGroup>
               <SectionTitle>
@@ -661,21 +639,21 @@ export default function CreateTaskForm({ onClose, loggedInUser, onTaskCreated })
               </SectionTitle>
               <SliderContainer>
                 <SliderTrackVisual>
-                  {PRIORITY_OPTIONS.map((_, index) => ( 
+                  {PRIORITY_OPTIONS_KEYS.map((_, index) => (
                     <SliderDotVisual key={index} />
                   ))}
                 </SliderTrackVisual>
                 <SliderInput
                   name="priority"
                   min="0"
-                  max={PRIORITY_OPTIONS.length - 1}
+                  max={PRIORITY_OPTIONS_KEYS.length - 1}
                   step="1"
                   value={taskData.priority}
                   onChange={handleChange}
                 />
               </SliderContainer>
             </FormGroup>
-            
+
             <FormGroup>
               <SectionTitle>
                 Сложность
@@ -707,8 +685,9 @@ export default function CreateTaskForm({ onClose, loggedInUser, onTaskCreated })
                   onFocus={() => setIsSphereSelectOpen(true)}
                   onBlur={() => setIsSphereSelectOpen(false)}
                   onClick={() => setIsSphereSelectOpen(!isSphereSelectOpen)}
+                  required
                 >
-                  <option value={""} disabled={taskData.sphere !== ""}>
+                  <option value="" disabled={taskData.sphere !== ""}>
                     Выбрать сферу
                   </option>
                   {SPHERE_OPTIONS.map(opt => (
@@ -738,7 +717,7 @@ export default function CreateTaskForm({ onClose, loggedInUser, onTaskCreated })
 
             <RewardCategoryBlock>
               <RewardCategoryTitle>Бонус за скорость</RewardCategoryTitle>
-              <RewardItemsGroup> 
+              <RewardItemsGroup>
                 <IndividualRewardItem>
                   <RewardIconPlaceholder><XPIcon /></RewardIconPlaceholder>
                   <RewardInput type="number" name="fastDoneBonus" value={taskData.fastDoneBonus} onChange={handleChange} min="0" />
@@ -746,16 +725,22 @@ export default function CreateTaskForm({ onClose, loggedInUser, onTaskCreated })
               </RewardItemsGroup>
             </RewardCategoryBlock>
           </RewardsMainContainer>
-          
+
+          {isUpdateForm && taskToEdit && (
+            <CreationDateDisplay>
+              Обновлена: {formatFullDateTime(taskToEdit.updateDate)}
+            </CreationDateDisplay>
+          )}
+
           <FooterActionsContainer>
-            <DeleteButton type="button" onClick={handleDeleteClick} title="Отменить создание">
+            <DeleteButton type="button" onClick={handleDeleteClick} title={isUpdateForm ? "Удалить задачу" : "Отменить создание"}>
               <span className="icon-placeholder">
                 <TrashIcon />
               </span>
-              Отменить
+              {isUpdateForm ? "Удалить задачу" : "Отменить"}
             </DeleteButton>
-            
-            <SaveButton type="submit" title="Сохранить задачу">
+
+            <SaveButton type="submit" title={isUpdateForm ? "Сохранить изменения" : "Сохранить задачу"}>
               <span className="icon-placeholder">
                 <CheckIcon />
               </span>

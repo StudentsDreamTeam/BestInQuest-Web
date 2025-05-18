@@ -1,7 +1,7 @@
-import { styled } from 'styled-components'
- 
+import { styled } from 'styled-components';
 import SidebarUserProfile from './SidebarUserProfile/SidebarUserProfile';
 import SidebarMenu from './SidebarMenu/SidebarMenu';
+import { useUser } from '../../contexts/UserContext';
 
 const SidebarContainer = styled.nav`
   width: 25%;
@@ -10,11 +10,12 @@ const SidebarContainer = styled.nav`
   overflow-y: auto;
 `
 
-export default function Sidebar({ user, active, onChange, menuItems }) {
-  return (
+export default function Sidebar({ active, onChange, menuItems }) {
+  const { user } = useUser();
 
+  return (
     <SidebarContainer>
-      <SidebarUserProfile user={user}/>
+      <SidebarUserProfile user={user} />
       <SidebarMenu
         active={active}
         onChange={onChange}
@@ -22,4 +23,4 @@ export default function Sidebar({ user, active, onChange, menuItems }) {
       />
     </SidebarContainer>
   );
-};
+}

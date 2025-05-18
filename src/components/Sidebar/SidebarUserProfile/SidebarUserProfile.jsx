@@ -1,8 +1,7 @@
 import './SidebarUserProfile.css';
-import defaultUserAvatar from '../../../img/userAvatar.png';
 import { styled } from 'styled-components';
-import { ReactComponent as StarIcon } from '../../../icons/StarIcon.svg';
-
+import { ReactComponent as StarIcon } from '../../../assets/icons/StarIcon.svg';
+import defaultUserAvatar from '../../../assets/img/userAvatar.png';
 
 const UserProfileContainer = styled.div`
   display: flex;
@@ -52,23 +51,22 @@ const StarIconPlaceholder = styled.div`
   }
 `;
 
-
 export default function SidebarUserProfile({ user }) {
+  if (!user) {
+    return <UserProfileContainer>Загрузка пользователя...</UserProfileContainer>;
+  }
+
   return (
     <UserProfileContainer>
       <div className="avatar">
         <img src={user.avatar || defaultUserAvatar} alt="User Avatar" />
       </div>
-
       <UserInfo>
         <h3>{user.name}</h3>
         <p>{user.level} уровень</p>
         <UserStats>
-          <StarIconPlaceholder>
-            <StarIcon />
-            {/* Ваша иконка звезды здесь, например <StarSVG /> */}
-          </StarIconPlaceholder>
-          <XpDisplay>{user.xp || 0}</XpDisplay> {/* Отображаем user.xp */}
+          <StarIconPlaceholder><StarIcon /></StarIconPlaceholder>
+          <XpDisplay>{user.xp || 0}</XpDisplay>
         </UserStats>
       </UserInfo>
     </UserProfileContainer>

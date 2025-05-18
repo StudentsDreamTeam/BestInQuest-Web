@@ -1,15 +1,12 @@
-// src/components/DeleteTaskConfirmationModal/DeleteTaskConfirmationModal.jsx
 import { styled } from 'styled-components';
-import Button from '../Button/Button';
-
-// ModalOverlay и ModalContent убраны, так как их роль выполняет Modal.jsx и его CSS
+import Button from '../../../components/Button/Button';
 
 const ModalTitle = styled.h2`
   font-size: 1.5rem;
   font-weight: 600;
   color: #333;
   margin-bottom: 2rem;
-  text-align: center; // Добавлено для центрирования заголовка
+  text-align: center;
 `;
 
 const ButtonGroup = styled.div`
@@ -43,15 +40,9 @@ const CancelButton = styled(Button)`
   }
 `;
 
-
-export default function DeleteTaskConfirmationModal({ isOpen, onClose, onConfirmDelete }) {
-  // isOpen проп больше не нужен здесь, если модалка рендерится условно в Layout
-  // Но если мы хотим сохранить компонент универсальным, то можно оставить.
-  // Для текущей реализации с Modal в Layout, isOpen здесь не используется.
-  // if (!isOpen) return null; // Эта проверка теперь делается в Layout для <Modal>
-
+export default function DeleteTaskConfirmationModal({ onClose, onConfirmDelete }) {
   return (
-    <> {/* Обертка в фрагмент, так как ModalOverlay и ModalContent убраны */}
+    <>
       <ModalTitle>Точно удалить задачу?</ModalTitle>
       <ButtonGroup>
         <ConfirmButton onClick={onConfirmDelete} isActive>Да, удалить</ConfirmButton>

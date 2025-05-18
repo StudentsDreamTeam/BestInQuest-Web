@@ -1,6 +1,5 @@
 import Task from '../Task/Task.jsx';
 import { styled } from 'styled-components';
-// DeleteTaskConfirmationModal теперь управляется из Layout, убираем useState для него отсюда
 
 const TaskListComponent = styled.div`
   display: flex;
@@ -19,10 +18,7 @@ const LoadingMessage = styled.p`
 `;
 
 export default function TaskList({ tasks, setTasks, onOpenUpdateTaskModal, onOpenDeleteConfirmModal }) {
-  // Состояния isDeleteModalOpen и taskToDeleteId убраны, теперь управляются в Layout
-
   const handleDeleteRequest = (taskId) => {
-    // Эта функция теперь просто вызывает открытие модального окна подтверждения из Layout
     onOpenDeleteConfirmModal(taskId);
   };
 
@@ -39,7 +35,7 @@ export default function TaskList({ tasks, setTasks, onOpenUpdateTaskModal, onOpe
     }
     // TODO: API call for status update
     const taskToUpdate = tasks.find(t => t.id === taskId);
-    if (taskToUpdate && tasks.find(t => t.id === taskId)?.author?.id) { // Проверка, что автор есть и у него есть id
+    if (taskToUpdate && tasks.find(t => t.id === taskId)?.author?.id) {
       try {
         const response = await fetch(`http://localhost:15614/tasks/${taskId}?userID=${taskToUpdate.author.id}`, {
           method: 'PUT',
@@ -89,13 +85,12 @@ export default function TaskList({ tasks, setTasks, onOpenUpdateTaskModal, onOpe
           <Task
             key={task.id}
             task={task}
-            onDeleteTask={handleDeleteRequest} // Переименовано для ясности, вызывает модалку подтверждения
+            onDeleteTask={handleDeleteRequest}
             onToggleStatus={handleToggleStatus}
             onTaskClick={onOpenUpdateTaskModal}
           />
         ))}
       </TaskListComponent>
-      {/* DeleteTaskConfirmationModal теперь рендерится в Layout */}
     </>
   );
 }
