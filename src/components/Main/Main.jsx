@@ -2,13 +2,14 @@ import './Main.css';
 import Header from "./Header/Header.jsx";
 import TaskList from "../../features/tasks/components/TaskList";
 import UserProfilePage from '../../features/user/components/UserProfilePage';
-import AchievementsPage from '../../features/achievements/components/AchievementsPage'; // Новый импорт
+import AchievementsPage from '../../features/achievements/components/AchievementsPage';
+import ShopPage from '../../features/shop/components/ShopPage'; // Новый импорт
 
 export default function Main({ active, onOpenUpdateTaskModal, onOpenDeleteConfirmModal }) {
   // active здесь - это activeView из AppLayout
   let pageTitle = active; // По умолчанию заголовок равен активной вкладке
-  if (active === 'Профиль' || active === 'Достижения') {
-    pageTitle = ''; // Для профиля и достижений свой заголовок не нужен или будет внутри страницы
+  if (active === 'Профиль' || active === 'Достижения' || active === 'Магазин') { // Добавили 'Магазин'
+    pageTitle = ''; // Для этих страниц свой заголовок не нужен или будет внутри страницы
   }
 
   return (
@@ -24,6 +25,7 @@ export default function Main({ active, onOpenUpdateTaskModal, onOpenDeleteConfir
       )}
       {active === 'Профиль' && <UserProfilePage />}
       {active === 'Достижения' && <AchievementsPage />}
+      {active === 'Магазин' && <ShopPage />} {/* Новая страница */}
 
       {/* Другие вкладки */}
       {active === 'Проекты' && (
@@ -32,12 +34,11 @@ export default function Main({ active, onOpenUpdateTaskModal, onOpenDeleteConfir
           In development (Projects)
         </>
       )}
-      {active === 'Магазин' && (
+      {/* {active === 'Магазин' && ( // Удаляем старую заглушку
         <>
-          {/* <Header title={'Магазин'} /> */}
           In development (Shop)
         </>
-      )}
+      )} */}
       {active === 'Награды' && (
         <>
           {/* <Header title={'Награды'} /> */}

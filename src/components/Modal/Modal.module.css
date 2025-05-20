@@ -7,9 +7,28 @@ dialog {
   border-radius: 20px; 
 
   z-index: 1001;
+  /* Уберем padding из общего dialog, так как контент теперь сам его задает */
+  padding: 0; 
+  overflow: visible; /* Чтобы тени от внутреннего контента не обрезались */
 }
+
+dialog::backdrop { /* Стили для фона за модальным окном */
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 
 dialog.delete {
   width: 30%;
   height: 30%;
+  padding: 2rem; /* Вернем padding для маленьких модалок */
+}
+
+/* Стили для модалки магазина, если нужно переопределить */
+dialog.shopItem {
+  width: auto; /* Ширина по контенту */
+  max-width: 500px; /* Максимальная ширина */
+  height: auto; /* Высота по контенту */
+  max-height: 90vh; /* Ограничение по высоте экрана */
+  /* padding уже 0, внутренний компонент ShopItemModal задает свои отступы */
+  border-radius: 20px; /* Если у внутреннего контента скругление меньше */
 }
