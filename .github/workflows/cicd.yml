@@ -42,7 +42,7 @@ jobs:
             ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
           
           
-  build-and-test:
+  build-and-push:
     needs: analyze
     runs-on: ubuntu-latest
     steps:
@@ -101,38 +101,29 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           push: true
-  # deploy:
-  #   needs: analyze
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: write
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 20
-      
-  #     - run: npm ci
-  #     - run: npm run build
 
-  #     # Деплой main -> прод (username.github.io/repo)
-  #     - name: Deploy Production
-  #       if: github.ref == 'refs/heads/main'
-  #       uses: peaceiris/actions-gh-pages@v3
-  #       with:
-  #         github_token: ${{ secrets.GITHUB_TOKEN }}
-  #         publish_dir: ./dist
-  #         publish_branch: gh-pages
-  #         destination_dir: ''
-  #         force_orphan: true
 
-  #     # Деплой develop -> стейдж (username.github.io/repo/dev)
-  #     - name: Deploy Staging
-  #       if: github.ref == 'refs/heads/develop'
-  #       uses: peaceiris/actions-gh-pages@v3
-  #       with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: gh-pages
-          destination_dir: 'dev'  # Отдельная папка для develop
-          force_orphan: true
+  deploy:
+    needs: build-and-push
+    runs-on: self-hosted   
+    env:
+      DEPLOY_DIR: /opt/app  
+    steps:
+      - uses: actions/checkout@v4      
+      - name: Deploy application
+        run: |
+          cd $DEPLOY_DIR
+          # Останавливаем старые контейнеры (если есть)
+          docker compose down --rmi all -v || true
+
+          if docker network inspect app_network >/dev/null 2>&1; then
+          docker network rm app_network || true
+          fi
+
+          docker network create app_network || true
+          
+          # Запускаем новые контейнеры
+          docker compose up -d
+          
+          # Проверяем статус
+          docker compose ps
