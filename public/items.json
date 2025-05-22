@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "name": "Эликсир Опыта",
+    "description": "Увеличивает получаемый опыт на 50% в течение 10 минут. Идеально для быстрой прокачки!",
+    "rarity": "common",
+    "iconUrl": "/default_item_icon.png",
+    "xpMultiplier": 1.5,
+    "currencyMultiplier": 1,
+    "duration": 600,
+    "cost": 50
+  },
+  {
+    "id": 2,
+    "name": "Амулет Удачи",
+    "description": "Немного увеличивает шанс найти редкие предметы и количество получаемой валюты.",
+    "rarity": "uncommon",
+    "iconUrl": "/default_item_icon.png",
+    "xpMultiplier": 1,
+    "currencyMultiplier": 1.2,
+    "duration": 1800,
+    "cost": 120
+  },
+  {
+    "id": 3,
+    "name": "Свиток Мудрости",
+    "description": "Значительно увеличивает получаемый опыт на короткое время. Применяется перед сложным испытанием.",
+    "rarity": "rare",
+    "iconUrl": "/default_item_icon.png",
+    "xpMultiplier": 2,
+    "currencyMultiplier": 1.1,
+    "duration": 300,
+    "cost": 200
+  },
+  {
+    "id": 4,
+    "name": "Эпический Фолиант",
+    "description": "Мощный артефакт, удваивающий и опыт, и валюту. Действует продолжительное время.",
+    "rarity": "epic",
+    "iconUrl": "/default_item_icon.png",
+    "xpMultiplier": 2,
+    "currencyMultiplier": 2,
+    "duration": 3600,
+    "cost": 500
+  },
+  {
+    "id": 5,
+    "name": "Легендарный Тотем",
+    "description": "Древний тотем, дарующий невероятный прирост к опыту и валюте на очень долгое время. Только для избранных!",
+    "rarity": "legendary",
+    "iconUrl": "/default_item_icon.png",
+    "xpMultiplier": 3,
+    "currencyMultiplier": 2.5,
+    "duration": 7200,
+    "cost": 1000
+  }
+]

@@ -1,0 +1,196 @@
+[
+	{
+    "id": 6,
+    "linkedTaskId": 3,
+
+    "title": "Тренировка",
+    "description": "desc",
+    "sphere": "Sport",
+
+    "status": "new",
+    "priority": "low",
+    "difficulty": 1,
+
+    "updateDate": "2025-05-13T18:54:28.4329517",
+    "deadline": "2025-05-21T21:00:59",
+    "duration": 300,
+
+    "fastDoneBonus": 0,
+    "combo": false,
+    "rewardXp": 100,
+    "rewardCurrency": 0,
+
+    "author": {
+        "id": 1,
+        "name": "Илья",
+        "email": "example@example.com"
+    },
+    "executor": {
+        "id": 1,
+        "name": "Данил",
+        "email": "example@example.com"
+    }
+  },
+
+  {
+    "id": 1,
+    "linkedTaskId": null,
+
+    "title": "Утренняя пробежка",
+    "description": "Пробежать 5 км в парке.",
+    "sphere": "Sport",
+
+    "status": "new",
+    "priority": "high",
+    "difficulty": 2,
+
+    "updateDate": "2025-05-15T08:00:00.000Z",
+    "deadline": "2025-05-15T09:00:00.000Z",
+    "duration": 80,
+
+    "fastDoneBonus": 50,
+    "combo": false,
+    "rewardXp": 150,
+    "rewardCurrency": 10,
+    
+    "author": {
+      "id": 1,
+      "name": "Илья М.",
+      "email": "ilya@example.com"
+    },
+    "executor": {
+      "id": 2,
+      "name": "Василий Пупкин",
+      "email": "vasily@example.com"
+    }
+  },
+  {
+    "id": 2,
+    "linkedTaskId": null,
+
+    "title": "Подготовить отчет по проекту X",
+    "description": "Собрать данные, проанализировать, составить отчет.",
+    "sphere": "Work",
+
+    "status": "in_progress",
+    "priority": "critical",
+    "difficulty": 3,
+    
+    "updateDate": "2025-05-14T10:00:00.000Z",
+    "deadline": "2025-05-18T17:00:00.000Z",
+    "duration": 1260,
+
+    "fastDoneBonus": 100,
+    "combo": true,
+    "rewardXp": 500,
+    "rewardCurrency": 50,
+
+    "author": {
+      "id": 3,
+      "name": "Анна С.",
+      "email": "anna@example.com"
+    },
+    "executor": {
+      "id": 2,
+      "name": "Василий Пупкин",
+      "email": "vasily@example.com"
+    }
+  },
+  {
+    "id": 3,
+    "linkedTaskId": 3,
+
+    "title": "Тренировка в зале",
+    "description": "Силовая тренировка по программе.",
+    "sphere": "Sport",
+
+    "status": "done",
+    "priority": "normal",
+    "difficulty": 1,
+
+    "updateDate": "2025-05-13T18:54:28.432Z",
+    "deadline": "2025-05-13T21:00:00.000Z",
+    "duration": 3600,
+
+    "fastDoneBonus": 20,
+    "combo": false,
+    "rewardXp": 100,
+    "rewardCurrency": 0,
+
+    "author": {
+      "id": 1,
+      "name": "Илья М.",
+      "email": "ilya@example.com"
+    },
+    "executor": {
+      "id": 1,
+      "name": "Илья М.",
+      "email": "ilya@example.com"
+    }
+  },
+  {
+    "id": 4,
+    "linkedTaskId": null,
+
+    "title": "Прочитать главу книги по React",
+    "description": "Глава 5: Хуки состояния и эффектов.",
+    "sphere": "Self-Development",
+
+    "status": "pending",
+    "priority": "low",
+    "difficulty": 1,
+
+    "updateDate": "2025-05-15T12:00:00.000Z",
+    "deadline": "2025-05-16T23:59:00.000Z",
+    "duration": 5400,
+
+    "fastDoneBonus": 0,
+    "combo": false,
+    "rewardXp": 75,
+    "rewardCurrency": 5,
+
+    "author": {
+      "id": 2,
+      "name": "Василий Пупкин",
+      "email": "vasily@example.com"
+    },
+    "executor": {
+      "id": 2,
+      "name": "Василий Пупкин",
+      "email": "vasily@example.com"
+    }
+  },
+  {
+    "id": 5,
+    "linkedTaskId": null,
+
+    "title": "Закупить продукты на неделю",
+    "description": "Молоко, хлеб, овощи, фрукты, мясо.",
+    "sphere": "Household",
+
+    "status": "new",
+    "priority": "optional",
+    "difficulty": 0,
+
+    "updateDate": "2025-05-15T14:00:00.000Z",
+    "deadline": "2025-05-15T19:00:00.000Z",
+    "duration": 5,
+
+    "fastDoneBonus": 10,
+    "combo": false,
+    "rewardXp": 30,
+    "rewardCurrency": 0,
+
+    "author": {
+      "id": 3,
+      "name": "Анна С.",
+      "email": "anna@example.com"
+    },
+    "executor": {
+      "id": 3,
+      "name": "Анна С.",
+      "email": "anna@example.com"
+    }
+  }
+]
+

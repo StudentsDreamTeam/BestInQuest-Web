@@ -1,85 +1,56 @@
-import './Main.css'
+import './Main.css';
+import Header from "./Header/Header.jsx";
+import TaskList from "../../features/tasks/components/TaskList";
+import UserProfilePage from '../../features/user/components/UserProfilePage';
+import AchievementsPage from '../../features/achievements/components/AchievementsPage';
+import ShopPage from '../../features/shop/components/ShopPage'; // Новый импорт
 
-import Header from "../Header/Header"
-import TaskList from "../TaskList/TaskList"
-import ProjectList from "../ProjectList/ProjectList"
+export default function Main({ active, onOpenUpdateTaskModal, onOpenDeleteConfirmModal }) {
+  // active здесь - это activeView из AppLayout
+  let pageTitle = active; // По умолчанию заголовок равен активной вкладке
+  if (active === 'Профиль' || active === 'Достижения' || active === 'Магазин') { // Добавили 'Магазин'
+    pageTitle = ''; // Для этих страниц свой заголовок не нужен или будет внутри страницы
+  }
 
-
-export default function Main({ active }) {
   return (
-    <>
-      <div className='main'>
-        { active === 'Добавить задачу' && (
-          <>
-            <Header />
-            В разработке
-          </>
-        )}
+    <div className='main'>
+      {/* Отображаем Header только для определенных страниц, если нужно */}
+      {pageTitle && <Header title={pageTitle} />}
 
-        { active === 'Сегодня' && (
-          <>
-            <Header />
-            <TaskList />
-          </>
-        )}
+      {active === 'Сегодня' && (
+        <TaskList
+          onOpenUpdateTaskModal={onOpenUpdateTaskModal}
+          onOpenDeleteConfirmModal={onOpenDeleteConfirmModal}
+        />
+      )}
+      {active === 'Профиль' && <UserProfilePage />}
+      {active === 'Достижения' && <AchievementsPage />}
+      {active === 'Магазин' && <ShopPage />} {/* Новая страница */}
 
-        { active === 'Календарь' && (
-          <>
-            <Header />
-            В разработке
-          </>
-        )}
-
-        { active === 'Проекты' && (
-          <>
-            <Header />
-            В разработке
-            <ProjectList />
-          </>
-        )}
-
-        { active === 'Группы' && (
-          <>
-            <Header />
-            В разработке
-          </>
-        )}
-
-        { active === 'Награды' && (
-          <>
-            <Header />
-            В разработке
-          </>
-        )}
-
-        { active === 'Инвентарь' && (
-          <>
-            <Header />
-            В разработке
-          </>
-        )}
-
-        { active === 'Достижения' && (
-          <>
-            <Header />
-            В разработке
-          </>
-        )}
-
-        { active === 'Соревнования' && (
-          <>
-            <Header />
-            В разработке
-          </>
-        )}
-
-        { active === 'Рейтинг' && (
-          <>
-            <Header />
-            В разработке
-          </>
-        )}
-      </div>
-    </>
-  )
+      {/* Другие вкладки */}
+      {active === 'Проекты' && (
+        <>
+          {/* <Header title={'Проекты'} /> */}
+          In development (Projects)
+        </>
+      )}
+      {/* {active === 'Магазин' && ( // Удаляем старую заглушку
+        <>
+          In development (Shop)
+        </>
+      )} */}
+      {active === 'Награды' && (
+        <>
+          {/* <Header title={'Награды'} /> */}
+          In development (Rewards)
+        </>
+      )}
+      {active === 'Инвентарь' && (
+        <>
+          {/* <Header title={'Инвентарь'} /> */}
+          In development (Inventory)
+        </>
+      )}
+    </div>
+  );
 }
