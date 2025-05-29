@@ -6,13 +6,22 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.js'],
     globals: true,
-    deps: {
-      inline: ['react']
-    },
     coverage: {
-      provider: 'v8', // или 'istanbul' (если 'v8' не работает)
-      reporter: ['text', 'lcov'], // 'lcov' для Sonar
-      reportsDirectory: './coverage', // папка с отчетами
+      provider: 'v8',
+      reporter: ['text', 'lcov'],
+      reportsDirectory: './coverage',
+      include: ['src/**/*.{js,jsx,ts,tsx}'],
+      exclude: [
+        '**/__tests__/**',
+        '**/*.d.ts',
+        '**/index.{js,jsx,ts,tsx}'
+      ]
+    },
+    // Замените устаревший deps.inline
+    server: {
+      deps: {
+        inline: ['react']
+      }
     }
   },
   resolve: {
