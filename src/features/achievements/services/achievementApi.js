@@ -1,14 +1,8 @@
 // === FILE: .\src\features\achievements\services\achievementApi.js ===
+// ВАРИАНТ БЕЗ ISACHIEVED
 
 import { API_BASE_URL } from '../../../constants';
 
-/**
- * Загружает все доступные достижения для конкретного пользователя.
- * API НЕ возвращает статус получения (isAchieved) или текущий прогресс.
- * @param {number|string} userId - ID пользователя.
- * @returns {Promise<Array<object>>} Массив достижений пользователя.
- * @throws {Error} Если запрос не удался.
- */
 export const fetchUserAchievements = async (userId) => {
   if (!userId) {
     throw new Error("User ID is required to fetch achievements.");
@@ -19,24 +13,25 @@ export const fetchUserAchievements = async (userId) => {
       const errorText = await response.text();
       throw new Error(`Failed to fetch user achievements: ${response.status} ${errorText}`);
     }
-    const achievementsFromApi = await response.json();
+    const userAchievementsData = await response.json();
 
-    // Адаптируем поле 'icon' в 'iconUrl' и используем дефолтное значение, если 'icon' нет.
-    // Также, генерируем временный ключ, если 'id' отсутствует или null.
-    return achievementsFromApi.map((ach, index) => {
+    return userAchievementsData.map((userAch, index) => {
+      const achievementDetails = userAch.achievement;
       let uniqueKey;
-      if (ach.id !== undefined && ach.id !== null) {
-        uniqueKey = ach.id;
+
+      if (achievementDetails && achievementDetails.id !== undefined && achievementDetails.id !== null) {
+        uniqueKey = achievementDetails.id;
       } else {
-        // Генерируем ключ на основе индекса и, возможно, других уникальных данных, если есть
-        // Например, ach.name, если он уникален, или просто индекс как крайняя мера
-        console.warn(`Achievement object at index ${index} is missing an ID. Using fallback key.`, ach);
-        uniqueKey = `achievement-fallback-${index}-${ach.name || 'no-name'}`; // Добавим имя для большей уникальности, если есть
+        console.warn(`Achievement object at index ${index} (or its nested 'achievement' object) is missing an ID. Using fallback key.`, userAch);
+        uniqueKey = `achievement-fallback-${index}-${achievementDetails?.name || 'no-name'}`;
       }
+
       return {
-        ...ach,
-        id: uniqueKey, // Присваиваем обработанный id (оригинальный или сгенерированный)
-        iconUrl: ach.icon || '/default_achievement_icon.png',
+        ...achievementDetails,
+        id: uniqueKey,
+        iconUrl: (achievementDetails && achievementDetails.icon) || '/default_achievement_icon.png',
+        // acquireDate: userAch.acquireDate, // Можно оставить, если где-то нужен
+        // isAchieved здесь НЕ добавляется
       };
     });
 
