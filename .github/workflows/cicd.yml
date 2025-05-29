@@ -12,6 +12,9 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate lock file
+        if: "!steps.cache.outputs.cache-hit"  # Или более точная проверка:
+        run: npm install
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
