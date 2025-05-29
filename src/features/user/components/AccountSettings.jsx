@@ -1,3 +1,5 @@
+// === FILE: .\src\features\user\components\AccountSettings.jsx ===
+
 import { styled } from 'styled-components';
 import { useUser } from '../../../contexts/UserContext';
 
@@ -59,7 +61,7 @@ const DestructiveActionLink = styled(ActionLink)`
 
 
 export default function AccountSettings() {
-  const { user } = useUser();
+  const { user, logout } = useUser(); // Получаем logout из контекста
 
   if (!user) return null;
 
@@ -78,9 +80,9 @@ export default function AccountSettings() {
     // Логика удаления (появится позже, вероятно, с модальным окном подтверждения)
   };
 
-  const handleLogout = () => {
-    console.log("Инициирован выход из аккаунта пользователя:", user.id);
-    // Логика выхода (появится позже)
+  const handleLogoutClick = () => { // Переименовал, чтобы не конфликтовать с logout из контекста
+    logout(); // Вызываем функцию logout из контекста
+    // App.jsx автоматически перерисует LoginPage, так как user станет null
   };
 
   return (
@@ -101,7 +103,7 @@ export default function AccountSettings() {
         <DestructiveActionLink onClick={handleDeleteAccount}>Удалить аккаунт</DestructiveActionLink>
       </SettingItem>
       <SettingItem>
-        <ActionLink onClick={handleLogout}>Выйти</ActionLink>
+        <ActionLink onClick={handleLogoutClick}>Выйти</ActionLink>
       </SettingItem>
     </SettingsContainer>
   );

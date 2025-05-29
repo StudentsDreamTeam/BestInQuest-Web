@@ -1,43 +1,57 @@
-import { useState, useEffect } from 'react';
+// === FILE: .\src\App.jsx ===
+
 import AppLayout from './layouts/AppLayout';
 import LoginPage from './features/auth/components/LoginPage';
-import { UserProvider } from './contexts/UserContext';
+import { UserProvider, useUser } from './contexts/UserContext';
 import { TasksProvider } from './contexts/TasksContext';
+import { styled } from 'styled-components';
 
-export default function App() {
-  // Простое состояние для симуляции аутентификации
-  // В реальном приложении это будет сложнее (например, проверка токена в localStorage)
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+// Простой компонент для отображения загрузки
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  z-index: 2000;
+  color: #333;
+`;
 
-  // Симуляция проверки аутентификации при загрузке (например, из localStorage)
-  useEffect(() => {
-    // const storedAuth = localStorage.getItem('isAuthenticated');
-    // if (storedAuth === 'true') {
-    //   setIsAuthenticated(true);
-    // }
-    // Пока что мы всегда начинаем с экрана входа
-  }, []);
+function AppContent() {
+  const { user, isLoadingUser, userError } = useUser();
 
-
-  const handleLoginSuccess = () => {
-    setIsAuthenticated(true);
-    // localStorage.setItem('isAuthenticated', 'true'); // Для сохранения между сессиями
-  };
-
-  // const handleLogout = () => { // Понадобится позже
-  //   setIsAuthenticated(false);
-  //   localStorage.removeItem('isAuthenticated');
-  // };
-
-  if (!isAuthenticated) {
-    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  if (isLoadingUser) {
+    return <LoadingOverlay>Проверка сессии...</LoadingOverlay>;
   }
 
+  // Если была ошибка при попытке восстановить сессию и пользователь не загружен
+  if (userError && !user) {
+    // Мы не показываем ошибку здесь напрямую, т.к. LoginPage сама будет пытаться сделать вход.
+    // Это сообщение полезно для отладки.
+    console.warn("Ошибка при автоматическом входе, отображается страница входа:", userError);
+  }
+
+  if (!user) {
+    return <LoginPage />;
+  }
+
+  // Пользователь аутентифицирован, показываем основной layout
   return (
-    <UserProvider> {/* UserProvider теперь загружает пользователя только после "входа" */}
-      <TasksProvider>
-        <AppLayout /> {/* AppLayout будет доступен только аутентифицированным пользователям */}
-      </TasksProvider>
+    <TasksProvider>
+      <AppLayout />
+    </TasksProvider>
+  );
+}
+
+export default function App() {
+  return (
+    <UserProvider> {/* UserProvider теперь оборачивает всё приложение */}
+      <AppContent />
     </UserProvider>
   );
 }

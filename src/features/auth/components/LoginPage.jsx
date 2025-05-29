@@ -1,6 +1,8 @@
+// === FILE: .\src\features\auth\components\LoginPage.jsx ===
+
 import { useState } from 'react';
 import { styled } from 'styled-components';
-// import { ReactComponent as EyeIcon } from '../../../assets/icons/EyeIcon.svg'; // Предполагаем, что есть иконка глаза
+import { useUser } from '../../../contexts/UserContext';
 
 const PageWrapper = styled.div`
   display: flex;
@@ -72,11 +74,13 @@ const PasswordToggle = styled.button`
   align-items: center;
   justify-content: center;
   color: #6c757d;
+  font-size: 0.8rem;
 
-  svg {
+  /* Замените на вашу иконку глаза, если есть */
+  /* svg {
     width: 20px;
     height: 20px;
-  }
+  } */
   &:hover {
     color: #333;
   }
@@ -110,6 +114,10 @@ const PrimaryButton = styled.button`
   &:hover {
     background-color: #823cdf;
   }
+  &:disabled {
+    background-color: #c7a5f2;
+    cursor: not-allowed;
+  }
 `;
 
 const SecondaryButton = styled.button`
@@ -129,21 +137,36 @@ const SecondaryButton = styled.button`
   }
 `;
 
-export default function LoginPage({ onLoginSuccess }) {
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  margin-bottom: -0.5rem; /* Компенсировать отступ формы */
+  text-align: left;
+`;
+
+export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (event) => {
+  const { login } = useUser();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Попытка входа с данными:', { email, password });
-    // Здесь будет логика API запроса
-    // Пока просто симулируем успешный вход
-    if (email && password) { // Очень простая "валидация"
-      console.log('Успешный вход (симуляция). Загружаем пользователя с id=1.');
-      onLoginSuccess(); // Вызываем коллбэк для смены состояния в App.jsx
-    } else {
-      alert('Пожалуйста, введите email и пароль.');
+    setIsSubmitting(true);
+    setError('');
+    try {
+      await login(email, password);
+      // Успешный вход обработается в App.jsx через UserContext
+      // onLoginSuccess больше не нужен здесь, так как App.jsx слушает user из context
+    } catch (err) {
+      console.error('Login Page: Login failed', err);
+      setError(err.message || 'Ошибка входа. Пожалуйста, проверьте данные.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -170,6 +193,7 @@ export default function LoginPage({ onLoginSuccess }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={isSubmitting}
             />
           </InputGroup>
           <InputGroup>
@@ -179,14 +203,18 @@ export default function LoginPage({ onLoginSuccess }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={isSubmitting}
             />
-            <PasswordToggle type="button" onClick={toggleShowPassword} title={showPassword ? "Скрыть пароль" : "Показать пароль"}>
-              {/* <EyeIcon /> Замените на вашу иконку глаза */}
+            <PasswordToggle type="button" onClick={toggleShowPassword} title={showPassword ? "Скрыть пароль" : "Показать пароль"} disabled={isSubmitting}>
+              {showPassword ? "Скрыть" : "Показать"}
             </PasswordToggle>
           </InputGroup>
           <ForgotPasswordLink href="#">Не помню пароль</ForgotPasswordLink>
-          <PrimaryButton type="submit">Войти</PrimaryButton>
-          <SecondaryButton type="button" onClick={handleCreateProfile}>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <PrimaryButton type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Вход...' : 'Войти'}
+          </PrimaryButton>
+          <SecondaryButton type="button" onClick={handleCreateProfile} disabled={isSubmitting}>
             Создать профиль
           </SecondaryButton>
         </Form>
