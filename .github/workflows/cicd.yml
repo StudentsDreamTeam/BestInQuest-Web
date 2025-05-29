@@ -17,7 +17,9 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      
+      - name: Generate lock file
+        if: "!steps.cache.outputs.cache-hit"  # Или более точная проверка:
+        run: npm install
       - run: npm ci
       # - run: npm run lint
       - run: npm run build
