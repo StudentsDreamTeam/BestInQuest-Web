@@ -25,7 +25,11 @@ jobs:
       # - run: npm install -D @testing-library/jest-dom @testing-library/react @testing-library/user-event jsdom
       # - run: npm run lint
       - run: npm run build
-      - run: npm run test:coverage
+      # - run: npm run test:coverage
+      - name: Run and send to SonarCloud
+        run: |
+          npx vitest run --coverage.enabled --coverage.reporter lcov --coverage.provider v8
+          sonar-scanner -Dsonar.projectKey=StudentsDreamTeam_BestInQuest-Web
       
       - name: Cache SonarCloud
         uses: actions/cache@v3
@@ -44,7 +48,7 @@ jobs:
             -Dsonar.projectKey=StudentsDreamTeam_BestInQuest-Web
             -Dsonar.sources=src
             -Dsonar.exclusions=**/__mocks__/**,**/public/**
-            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+            # -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
             ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
           
           
