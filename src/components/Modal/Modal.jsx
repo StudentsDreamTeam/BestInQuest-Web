@@ -43,6 +43,7 @@ export default function Modal({ children, open, modelType, onCloseModal }) {
       <dialog
         ref={ dialog }
         className={dialogClasses}
+        data-testid="modal-dialog"
       >
         { children }
       </dialog>,

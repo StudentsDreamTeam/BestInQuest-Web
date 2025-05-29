@@ -150,7 +150,7 @@ export default function Task({ task, onOpenUpdateModal, onOpenDeleteConfirmModal
   const executorName = task.executor?.name || 'Не назначен';
 
   return (
-    <TaskContainer $isImportant={isTaskImportant}>
+    <TaskContainer $isImportant={isTaskImportant} data-testid="task-container">
       <CheckButton isImportant={isTaskImportant} onClick={handleToggleComplete}>
         <CheckIconToShow />
       </CheckButton>
