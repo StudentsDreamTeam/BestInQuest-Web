@@ -17,10 +17,10 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - name: Rebuild package-lock.json
-        run: |
-          rm -f package-lock.json  # Удаляем старый lock-файл
-          npm install              # Генерируем новый
+      # - name: Rebuild package-lock.json
+      #   run: |
+      #     rm -f package-lock.json  # Удаляем старый lock-файл
+      #     npm install              # Генерируем новый
       - run: npm ci
       - run: npm install -D @testing-library/jest-dom @testing-library/react @testing-library/user-event jsdom
       # - run: npm run lint
