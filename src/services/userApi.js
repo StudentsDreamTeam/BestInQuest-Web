@@ -35,10 +35,9 @@ export async function loginUser(email, password) {
   if (!response.ok) {
     let errorMessage = `Authentication failed: ${response.status}`;
     try {
-      const errorBody = await response.json(); // API может возвращать JSON с ошибкой
+      const errorBody = await response.json();
       errorMessage += ` - ${errorBody.message || errorBody.error || JSON.stringify(errorBody)}`;
     } catch (e) {
-      // Если тело ответа не JSON или пустое
       const textError = await response.text();
       if (textError) {
         errorMessage += ` - ${textError}`;
@@ -46,5 +45,53 @@ export async function loginUser(email, password) {
     }
     throw new Error(errorMessage);
   }
-  return response.json(); // Предполагаем, что API возвращает объект пользователя
+  return response.json();
+}
+
+/**
+ * Регистрирует нового пользователя.
+ * @param {object} registrationData - Данные для регистрации (name, email, password).
+ * @returns {Promise<object>} Ответ от API (может быть созданный пользователь или сообщение об успехе).
+ * @throws {Error} Если регистрация не удалась.
+ */
+export async function registerUser(registrationData) {
+  const currentDate = new Date().toISOString();
+  const payload = {
+    ...registrationData,
+    xp: 0,
+    level: 1,
+    streak: 0,
+    registrationDate: currentDate,
+    lastInDate: currentDate,
+  };
+
+  const response = await fetch(`${API_BASE_URL}/users/wrong-add`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    let errorMessage = `Registration failed: ${response.status}`;
+    try {
+      const errorBody = await response.json();
+      errorMessage += ` - ${errorBody.message || errorBody.error || JSON.stringify(errorBody)}`;
+    } catch (e) {
+      const textError = await response.text();
+      if (textError) {
+        errorMessage += ` - ${textError}`;
+      }
+    }
+    throw new Error(errorMessage);
+  }
+  // API может вернуть 201 Created с пустым телом или с созданным пользователем
+  // Если тело пустое, response.json() вызовет ошибку, поэтому проверяем Content-Type или статус
+  const contentType = response.headers.get("content-type");
+  if (contentType && contentType.indexOf("application/json") !== -1) {
+    return response.json();
+  } else {
+    return { success: true, message: "Registration successful, no content returned." }; // Возвращаем объект успеха, если нет JSON
+  }
 }
