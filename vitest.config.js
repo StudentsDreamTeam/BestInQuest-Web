@@ -1,5 +1,5 @@
-import { defineConfig } from 'vitest/config'
-import path from 'path'
+import { defineConfig } from 'vitest/config';
+import path from 'path';
 
 export default defineConfig({
   test: {
@@ -8,6 +8,11 @@ export default defineConfig({
     globals: true,
     deps: {
       inline: ['react']
+    },
+    coverage: {
+      provider: 'v8', // или 'istanbul' (если 'v8' не работает)
+      reporter: ['text', 'lcov'], // 'lcov' для Sonar
+      reportsDirectory: './coverage', // папка с отчетами
     }
   },
   resolve: {
@@ -15,4 +20,4 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   }
-}) 
+});
