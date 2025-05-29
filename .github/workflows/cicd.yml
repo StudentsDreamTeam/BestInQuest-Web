@@ -43,10 +43,7 @@ jobs:
             -Dsonar.testExecutionReportPaths=coverage/test-report.xml
             -Dsonar.coverage.exclusions=**/__mocks__/**,**/public/**,**/*.stories.*
             -Dsonar.qualitygate.wait=true
-            ${{ github.event_name == 'pull_request' && 
-               '-Dsonar.pullrequest.key=' + github.event.pull_request.number + 
-               ' -Dsonar.pullrequest.branch=' + github.head_ref || 
-               '-Dsonar.branch.name=' + github.ref_name }}
+            ${{ github.event_name == 'pull_request' && format('-Dsonar.pullrequest.key={0} -Dsonar.pullrequest.branch={1}', github.event.pull_request.number, github.head_ref) || format('-Dsonar.branch.name={0}', github.ref_name) }}
       
       # - run: npm ci
       # # - run: npm run lint
