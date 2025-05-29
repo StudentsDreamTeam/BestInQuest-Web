@@ -57,7 +57,7 @@ const CloseButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-top: 1.5rem; /* Отступ сверху */
+  margin-top: 1.5rem;
 
   &:hover {
     background-color: #823cdf;
@@ -71,14 +71,14 @@ export default function AchievementModal({ achievement, onClose }) {
   const {
     name,
     description,
-    iconUrl, // Используем это поле, которое подготавливается в achievementApi.js
+    iconUrl, // Теперь всегда путь к дефолтной иконке
     requiredXp,
     type,
-  } = achievement; // Убраны isAchieved и связанные с прогрессом поля
+  } = achievement;
 
   return (
     <ModalContent>
-      <AchievementIconLarge src={iconUrl} alt={name} /> {/* iconUrl из achievementApi.js */}
+      <AchievementIconLarge src={iconUrl} alt={name} />
       <AchievementNameLarge>{name}</AchievementNameLarge>
       <AchievementDescriptionLarge>{description}</AchievementDescriptionLarge>
 
@@ -92,7 +92,6 @@ export default function AchievementModal({ achievement, onClose }) {
           <strong>Тип:</strong> {type}
         </DetailItem>
       )}
-      {/* Нет отображения статуса или прогресса */}
       <CloseButton onClick={onClose}>Закрыть</CloseButton>
     </ModalContent>
   );

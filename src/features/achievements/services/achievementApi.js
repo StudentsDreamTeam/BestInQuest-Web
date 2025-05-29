@@ -1,8 +1,17 @@
 // === FILE: .\src\features\achievements\services\achievementApi.js ===
-// ВАРИАНТ БЕЗ ISACHIEVED
 
 import { API_BASE_URL } from '../../../constants';
 
+const DEFAULT_ACHIEVEMENT_ICON_URL = '/default_achievement_icon.png';
+
+/**
+ * Загружает все доступные достижения для конкретного пользователя.
+ * API НЕ возвращает статус получения (isAchieved) или текущий прогресс.
+ * Структура ответа API: массив объектов вида { achievement: { id, name, ... }, acquireDate: "..." }
+ * @param {number|string} userId - ID пользователя.
+ * @returns {Promise<Array<object>>} Массив достижений пользователя, адаптированный для фронтенда.
+ * @throws {Error} Если запрос не удался.
+ */
 export const fetchUserAchievements = async (userId) => {
   if (!userId) {
     throw new Error("User ID is required to fetch achievements.");
@@ -29,9 +38,9 @@ export const fetchUserAchievements = async (userId) => {
       return {
         ...achievementDetails,
         id: uniqueKey,
-        iconUrl: (achievementDetails && achievementDetails.icon) || '/default_achievement_icon.png',
-        // acquireDate: userAch.acquireDate, // Можно оставить, если где-то нужен
-        // isAchieved здесь НЕ добавляется
+        iconUrl: DEFAULT_ACHIEVEMENT_ICON_URL, // <--- ВСЕГДА ДЕФОЛТНАЯ ИКОНКА
+        // acquireDate: userAch.acquireDate, // Раскомментируйте, если это поле нужно
+        // isAchieved: !!userAch.acquireDate, // Раскомментируйте, если нужен флаг isAchieved на основе acquireDate
       };
     });
 

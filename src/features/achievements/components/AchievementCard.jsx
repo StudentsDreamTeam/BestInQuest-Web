@@ -13,8 +13,8 @@ const Card = styled.div`
   text-align: center;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   cursor: pointer;
-  min-height: 280px; /* Примерная высота, чтобы карточки выглядели однородно */
-  justify-content: flex-start; /* Контент начинается сверху */
+  min-height: 280px;
+  justify-content: flex-start;
 `;
 
 const IconPlaceholder = styled.div`
@@ -46,20 +46,19 @@ const Description = styled.p`
   font-size: 0.875rem;
   color: #666;
   line-height: 1.4;
-  /* flex-grow: 1; убрано, чтобы не растягивать если текста мало */
 `;
 
 export default function AchievementCard({ achievement, onClick }) {
-  const { name, description, iconUrl } = achievement; // Убраны isAchieved, progressCurrent, progressTarget
+  const { name, description, iconUrl } = achievement;
 
   return (
     <Card onClick={() => onClick(achievement)}>
       <IconPlaceholder>
-        <img src={iconUrl} alt={name} /> {/* iconUrl формируется в API сервисе */}
+        {/* iconUrl теперь всегда будет путем к дефолтной иконке */}
+        <img src={iconUrl} alt={name} />
       </IconPlaceholder>
       <Name>{name}</Name>
       <Description>{description}</Description>
-      {/* Нет отображения статуса или прогресса */}
     </Card>
   );
 }
