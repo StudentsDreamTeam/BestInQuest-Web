@@ -17,16 +17,16 @@ jobs:
         with:
           node-version: 20
           cache: npm
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm install -D @vitest/coverage-c8 @testing-library/react@experimental --legacy-peer-deps
       
-      - run: npm ci
-      # - run: npm run lint
-      - run: npm run build
+      - name: Run tests with coverage
+        run: npm test -- --coverage
       
-      - name: Cache SonarCloud
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: sonar-${{ github.ref }}
+      - name: Build project
+        run: npm run build
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5.0.0
@@ -38,8 +38,38 @@ jobs:
             -Dsonar.organization=studentsdreamteam
             -Dsonar.projectKey=StudentsDreamTeam_BestInQuest-Web
             -Dsonar.sources=src
-            -Dsonar.exclusions=**/__mocks__/**,**/public/**
-            ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
+            -Dsonar.tests=src
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.testExecutionReportPaths=coverage/test-report.xml
+            -Dsonar.coverage.exclusions=**/__mocks__/**,**/public/**,**/*.stories.*
+            -Dsonar.qualitygate.wait=true
+            ${{ github.event_name == 'pull_request' && 
+               '-Dsonar.pullrequest.key=' + github.event.pull_request.number + 
+               ' -Dsonar.pullrequest.branch=' + github.head_ref || 
+               '-Dsonar.branch.name=' + github.ref_name }}
+      
+      # - run: npm ci
+      # # - run: npm run lint
+      # - run: npm run build
+      
+      # - name: Cache SonarCloud
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/.sonar/cache
+      #     key: sonar-${{ github.ref }}
+
+      # - name: SonarCloud Scan
+      #   uses: SonarSource/sonarqube-scan-action@v5.0.0
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     args: >
+      #       -Dsonar.organization=studentsdreamteam
+      #       -Dsonar.projectKey=StudentsDreamTeam_BestInQuest-Web
+      #       -Dsonar.sources=src
+      #       -Dsonar.exclusions=**/__mocks__/**,**/public/**
+      #       ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
           
           
   build-and-push:
