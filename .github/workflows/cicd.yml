@@ -17,10 +17,14 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      
+      - name: Rebuild package-lock.json
+        run: |
+          rm -f package-lock.json  # Удаляем старый lock-файл
+          npm install              # Генерируем новый
       - run: npm ci
       # - run: npm run lint
       - run: npm run build
+      - run: npm run test:coverage
       
       - name: Cache SonarCloud
         uses: actions/cache@v3
@@ -39,6 +43,7 @@ jobs:
             -Dsonar.projectKey=StudentsDreamTeam_BestInQuest-Web
             -Dsonar.sources=src
             -Dsonar.exclusions=**/__mocks__/**,**/public/**
+            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
             ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
           
           
