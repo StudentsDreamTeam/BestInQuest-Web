@@ -1,4 +1,4 @@
-// === NEW FILE: .\src\features\achievements\components\AchievementModal.jsx ===
+// === FILE: .\src\features\achievements\components\AchievementModal.jsx ===
 
 import { styled } from 'styled-components';
 
@@ -16,12 +16,12 @@ const ModalContent = styled.div`
 `;
 
 const AchievementIconLarge = styled.img`
-  width: 200px; /* Размер побольше, чем в карточке */
+  width: 200px;
   height: 200px;
   object-fit: cover;
   margin-bottom: 1.5rem;
   border-radius: 10px;
-  background-color: #f0f0f0; /* Заглушка, если изображение с прозрачностью */
+  background-color: #f0f0f0;
 `;
 
 const AchievementNameLarge = styled.h2`
@@ -38,34 +38,21 @@ const AchievementDescriptionLarge = styled.p`
   max-width: 450px;
 `;
 
-const StatusText = styled.p`
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: ${props => (props.$isAchieved ? '#28a745' : '#6c757d')}; /* Зеленый для полученных, серый для остальных */
-`;
-
-const ProgressBarContainerLarge = styled.div`
-  width: 80%;
-  max-width: 300px;
-  height: 10px;
-  background-color: #e9ecef;
-  border-radius: 5px;
-  margin-bottom: 0.5rem;
-  overflow: hidden;
-`;
-
-const ProgressBarFillLarge = styled.div`
-  height: 100%;
-  width: ${props => props.$progress}%;
-  background-color: #9747FF; /* Фирменный фиолетовый */
-  border-radius: 5px;
-  transition: width 0.3s ease-in-out;
-`;
-
-const ProgressTextLarge = styled.p`
+const DetailItem = styled.p`
   font-size: 0.9rem;
-  color: #495057;
+  color: #444;
+  margin-bottom: 0.5rem;
+  strong {
+    color: #333;
+  }
+`;
+
+const StatusTextLarge = styled.p`
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  color: ${props => (props.$isAchieved ? '#28a745' : '#6c757d')};
 `;
 
 const CloseButton = styled.button`
@@ -89,8 +76,15 @@ const CloseButton = styled.button`
 export default function AchievementModal({ achievement, onClose }) {
   if (!achievement) return null;
 
-  const { name, description, iconUrl, progressCurrent, progressTarget, isAchieved } = achievement;
-  const progressPercentage = progressTarget > 0 ? (Math.min(progressCurrent, progressTarget) / progressTarget) * 100 : (isAchieved ? 100 : 0);
+  const {
+    name,
+    description,
+    iconUrl, // Используем это поле, которое должно быть подготовлено в achievementApi.js
+    isAchieved, // Предполагаем, что это поле приходит от API
+    requiredXp,
+    type,
+    // Убираем progressCurrent, progressTarget, так как их нет в новой структуре
+  } = achievement;
 
   return (
     <ModalContent>
@@ -98,21 +92,24 @@ export default function AchievementModal({ achievement, onClose }) {
       <AchievementNameLarge>{name}</AchievementNameLarge>
       <AchievementDescriptionLarge>{description}</AchievementDescriptionLarge>
 
-      {isAchieved ? (
-        <StatusText $isAchieved={true}>Достижение получено!</StatusText>
-      ) : (
-        <>
-          <StatusText $isAchieved={false}>В процессе</StatusText>
-          {progressTarget > 0 && (
-            <>
-              <ProgressBarContainerLarge>
-                <ProgressBarFillLarge $progress={progressPercentage} />
-              </ProgressBarContainerLarge>
-              <ProgressTextLarge>{`${progressCurrent} / ${progressTarget}`}</ProgressTextLarge>
-            </>
-          )}
-        </>
+      {/* Отображаем другие доступные атрибуты */}
+      {typeof requiredXp === 'number' && (
+        <DetailItem>
+          <strong>Требуемый опыт:</strong> {requiredXp}
+        </DetailItem>
       )}
+      {type && (
+        <DetailItem>
+          <strong>Тип:</strong> {type}
+        </DetailItem>
+      )}
+
+      <StatusTextLarge $isAchieved={!!isAchieved}>
+        {isAchieved ? 'Достижение получено!' : 'Достижение не получено'}
+      </StatusTextLarge>
+
+      {/* Убираем прогресс-бар, так как его не будет */}
+
       <CloseButton onClick={onClose}>Закрыть</CloseButton>
     </ModalContent>
   );

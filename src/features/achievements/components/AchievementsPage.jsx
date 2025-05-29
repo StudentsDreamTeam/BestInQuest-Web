@@ -5,8 +5,8 @@ import { styled } from 'styled-components';
 import AchievementCard from './AchievementCard';
 import AchievementModal from './AchievementModal';
 import Modal from '../../../components/Modal/Modal';
-import { fetchUserAchievements } from '../services/achievementApi'; // Изменено
-import { useUser } from '../../../contexts/UserContext'; // Новый импорт
+import { fetchUserAchievements } from '../services/achievementApi';
+import { useUser } from '../../../contexts/UserContext';
 
 const PageContainer = styled.div`
   padding: 0;
@@ -72,9 +72,9 @@ const ErrorMessage = styled(LoadingMessage)`
 `;
 
 export default function AchievementsPage() {
-  const { user, isLoadingUser } = useUser(); // Получаем пользователя из контекста
+  const { user, isLoadingUser } = useUser();
   const [achievements, setAchievements] = useState([]);
-  const [isLoadingAchievements, setIsLoadingAchievements] = useState(true); // Переименовано для ясности
+  const [isLoadingAchievements, setIsLoadingAchievements] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('all');
   const [selectedAchievement, setSelectedAchievement] = useState(null);
@@ -83,8 +83,7 @@ export default function AchievementsPage() {
   useEffect(() => {
     const loadAchievements = async () => {
       if (!user || !user.id) {
-        // Пользователь еще не загружен или отсутствует ID, ждем
-        if (!isLoadingUser) { // Если загрузка пользователя завершилась и его нет
+        if (!isLoadingUser) {
             setError("Не удалось загрузить достижения: пользователь не определен.");
             setIsLoadingAchievements(false);
         }
@@ -94,9 +93,7 @@ export default function AchievementsPage() {
       setIsLoadingAchievements(true);
       setError(null);
       try {
-        // console.log(`Запрос достижений для пользователя ID: ${user.id}`);
-        const data = await fetchUserAchievements(user.id); // Используем ID пользователя
-        // Предполагаем, что API возвращает isAchieved и progressCurrent для каждого достижения.
+        const data = await fetchUserAchievements(user.id);
         setAchievements(data);
       } catch (err) {
         console.error("Ошибка при загрузке достижений пользователя:", err);
@@ -106,13 +103,11 @@ export default function AchievementsPage() {
       }
     };
 
-    // Загружаем достижения, когда пользователь (user.id) становится доступен.
-    // Если isLoadingUser true, то эффект все равно подождет следующего рендера, когда user может появиться.
     if (!isLoadingUser) {
         loadAchievements();
     }
 
-  }, [user, isLoadingUser]); // Зависимость от user и isLoadingUser
+  }, [user, isLoadingUser]);
 
   const handleAchievementCardClick = (achievement) => {
     setSelectedAchievement(achievement);
@@ -124,11 +119,12 @@ export default function AchievementsPage() {
     setSelectedAchievement(null);
   };
 
+  // Фильтруем по полю isAchieved, которое, как мы предполагаем, приходит с API
+  // или было добавлено при маппинге в fetchUserAchievements
   const filteredAchievements = activeTab === 'all'
     ? achievements
     : achievements.filter(ach => ach.isAchieved);
 
-  // Сначала проверяем загрузку пользователя, потом загрузку достижений
   if (isLoadingUser) {
     return <PageContainer><LoadingMessage>Загрузка данных пользователя...</LoadingMessage></PageContainer>;
   }
@@ -154,7 +150,7 @@ export default function AchievementsPage() {
         <AchievementsGrid>
           {filteredAchievements.map(ach => (
             <AchievementCard
-              key={ach.id}
+              key={ach.id} // Используем ID из ачивки
               achievement={ach}
               onClick={handleAchievementCardClick}
             />
