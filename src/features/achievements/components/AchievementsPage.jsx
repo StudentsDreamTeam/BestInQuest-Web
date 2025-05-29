@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import AchievementCard from './AchievementCard';
-import AchievementModal from './AchievementModal'; // Новый импорт
-import Modal from '../../../components/Modal/Modal'; // Общий компонент модального окна
-import { fetchAllAchievements } from '../services/achievementApi';
+import AchievementModal from './AchievementModal';
+import Modal from '../../../components/Modal/Modal';
+import { fetchUserAchievements } from '../services/achievementApi'; // Изменено
+import { useUser } from '../../../contexts/UserContext'; // Новый импорт
 
 const PageContainer = styled.div`
   padding: 0;
@@ -71,28 +72,47 @@ const ErrorMessage = styled(LoadingMessage)`
 `;
 
 export default function AchievementsPage() {
+  const { user, isLoadingUser } = useUser(); // Получаем пользователя из контекста
   const [achievements, setAchievements] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingAchievements, setIsLoadingAchievements] = useState(true); // Переименовано для ясности
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('all');
-  const [selectedAchievement, setSelectedAchievement] = useState(null); // Для модального окна
-  const [isModalOpen, setIsModalOpen] = useState(false); // Состояние модального окна
+  const [selectedAchievement, setSelectedAchievement] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const loadAchievements = async () => {
-      setIsLoading(true);
+      if (!user || !user.id) {
+        // Пользователь еще не загружен или отсутствует ID, ждем
+        if (!isLoadingUser) { // Если загрузка пользователя завершилась и его нет
+            setError("Не удалось загрузить достижения: пользователь не определен.");
+            setIsLoadingAchievements(false);
+        }
+        return;
+      }
+
+      setIsLoadingAchievements(true);
       setError(null);
       try {
-        const data = await fetchAllAchievements();
+        // console.log(`Запрос достижений для пользователя ID: ${user.id}`);
+        const data = await fetchUserAchievements(user.id); // Используем ID пользователя
+        // Предполагаем, что API возвращает isAchieved и progressCurrent для каждого достижения.
         setAchievements(data);
       } catch (err) {
+        console.error("Ошибка при загрузке достижений пользователя:", err);
         setError(err.message);
       } finally {
-        setIsLoading(false);
+        setIsLoadingAchievements(false);
       }
     };
-    loadAchievements();
-  }, []);
+
+    // Загружаем достижения, когда пользователь (user.id) становится доступен.
+    // Если isLoadingUser true, то эффект все равно подождет следующего рендера, когда user может появиться.
+    if (!isLoadingUser) {
+        loadAchievements();
+    }
+
+  }, [user, isLoadingUser]); // Зависимость от user и isLoadingUser
 
   const handleAchievementCardClick = (achievement) => {
     setSelectedAchievement(achievement);
@@ -101,14 +121,18 @@ export default function AchievementsPage() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedAchievement(null); // Сбрасываем выбранное достижение
+    setSelectedAchievement(null);
   };
 
   const filteredAchievements = activeTab === 'all'
     ? achievements
     : achievements.filter(ach => ach.isAchieved);
 
-  if (isLoading) {
+  // Сначала проверяем загрузку пользователя, потом загрузку достижений
+  if (isLoadingUser) {
+    return <PageContainer><LoadingMessage>Загрузка данных пользователя...</LoadingMessage></PageContainer>;
+  }
+  if (isLoadingAchievements) {
     return <PageContainer><LoadingMessage>Загрузка достижений...</LoadingMessage></PageContainer>;
   }
 
@@ -132,7 +156,7 @@ export default function AchievementsPage() {
             <AchievementCard
               key={ach.id}
               achievement={ach}
-              onClick={handleAchievementCardClick} // Передаем обработчик
+              onClick={handleAchievementCardClick}
             />
           ))}
         </AchievementsGrid>
@@ -142,7 +166,7 @@ export default function AchievementsPage() {
         </LoadingMessage>
       )}
 
-      <Modal open={isModalOpen} onCloseModal={handleCloseModal} modelType="achievementDetail"> {/* modelType для возможных кастомных стилей */}
+      <Modal open={isModalOpen} onCloseModal={handleCloseModal} modelType="achievementDetail">
         {selectedAchievement && (
           <AchievementModal
             achievement={selectedAchievement}
