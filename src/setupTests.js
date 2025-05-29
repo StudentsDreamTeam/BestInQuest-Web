@@ -1,37 +1,13 @@
-import { vi } from 'vitest'
+import { vi, expect } from 'vitest'
 import React from 'react'
 import '@testing-library/jest-dom'
+import { styleSheetSerializer } from 'jest-styled-components/serializer'
 
 // Добавляем глобальный React
 global.React = React
 
-// Мок для styled-components
-vi.mock('styled-components', () => {
-  const styled = new Proxy({}, {
-    get: (target, prop) => {
-      if (!target[prop]) {
-        target[prop] = vi.fn().mockImplementation((strings, ...args) => {
-          const Component = React.forwardRef((props, ref) => {
-            return React.createElement(prop, { ...props, ref });
-          });
-          Component.toString = () => `styled.${prop}`;
-          Component.attrs = () => Component;
-          Component.withConfig = () => Component;
-          return Component;
-        });
-      }
-      return target[prop];
-    }
-  });
-
-  return {
-    styled,
-    css: vi.fn().mockImplementation((...args) => JSON.stringify(args)),
-    createGlobalStyle: vi.fn().mockImplementation(() => () => null),
-    keyframes: vi.fn().mockImplementation(() => 'keyframe'),
-    ThemeProvider: ({ children }) => children
-  };
-});
+// Add the serializer for styled-components
+expect.addSnapshotSerializer(styleSheetSerializer)
 
 // Создаем базовый компонент для SVG
 const createSvgComponent = (name) => {
@@ -105,6 +81,13 @@ vi.mock('@/constants', () => ({
     NORMAL: 'normal',
     HIGH: 'high',
     URGENT: 'urgent'
+  },
+  STATUS_OPTIONS_MAP: {
+    NEW: "new",
+    PENDING: "pending",
+    IN_PROGRESS: "in_progress",
+    WAITING_REVIEW: "waiting_review",
+    DONE: "done"
   }
 }));
 
