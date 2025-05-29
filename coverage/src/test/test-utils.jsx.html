@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/services/userApi.js</title>
+    <title>Code coverage report for src/test/test-utils.jsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/services</a> userApi.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/test</a> test-utils.jsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/50</span>
+                <span class='fraction'>0/53</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/50</span>
+                <span class='fraction'>0/53</span>
             </div>
         
             
@@ -112,7 +112,10 @@
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -161,56 +164,62 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >// === FILE: .\src\services\userApi.js ===</span></span></span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { render } from '@testing-library/react'<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+<span class="cstat-no" title="statement not covered" >import { UserProvider } from '../contexts/UserContext'</span>
+<span class="cstat-no" title="statement not covered" >import { TasksProvider } from '../contexts/TasksContext'</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >import { API_BASE_URL } from '../constants';</span>
+<span class="cstat-no" title="statement not covered" >// Кастомный рендер с провайдерами</span>
+<span class="cstat-no" title="statement not covered" >export function renderWithProviders(ui, options = {}) {</span>
+<span class="cstat-no" title="statement not covered" >  return render(</span>
+<span class="cstat-no" title="statement not covered" >    &lt;UserProvider&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;TasksProvider&gt;</span>
+<span class="cstat-no" title="statement not covered" >        {ui}</span>
+<span class="cstat-no" title="statement not covered" >      &lt;/TasksProvider&gt;</span>
+<span class="cstat-no" title="statement not covered" >    &lt;/UserProvider&gt;,</span>
+<span class="cstat-no" title="statement not covered" >    options</span>
+<span class="cstat-no" title="statement not covered" >  )</span>
+<span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >/**</span>
-<span class="cstat-no" title="statement not covered" > * Загружает данные пользователя по ID.</span>
-<span class="cstat-no" title="statement not covered" > * @param {number|string} userId - ID пользователя.</span>
-<span class="cstat-no" title="statement not covered" > * @returns {Promise&lt;object&gt;} Данные пользователя.</span>
-<span class="cstat-no" title="statement not covered" > * @throws {Error} Если запрос не удался.</span>
-<span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export async function fetchUserById(userId) {</span>
-<span class="cstat-no" title="statement not covered" >  const response = await fetch(`${API_BASE_URL}/users/${userId}`);</span>
-<span class="cstat-no" title="statement not covered" >  if (!response.ok) {</span>
-<span class="cstat-no" title="statement not covered" >    const errorText = await response.text();</span>
-<span class="cstat-no" title="statement not covered" >    throw new Error(`Failed to fetch user ${userId}: ${response.status} ${errorText}`);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >  return response.json();</span>
-<span class="cstat-no" title="statement not covered" >};</span>
+<span class="cstat-no" title="statement not covered" >// Мок для успешного ответа API</span>
+<span class="cstat-no" title="statement not covered" >export const mockSuccessResponse = (data) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  return Promise.resolve({</span>
+<span class="cstat-no" title="statement not covered" >    ok: true,</span>
+<span class="cstat-no" title="statement not covered" >    json: () =&gt; Promise.resolve(data),</span>
+<span class="cstat-no" title="statement not covered" >  })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >/**</span>
-<span class="cstat-no" title="statement not covered" > * Аутентифицирует пользователя.</span>
-<span class="cstat-no" title="statement not covered" > * @param {string} email - Email пользователя.</span>
-<span class="cstat-no" title="statement not covered" > * @param {string} password - Пароль пользователя.</span>
-<span class="cstat-no" title="statement not covered" > * @returns {Promise&lt;object&gt;} Данные пользователя в случае успеха.</span>
-<span class="cstat-no" title="statement not covered" > * @throws {Error} Если аутентификация не удалась.</span>
-<span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export async function loginUser(email, password) {</span>
-<span class="cstat-no" title="statement not covered" >  const response = await fetch(`${API_BASE_URL}/users/auth`, {</span>
-<span class="cstat-no" title="statement not covered" >    method: 'POST',</span>
-<span class="cstat-no" title="statement not covered" >    headers: {</span>
-<span class="cstat-no" title="statement not covered" >      'Content-Type': 'application/json',</span>
+<span class="cstat-no" title="statement not covered" >// Мок для ошибки API</span>
+<span class="cstat-no" title="statement not covered" >export const mockErrorResponse = (status = 400, message = 'Error') =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  return Promise.reject({</span>
+<span class="cstat-no" title="statement not covered" >    status,</span>
+<span class="cstat-no" title="statement not covered" >    message,</span>
+<span class="cstat-no" title="statement not covered" >  })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >// Хелпер для ожидания асинхронных действий</span>
+<span class="cstat-no" title="statement not covered" >export const waitForAsync = () =&gt; new Promise(resolve =&gt; setTimeout(resolve, 0))</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >// Мок для localStorage</span>
+<span class="cstat-no" title="statement not covered" >export const mockLocalStorage = () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const store = {}</span>
+<span class="cstat-no" title="statement not covered" >  return {</span>
+<span class="cstat-no" title="statement not covered" >    getItem: (key) =&gt; store[key],</span>
+<span class="cstat-no" title="statement not covered" >    setItem: (key, value) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      store[key] = value.toString()</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    body: JSON.stringify({ email, password }),</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
-<span class="cstat-no" title="statement not covered" >  if (!response.ok) {</span>
-<span class="cstat-no" title="statement not covered" >    let errorMessage = `Authentication failed: ${response.status}`;</span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      const errorBody = await response.json(); // API может возвращать JSON с ошибкой</span>
-<span class="cstat-no" title="statement not covered" >      errorMessage += ` - ${errorBody.message || errorBody.error || JSON.stringify(errorBody)}`;</span>
-<span class="cstat-no" title="statement not covered" >    } catch (e) {</span>
-<span class="cstat-no" title="statement not covered" >      // Если тело ответа не JSON или пустое</span>
-<span class="cstat-no" title="statement not covered" >      const textError = await response.text();</span>
-<span class="cstat-no" title="statement not covered" >      if (textError) {</span>
-<span class="cstat-no" title="statement not covered" >        errorMessage += ` - ${textError}`;</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    throw new Error(errorMessage);</span>
+<span class="cstat-no" title="statement not covered" >    removeItem: (key) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      delete store[key]</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    clear: () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      Object.keys(store).forEach(key =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        delete store[key]</span>
+<span class="cstat-no" title="statement not covered" >      })</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >  return response.json(); // Предполагаем, что API возвращает объект пользователя</span>
-<span class="cstat-no" title="statement not covered" >}</span></pre></td></tr></table></pre>
+<span class="cstat-no" title="statement not covered" >} </span></pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
