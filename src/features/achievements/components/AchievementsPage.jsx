@@ -24,7 +24,6 @@ const PageHeader = styled.div`
   border-bottom: 1px solid #e0e0e0;
 `;
 
-// Убираем TabButton, так как вкладок больше не будет
 const PageTitle = styled.h1`
   font-size: 1.8rem;
   font-weight: 600;
@@ -56,7 +55,6 @@ export default function AchievementsPage() {
   const [achievements, setAchievements] = useState([]);
   const [isLoadingAchievements, setIsLoadingAchievements] = useState(true);
   const [error, setError] = useState(null);
-  // activeTab убираем
   const [selectedAchievement, setSelectedAchievement] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -99,7 +97,6 @@ export default function AchievementsPage() {
     setSelectedAchievement(null);
   };
 
-  // filteredAchievements больше не нужны, всегда показываем все 'achievements'
   if (isLoadingUser) {
     return <PageContainer><LoadingMessage>Загрузка данных пользователя...</LoadingMessage></PageContainer>;
   }
@@ -111,16 +108,26 @@ export default function AchievementsPage() {
     return <PageContainer><ErrorMessage>Ошибка: {error}</ErrorMessage></PageContainer>;
   }
 
+  console.log("Achievements data:", achievements);
+  const ids = achievements.map(a => a.id);
+  const uniqueIds = new Set(ids);
+  if (ids.length !== uniqueIds.size) {
+      console.warn("DUPLICATE IDs FOUND IN ACHIEVEMENTS:", ids);
+  }
+  if (ids.some(id => id === undefined || id === null)) {
+      console.warn("UNDEFINED/NULL IDs FOUND IN ACHIEVEMENTS:", ids);
+  }
+
   return (
     <PageContainer>
       <PageHeader>
-        <PageTitle>Достижения</PageTitle> {/* Просто заголовок */}
+        <PageTitle>Достижения</PageTitle>
       </PageHeader>
       {achievements.length > 0 ? (
         <AchievementsGrid>
-          {achievements.map(ach => ( // Используем 'achievements' напрямую
+          {achievements.map(ach => (
             <AchievementCard
-              key={ach.id}
+              key={ach.id} // <<--- Ключ здесь, это правильно
               achievement={ach}
               onClick={handleAchievementCardClick}
             />
