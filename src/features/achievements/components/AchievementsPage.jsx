@@ -1,10 +1,14 @@
+// === FILE: .\src\features\achievements\components\AchievementsPage.jsx ===
+
 import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import AchievementCard from './AchievementCard';
+import AchievementModal from './AchievementModal'; // Новый импорт
+import Modal from '../../../components/Modal/Modal'; // Общий компонент модального окна
 import { fetchAllAchievements } from '../services/achievementApi';
 
 const PageContainer = styled.div`
-  padding: 0; /* Убираем padding, так как Main.css его уже имеет */
+  padding: 0;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -12,9 +16,9 @@ const PageContainer = styled.div`
 
 const PageHeader = styled.div`
   display: flex;
-  justify-content: flex-start; /* Кнопки слева */
+  justify-content: flex-start;
   align-items: center;
-  padding: 1rem 0; /* Вертикальные отступы для хедера */
+  padding: 1rem 0;
   margin-bottom: 1.5rem;
   border-bottom: 1px solid #e0e0e0;
 `;
@@ -34,7 +38,7 @@ const TabButton = styled.button`
     content: '';
     display: ${props => (props.$isActive ? 'block' : 'none')};
     position: absolute;
-    bottom: -1px; /* Чтобы линия была точно под текстом, перекрывая border-bottom хедера */
+    bottom: -1px;
     left: 0;
     width: 100%;
     height: 2px;
@@ -48,11 +52,11 @@ const TabButton = styled.button`
 
 const AchievementsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Адаптивная сетка */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
-  overflow-y: auto; /* Прокрутка для списка достижений */
-  flex-grow: 1; /* Занимает оставшееся место */
-  padding-bottom: 1rem; /* Отступ снизу для прокрутки */
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-bottom: 1rem;
 `;
 
 const LoadingMessage = styled.p`
@@ -70,7 +74,9 @@ export default function AchievementsPage() {
   const [achievements, setAchievements] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('all'); // 'all' или 'achieved'
+  const [activeTab, setActiveTab] = useState('all');
+  const [selectedAchievement, setSelectedAchievement] = useState(null); // Для модального окна
+  const [isModalOpen, setIsModalOpen] = useState(false); // Состояние модального окна
 
   useEffect(() => {
     const loadAchievements = async () => {
@@ -78,9 +84,6 @@ export default function AchievementsPage() {
       setError(null);
       try {
         const data = await fetchAllAchievements();
-        // В реальном приложении, вы бы, возможно, получали UserAchievements,
-        // где поле isAchieved и progressCurrent уже установлены сервером для текущего пользователя.
-        // Пока мы используем isAchieved из achievements.json (везде false).
         setAchievements(data);
       } catch (err) {
         setError(err.message);
@@ -90,6 +93,16 @@ export default function AchievementsPage() {
     };
     loadAchievements();
   }, []);
+
+  const handleAchievementCardClick = (achievement) => {
+    setSelectedAchievement(achievement);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedAchievement(null); // Сбрасываем выбранное достижение
+  };
 
   const filteredAchievements = activeTab === 'all'
     ? achievements
@@ -116,7 +129,11 @@ export default function AchievementsPage() {
       {filteredAchievements.length > 0 ? (
         <AchievementsGrid>
           {filteredAchievements.map(ach => (
-            <AchievementCard key={ach.id} achievement={ach} />
+            <AchievementCard
+              key={ach.id}
+              achievement={ach}
+              onClick={handleAchievementCardClick} // Передаем обработчик
+            />
           ))}
         </AchievementsGrid>
       ) : (
@@ -124,6 +141,15 @@ export default function AchievementsPage() {
           {activeTab === 'achieved' ? 'У вас пока нет полученных достижений.' : 'Достижения не найдены.'}
         </LoadingMessage>
       )}
+
+      <Modal open={isModalOpen} onCloseModal={handleCloseModal} modelType="achievementDetail"> {/* modelType для возможных кастомных стилей */}
+        {selectedAchievement && (
+          <AchievementModal
+            achievement={selectedAchievement}
+            onClose={handleCloseModal}
+          />
+        )}
+      </Modal>
     </PageContainer>
   );
 }

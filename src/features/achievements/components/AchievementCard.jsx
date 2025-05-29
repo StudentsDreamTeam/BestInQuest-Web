@@ -1,3 +1,5 @@
+// === FILE: .\src\features\achievements\components\AchievementCard.jsx ===
+
 import { styled } from 'styled-components';
 
 const Card = styled.div`
@@ -10,7 +12,13 @@ const Card = styled.div`
   align-items: center;
   text-align: center;
   opacity: ${props => props.$isAchieved ? 1 : 0.6}; /* Менее яркие для не полученных */
-  transition: opacity 0.3s;
+  transition: opacity 0.3s, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer; /* Добавляем курсор, чтобы показать интерактивность */
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const IconPlaceholder = styled.div`
@@ -69,24 +77,22 @@ const ProgressText = styled.p`
   align-self: flex-end; /* Справа под прогресс-баром */
 `;
 
-export default function AchievementCard({ achievement }) {
+export default function AchievementCard({ achievement, onClick }) { // Добавляем onClick prop
   const { name, description, iconUrl, progressCurrent, progressTarget, isAchieved } = achievement;
   const progressPercentage = progressTarget > 0 ? (Math.min(progressCurrent, progressTarget) / progressTarget) * 100 : (isAchieved ? 100 : 0);
 
   return (
-    <Card $isAchieved={isAchieved}>
+    <Card $isAchieved={isAchieved} onClick={() => onClick(achievement)}> {/* Вызываем onClick с данными ачивки */}
       <IconPlaceholder>
-        {iconUrl && iconUrl !== "placeholder_icon_url_default.png" ? ( // Проверяем, чтобы не была заглушка по умолчанию, если она есть
+        {iconUrl && iconUrl !== "placeholder_icon_url_default.png" ? (
           <img src={iconUrl} alt={name} />
         ) : (
-          // Можете вставить здесь SVG-заглушку или оставить пустым для фона
-          // Либо использовать дефолтную картинку, если она у вас есть в проекте
-          <img src="/default_achievement_icon.png" alt="Достижение" /> // Путь к вашей дефолтной картинке в public
+          <img src="/default_achievement_icon.png" alt="Достижение" />
         )}
       </IconPlaceholder>
       <Name>{name}</Name>
       <Description>{description}</Description>
-      {!isAchieved && progressTarget > 0 && ( // Показываем прогресс только если не получено и есть цель
+      {!isAchieved && progressTarget > 0 && (
         <>
           <ProgressBarContainer>
             <ProgressBarFill $progress={progressPercentage} />
