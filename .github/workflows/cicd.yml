@@ -12,17 +12,15 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate lock file
-        if: "!steps.cache.outputs.cache-hit"  # Или более точная проверка:
-        run: npm install
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - name: Generate lock file
-        if: "!steps.cache.outputs.cache-hit"  # Или более точная проверка:
-        run: npm install
+      - name: Rebuild package-lock.json
+        run: |
+          rm -f package-lock.json  # Удаляем старый lock-файл
+          npm install              # Генерируем новый
       - run: npm ci
       # - run: npm run lint
       - run: npm run build
