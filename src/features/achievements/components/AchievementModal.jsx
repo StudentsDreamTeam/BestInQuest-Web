@@ -47,14 +47,6 @@ const DetailItem = styled.p`
   }
 `;
 
-const StatusTextLarge = styled.p`
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-  color: ${props => (props.$isAchieved ? '#28a745' : '#6c757d')};
-`;
-
 const CloseButton = styled.button`
   background-color: #9747FF;
   color: white;
@@ -65,7 +57,7 @@ const CloseButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-top: 1rem;
+  margin-top: 1.5rem; /* Отступ сверху */
 
   &:hover {
     background-color: #823cdf;
@@ -79,20 +71,17 @@ export default function AchievementModal({ achievement, onClose }) {
   const {
     name,
     description,
-    iconUrl, // Используем это поле, которое должно быть подготовлено в achievementApi.js
-    isAchieved, // Предполагаем, что это поле приходит от API
+    iconUrl, // Используем это поле, которое подготавливается в achievementApi.js
     requiredXp,
     type,
-    // Убираем progressCurrent, progressTarget, так как их нет в новой структуре
-  } = achievement;
+  } = achievement; // Убраны isAchieved и связанные с прогрессом поля
 
   return (
     <ModalContent>
-      <AchievementIconLarge src={iconUrl || '/default_achievement_icon.png'} alt={name} />
+      <AchievementIconLarge src={iconUrl} alt={name} /> {/* iconUrl из achievementApi.js */}
       <AchievementNameLarge>{name}</AchievementNameLarge>
       <AchievementDescriptionLarge>{description}</AchievementDescriptionLarge>
 
-      {/* Отображаем другие доступные атрибуты */}
       {typeof requiredXp === 'number' && (
         <DetailItem>
           <strong>Требуемый опыт:</strong> {requiredXp}
@@ -103,13 +92,7 @@ export default function AchievementModal({ achievement, onClose }) {
           <strong>Тип:</strong> {type}
         </DetailItem>
       )}
-
-      <StatusTextLarge $isAchieved={!!isAchieved}>
-        {isAchieved ? 'Достижение получено!' : 'Достижение не получено'}
-      </StatusTextLarge>
-
-      {/* Убираем прогресс-бар, так как его не будет */}
-
+      {/* Нет отображения статуса или прогресса */}
       <CloseButton onClick={onClose}>Закрыть</CloseButton>
     </ModalContent>
   );

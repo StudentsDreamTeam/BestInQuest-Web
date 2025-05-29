@@ -24,31 +24,11 @@ const PageHeader = styled.div`
   border-bottom: 1px solid #e0e0e0;
 `;
 
-const TabButton = styled.button`
-  background: none;
-  border: none;
-  padding: 0.5rem 1rem;
-  margin-right: 1rem;
-  font-size: 1.1rem;
-  font-weight: ${props => (props.$isActive ? '600' : '500')};
-  color: ${props => (props.$isActive ? '#9747FF' : '#6c757d')};
-  cursor: pointer;
-  position: relative;
-
-  &::after {
-    content: '';
-    display: ${props => (props.$isActive ? 'block' : 'none')};
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #9747FF;
-  }
-
-  &:hover {
-    color: #9747FF;
-  }
+// Убираем TabButton, так как вкладок больше не будет
+const PageTitle = styled.h1`
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
 `;
 
 const AchievementsGrid = styled.div`
@@ -76,7 +56,7 @@ export default function AchievementsPage() {
   const [achievements, setAchievements] = useState([]);
   const [isLoadingAchievements, setIsLoadingAchievements] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('all');
+  // activeTab убираем
   const [selectedAchievement, setSelectedAchievement] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -119,12 +99,7 @@ export default function AchievementsPage() {
     setSelectedAchievement(null);
   };
 
-  // Фильтруем по полю isAchieved, которое, как мы предполагаем, приходит с API
-  // или было добавлено при маппинге в fetchUserAchievements
-  const filteredAchievements = activeTab === 'all'
-    ? achievements
-    : achievements.filter(ach => ach.isAchieved);
-
+  // filteredAchievements больше не нужны, всегда показываем все 'achievements'
   if (isLoadingUser) {
     return <PageContainer><LoadingMessage>Загрузка данных пользователя...</LoadingMessage></PageContainer>;
   }
@@ -139,18 +114,13 @@ export default function AchievementsPage() {
   return (
     <PageContainer>
       <PageHeader>
-        <TabButton $isActive={activeTab === 'all'} onClick={() => setActiveTab('all')}>
-          Все
-        </TabButton>
-        <TabButton $isActive={activeTab === 'achieved'} onClick={() => setActiveTab('achieved')}>
-          Полученные
-        </TabButton>
+        <PageTitle>Достижения</PageTitle> {/* Просто заголовок */}
       </PageHeader>
-      {filteredAchievements.length > 0 ? (
+      {achievements.length > 0 ? (
         <AchievementsGrid>
-          {filteredAchievements.map(ach => (
+          {achievements.map(ach => ( // Используем 'achievements' напрямую
             <AchievementCard
-              key={ach.id} // Используем ID из ачивки
+              key={ach.id}
               achievement={ach}
               onClick={handleAchievementCardClick}
             />
@@ -158,7 +128,7 @@ export default function AchievementsPage() {
         </AchievementsGrid>
       ) : (
         <LoadingMessage>
-          {activeTab === 'achieved' ? 'У вас пока нет полученных достижений.' : 'Достижения не найдены.'}
+          Достижения не найдены.
         </LoadingMessage>
       )}
 

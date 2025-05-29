@@ -14,7 +14,7 @@
     "description": "Выполнить 10 задач в сфере 'Спорт'.",
     "iconUrl": "default_achievement_icon.png",
     "progressCurrent": 0,
-    "progressTarget": 10,
+    "progressTarget": 10, 
     "isAchieved": false
   },
   {

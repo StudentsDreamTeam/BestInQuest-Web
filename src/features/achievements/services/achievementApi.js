@@ -4,6 +4,7 @@ import { API_BASE_URL } from '../../../constants';
 
 /**
  * Загружает все доступные достижения для конкретного пользователя.
+ * API НЕ возвращает статус получения (isAchieved) или текущий прогресс.
  * @param {number|string} userId - ID пользователя.
  * @returns {Promise<Array<object>>} Массив достижений пользователя.
  * @throws {Error} Если запрос не удался.
@@ -20,19 +21,10 @@ export const fetchUserAchievements = async (userId) => {
     }
     const achievementsFromApi = await response.json();
 
-    // Адаптируем данные с API к ожидаемой структуре в компонентах, если необходимо
-    // или компоненты будут напрямую использовать поля из API.
-    // Пока предполагаем, что компоненты будут адаптированы под структуру API.
-    // Например, если API возвращает "icon" вместо "iconUrl", компоненты должны это учесть.
-    // Также, если API не возвращает progressCurrent/Target, но мы хотим их как-то симулировать (например, для XP ачивок):
+    // Адаптируем поле 'icon' в 'iconUrl' и используем дефолтное значение, если 'icon' нет
     return achievementsFromApi.map(ach => ({
         ...ach,
-        iconUrl: ach.icon || '/default_achievement_icon.png', // Используем 'icon' или дефолт
-        // progressCurrent: ach.isAchieved ? (ach.requiredXp || 1) : 0, // Упрощенно, если это XP ачивка
-        // progressTarget: ach.requiredXp || 1, // Упрощенно
-        // isAchieved: ach.isAchieved === undefined ? false : ach.isAchieved // Если isAchieved нет, считаем false
-        // Если API НЕ возвращает isAchieved, то логика усложняется.
-        // Пока будем ожидать, что isAchieved приходит с API.
+        iconUrl: ach.icon || '/default_achievement_icon.png',
     }));
 
   } catch (error) {

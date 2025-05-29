@@ -11,11 +11,10 @@ const Card = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
-  opacity: ${props => props.$isAchieved ? 1 : 0.6};
-  transition: opacity 0.3s, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   cursor: pointer;
-  min-height: 300px; /* Для примерного выравнивания высоты */
-  justify-content: space-between; /* Чтобы контент распределялся */
+  min-height: 280px; /* Примерная высота, чтобы карточки выглядели однородно */
+  justify-content: flex-start; /* Контент начинается сверху */
 `;
 
 const IconPlaceholder = styled.div`
@@ -46,41 +45,21 @@ const Name = styled.h3`
 const Description = styled.p`
   font-size: 0.875rem;
   color: #666;
-  margin-bottom: 1rem;
   line-height: 1.4;
-  flex-grow: 1; /* Позволяет описанию занять доступное место */
+  /* flex-grow: 1; убрано, чтобы не растягивать если текста мало */
 `;
-
-const StatusText = styled.p`
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: ${props => (props.$isAchieved ? '#28a745' : '#6c757d')};
-  margin-top: auto; /* Прижимает текст статуса вниз */
-`;
-
 
 export default function AchievementCard({ achievement, onClick }) {
-  // Предполагаем, что API вернет поле isAchieved
-  // Поля progressCurrent и progressTarget убираем, так как их нет в новой структуре
-  // и прогресс-бара не будет.
-  const { name, description, iconUrl, isAchieved, requiredXp, type } = achievement;
+  const { name, description, iconUrl } = achievement; // Убраны isAchieved, progressCurrent, progressTarget
 
   return (
-    <Card $isAchieved={!!isAchieved} onClick={() => onClick(achievement)}>
+    <Card onClick={() => onClick(achievement)}>
       <IconPlaceholder>
-        {/* Используем iconUrl, который мы формируем в achievementApi.js */}
-        <img src={iconUrl || '/default_achievement_icon.png'} alt={name} />
+        <img src={iconUrl} alt={name} /> {/* iconUrl формируется в API сервисе */}
       </IconPlaceholder>
-      <div> {/* Дополнительная обертка для текста, чтобы StatusText прижимался вниз */}
-        <Name>{name}</Name>
-        <Description>{description}</Description>
-      </div>
-       {/* Можно добавить отображение requiredXp или type, если нужно */}
-      {/* {requiredXp && <p>Требуется XP: {requiredXp}</p>} */}
-      {/* {type && <p>Тип: {type}</p>} */}
-      <StatusText $isAchieved={!!isAchieved}>
-        {isAchieved ? 'Получено!' : 'Не получено'}
-      </StatusText>
+      <Name>{name}</Name>
+      <Description>{description}</Description>
+      {/* Нет отображения статуса или прогресса */}
     </Card>
   );
 }
