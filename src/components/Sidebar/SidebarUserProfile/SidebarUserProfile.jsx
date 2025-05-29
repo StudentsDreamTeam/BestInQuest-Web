@@ -60,11 +60,23 @@ const StarIconPlaceholder = styled.div`
 
 export default function SidebarUserProfile({ user, isActive, onClick }) {
   if (!user) {
-    return <UserProfileWrapper $isActive={false} onClick={() => {}}>Загрузка...</UserProfileWrapper>;
+    return <UserProfileWrapper 
+      data-testid="user-profile" 
+      data-active="false"
+      $isActive={false} 
+      onClick={() => {}}
+    >
+      Загрузка...
+    </UserProfileWrapper>;
   }
 
   return (
-    <UserProfileWrapper $isActive={isActive} onClick={onClick}>
+    <UserProfileWrapper 
+      data-testid="user-profile"
+      data-active={isActive.toString()}
+      $isActive={isActive} 
+      onClick={onClick}
+    >
       <div className="avatar">
         <img src={user.avatar || defaultUserAvatar} alt="User Avatar" />
       </div>
