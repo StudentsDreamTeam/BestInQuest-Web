@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { styled } from 'styled-components';
 
 import Sidebar from "../components/Sidebar/Sidebar";
-import Main from "../components/Main/Main";
+import Main from "../components/Main/Main"; // Main теперь будет отвечать за рендер UserProfilePage
 import Modal from '../components/Modal/Modal';
 
 import CreateTaskForm from '../features/tasks/components/CreateTaskForm';
 import UpdateTaskForm from '../features/tasks/components/UpdateTaskForm';
 import DeleteTaskConfirmationModal from '../features/tasks/components/DeleteTaskComfirmationModal';
-import ConfirmProfileUpdateModal from '../features/user/components/ConfirmProfileUpdateModal'; // Новый импорт
+import ConfirmProfileUpdateModal from '../features/user/components/ConfirmProfileUpdateModal';
 
 import { useUser } from '../contexts/UserContext';
 import { useTasks } from '../contexts/TasksContext';
@@ -45,11 +45,9 @@ export default function AppLayout() {
   const [isUpdateTaskModalOpen, setIsUpdateTaskModalOpen] = useState(false);
   const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
   
-  // Для модального окна подтверждения обновления профиля
   const [isConfirmProfileModalOpen, setIsConfirmProfileModalOpen] = useState(false);
   const [profileChangesToConfirm, setProfileChangesToConfirm] = useState({});
   const [onConfirmProfileUpdateCallback, setOnConfirmProfileUpdateCallback] = useState(null);
-
 
   const [taskToEdit, setTaskToEdit] = useState(null);
   const [taskToDeleteId, setTaskToDeleteId] = useState(null);
@@ -58,7 +56,7 @@ export default function AppLayout() {
     if (itemName === 'Добавить задачу') {
       setIsCreateTaskModalOpen(true);
     } else {
-      setActiveView(itemName);
+      setActiveView(itemName); // 'Профиль' также будет устанавливаться здесь
     }
   }
 
@@ -95,10 +93,9 @@ export default function AppLayout() {
     }
   };
 
-  // Функции для модального окна подтверждения профиля
   const handleOpenConfirmProfileModal = (changes, onConfirmCallback) => {
     setProfileChangesToConfirm(changes);
-    setOnConfirmProfileUpdateCallback(() => onConfirmCallback); // Сохраняем колбэк
+    setOnConfirmProfileUpdateCallback(() => onConfirmCallback); 
     setIsConfirmProfileModalOpen(true);
   };
 
@@ -110,40 +107,34 @@ export default function AppLayout() {
 
   const handleActualConfirmProfileUpdate = () => {
     if (onConfirmProfileUpdateCallback) {
-      onConfirmProfileUpdateCallback(); // Вызываем сохраненный колбэк
+      onConfirmProfileUpdateCallback(); 
     }
     handleCloseConfirmProfileModal();
   };
 
-
   if (isLoadingUser) return <LoadingOverlay>Загрузка пользователя...</LoadingOverlay>;
-  if (userError && !user) { // Показываем LoginPage если есть ошибка и нет юзера (например, при первой загрузке)
+  if (userError && !user) { 
       console.warn("AppLayout: User error and no user, potential redirect to login: ", userError);
-      // Это состояние должно обрабатываться в App.jsx, AppLayout не должен рендериться
       return <LoadingOverlay>Ошибка: {userError}. Пожалуйста, попробуйте перезагрузить страницу.</LoadingOverlay>;
   }
-  if (!user) return <LoadingOverlay>Пользователь не найден. Перенаправление...</LoadingOverlay>; // Или редирект на логин
+  if (!user) return <LoadingOverlay>Пользователь не найден. Перенаправление...</LoadingOverlay>;
 
   return (
     <LayoutContainer>
       <Sidebar
         activeMenuItem={activeView}
         onMenuItemChange={handleSidebarItemClick}
-        onProfileClick={() => setActiveView('Профиль')} // Профиль теперь просто меняет activeView
+        onProfileClick={() => setActiveView('Профиль')} 
         menuItems={menuItems}
       />
 
-      {/* Передаем onOpenConfirmProfileModal в UserProfilePage через Main или напрямую, если Main не нужен для этого */}
-      {activeView === 'Профиль' ? (
-         <UserProfilePage onOpenConfirmModal={handleOpenConfirmProfileModal} />
-      ) : (
-        <Main
-            active={activeView}
-            onOpenUpdateTaskModal={handleOpenUpdateTaskModal}
-            onOpenDeleteConfirmModal={handleOpenDeleteConfirmModal}
-        />
-      )}
-
+      {/* Main теперь всегда рендерится и получает onOpenConfirmProfileModal */}
+      <Main
+        active={activeView}
+        onOpenUpdateTaskModal={handleOpenUpdateTaskModal}
+        onOpenDeleteConfirmModal={handleOpenDeleteConfirmModal}
+        onOpenConfirmProfileModal={handleOpenConfirmProfileModal} // Передаем проп в Main
+      />
 
       <Modal open={isCreateTaskModalOpen} modelType={'create'} onCloseModal={handleCloseCreateTaskModal}>
         <CreateTaskForm onClose={handleCloseCreateTaskModal} />
@@ -166,8 +157,7 @@ export default function AppLayout() {
         />
       </Modal>
 
-      {/* Модальное окно для подтверждения изменений профиля */}
-      <Modal open={isConfirmProfileModalOpen} modelType={'delete'} onCloseModal={handleCloseConfirmProfileModal}> {/* Используем modelType 'delete' для схожих размеров */}
+      <Modal open={isConfirmProfileModalOpen} modelType={'delete'} onCloseModal={handleCloseConfirmProfileModal}>
         <ConfirmProfileUpdateModal
           changes={profileChangesToConfirm}
           onClose={handleCloseConfirmProfileModal}
