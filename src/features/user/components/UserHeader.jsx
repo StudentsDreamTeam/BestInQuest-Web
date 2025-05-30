@@ -1,7 +1,9 @@
+// === FILE: .\src\features\user\components\UserHeader.jsx ===
 import { styled } from 'styled-components';
-import { useUser } from '../../../contexts/UserContext';
 import defaultUserAvatar from '../../../assets/img/userAvatar.png';
 import { ReactComponent as EditIcon } from '../../../assets/icons/EditIcon.svg';
+import { ReactComponent as SaveIcon } from '../../../assets/icons/SaveIcon.svg'; // Предполагаем, что есть иконка сохранения
+import { ReactComponent as CancelIcon } from '../../../assets/icons/CancelIcon.svg'; // Предполагаем, что есть иконка отмены
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -17,6 +19,10 @@ const Avatar = styled.img`
   border-radius: 50%;
   margin-right: 1.5rem;
   object-fit: cover;
+  cursor: pointer; // Для будущей загрузки аватара
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 const UserInfo = styled.div`
@@ -29,9 +35,10 @@ const UserNameRow = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
+  min-height: 36px; /* Для предотвращения прыжков при смене инпута и текста */
 `;
 
-const UserName = styled.h1`
+const UserNameDisplay = styled.h1`
   font-size: 1.8rem;
   font-weight: 600;
   color: #333;
@@ -39,11 +46,29 @@ const UserName = styled.h1`
   margin-right: 0.75rem;
 `;
 
-const EditButton = styled.button`
+const NameInput = styled.input`
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  margin-right: 0.5rem;
+  width: auto;
+  min-width: 200px; /* Чтобы инпут не был слишком маленьким */
+  max-width: 300px;
+`;
+
+const EditControls = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const ControlButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 0.2rem;
   display: flex;
   align-items: center;
   
@@ -54,6 +79,18 @@ const EditButton = styled.button`
   }
   &:hover svg {
     fill: #7a3bb8;
+  }
+  &.save svg {
+    fill: #2ecc71; /* Зеленый для сохранения */
+     &:hover {
+        fill: #27ae60;
+     }
+  }
+  &.cancel svg {
+    fill: #e74c3c; /* Красный для отмены */
+    &:hover {
+        fill: #c0392b;
+    }
   }
 `;
 
@@ -95,9 +132,17 @@ const XpText = styled.div`
   max-width: 300px;
 `;
 
-export default function UserHeader() {
-  const { user } = useUser();
-
+// Пропсы: user (объект), isEditingName (булево), localName (строка), 
+// onNameChange (функция), onToggleEditName (функция), onSaveName (функция)
+export default function UserHeader({
+  user,
+  isEditingName,
+  localName,
+  onNameChange,
+  onToggleEditName,
+  onSaveName,
+  onCancelEditName
+}) {
   if (!user) return null;
 
   const xpForCurrentLevel = (user.level -1) * 150 + (user.level > 1 ? 350: 0) ; 
@@ -113,19 +158,46 @@ export default function UserHeader() {
       progressPercentage = 100;
   }
 
-  const handleNameEdit = () => {
-    console.log("Инициировано изменение имени пользователя");
+  const handleAvatarClick = () => {
+    console.log("Изменение аватара (в разработке)");
+    // Здесь будет логика открытия модального окна для загрузки нового аватара
   };
 
   return (
     <HeaderContainer>
-      <Avatar src={user.avatar || defaultUserAvatar} alt={`${user.name} avatar`} />
+      <Avatar 
+        src={user.avatar || defaultUserAvatar} 
+        alt={`${user.name} avatar`}
+        onClick={handleAvatarClick}
+        title="Изменить аватар (в разработке)"
+      />
       <UserInfo>
         <UserNameRow>
-          <UserName>{user.name}</UserName>
-          <EditButton onClick={handleNameEdit} title="Изменить имя">
-            <EditIcon />
-          </EditButton>
+          {isEditingName ? (
+            <>
+              <NameInput
+                type="text"
+                value={localName}
+                onChange={onNameChange}
+                autoFocus
+              />
+              <EditControls>
+                <ControlButton onClick={onSaveName} title="Сохранить имя" className="save">
+                  <SaveIcon />
+                </ControlButton>
+                <ControlButton onClick={onCancelEditName} title="Отменить" className="cancel">
+                  <CancelIcon />
+                </ControlButton>
+              </EditControls>
+            </>
+          ) : (
+            <>
+              <UserNameDisplay>{user.name}</UserNameDisplay>
+              <ControlButton onClick={onToggleEditName} title="Изменить имя">
+                <EditIcon />
+              </ControlButton>
+            </>
+          )}
         </UserNameRow>
         <UserStats>
           Уровень: <span>{user.level}</span>
