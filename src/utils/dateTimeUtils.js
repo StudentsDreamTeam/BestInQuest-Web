@@ -23,6 +23,7 @@ export const formatDeadlineForDisplay = (dateInput) => {
 
 /**
  * Форматирует ISO строку или объект Date в формат для datetime-local input ('YYYY-MM-DDTHH:mm').
+ * Использует UTC компоненты даты для независимости от часового пояса.
  * @param {string | Date} isoString - Дата в виде ISO строки или объекта Date.
  * @returns {string} Строка для input[type="datetime-local"] или пустая строка.
  */
@@ -31,11 +32,12 @@ export const formatDateTimeForInput = (isoString) => {
   try {
     const date = new Date(isoString);
     if (isNaN(date.getTime())) return '';
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
+    // Используем UTC методы для получения компонентов
+    const year = date.getUTCFullYear();
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   } catch (e) {
     console.error("Error formatting date for input:", e);
@@ -61,12 +63,29 @@ export const secondsToHHMM = (totalSeconds) => {
  * @returns {number} Общее количество секунд или 0.
  */
 export const hhMMToSeconds = (hhmmString) => {
-  if (!hhmmString) return 0;
+  if (!hhmmString || typeof hhmmString !== 'string') return 0;
   const parts = hhmmString.split(':');
   if (parts.length !== 2) return 0;
-  const hours = parseInt(parts[0], 10);
-  const minutes = parseInt(parts[1], 10);
-  if (isNaN(hours) || isNaN(minutes)) return 0;
+  
+  const hoursStr = parts[0];
+  const minutesStr = parts[1];
+
+  // Проверка, что строки содержат только цифры и имеют корректную длину
+  if (!/^\d{1,2}$/.test(hoursStr) || !/^\d{2}$/.test(minutesStr)) {
+    return 0;
+  }
+
+  const hours = parseInt(hoursStr, 10);
+  const minutes = parseInt(minutesStr, 10);
+
+  // Дополнительная проверка на NaN (хотя regex уже должен это покрыть) и на диапазоны
+  if (isNaN(hours) || isNaN(minutes) || hours < 0 || minutes < 0 || minutes > 59) {
+    return 0;
+  }
+  // Часы могут быть > 23, если это просто подсчет общего времени, но для формата ЧЧ:ММ обычно 0-23.
+  // Для большей строгости можно добавить hours > 23 (или hours > 99 если допускаем много часов) -> return 0
+  // Оставим пока как есть, так как функция просто конвертирует.
+
   return hours * 3600 + minutes * 60;
 };
 
@@ -91,7 +110,6 @@ export const formatDurationForDisplay = (totalSeconds) => {
   return parts.length > 0 ? parts.join(' ') : "0 мин";
 };
 
-
 /**
  * Форматирует дату для отображения создания/обновления задачи (напр., "15 мая 2025, 18:54").
  * @param {string | Date} dateString - Дата в виде ISO строки или объекта Date.
@@ -99,24 +117,34 @@ export const formatDurationForDisplay = (totalSeconds) => {
  */
 export const formatFullDateTime = (dateString) => {
     if (!dateString) return 'неизвестно';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Неверная дата'; // Проверка на валидность даты
     try {
-        return new Date(dateString).toLocaleString('ru-RU', {
+        return date.toLocaleString('ru-RU', { // Используем объект date, который уже создан
             day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
         });
     } catch (e) {
-        return 'Неверная дата';
+        // Этот catch может быть достигнут, если toLocaleString сам по себе выдаст ошибку
+        // на уже валидном объекте Date, что маловероятно для стандартных опций.
+        console.error("Error in formatFullDateTime with toLocaleString:", e);
+        return 'Неверная дата'; 
     }
 };
 
 /**
  * Форматирует дату для отображения в карточке задачи (напр., "мая 15, 18:54").
  * @param {string | Date} dateString - Дата в виде ISO строки или объекта Date.
- * @returns {string} Отформатированная строка или "Нет дедлайна".
+ * @returns {string} Отформатированная строка или "Нет дедлайна" / исходная строка при ошибке.
  */
 export const formatTaskCardDateTime = (dateString) => {
     if (!dateString) return 'Нет дедлайна';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) { // Проверка на валидность даты
+        console.error("Invalid date input for formatTaskCardDateTime:", dateString);
+        return dateString; // Возвращаем исходную строку, как и было в catch
+    }
     try {
-      return new Date(dateString).toLocaleString('ru-RU', {
+      return date.toLocaleString('ru-RU', { // Используем объект date
         month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
       });
     } catch (e) {
