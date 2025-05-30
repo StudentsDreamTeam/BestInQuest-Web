@@ -159,7 +159,9 @@ describe('TasksContext', () => {
           { title: 'New Task' },
           mockUser.id
         )
-        expect(contextValue.tasks[0]).toEqual(newTask)
+        await waitFor(() => {
+          expect(contextValue.tasks[0]).toEqual(newTask)
+        })
       })
 
       it('handles errors when adding task', async () => {
@@ -172,7 +174,9 @@ describe('TasksContext', () => {
         await expect(contextValue.addTask({ title: 'New Task' }))
           .rejects.toThrow('Failed to create task')
 
-        expect(contextValue.tasksError).toBe(error.message)
+        await waitFor(() => {
+          expect(contextValue.tasksError).toBe(error.message)
+        })
       })
 
       it('requires user to be available for adding task', async () => {
@@ -204,8 +208,9 @@ describe('TasksContext', () => {
           mockUser.id
         )
 
-        // Проверяем оптимистичное обновление и финальное состояние
-        expect(contextValue.tasks[0]).toEqual(updatedTask)
+        await waitFor(() => {
+          expect(contextValue.tasks[0]).toEqual(updatedTask)
+        })
       })
 
       it('reverts optimistic update on error', async () => {
@@ -218,8 +223,10 @@ describe('TasksContext', () => {
         const originalStatus = mockTasks[0].status
         await contextValue.toggleTaskStatus(1, originalStatus)
 
-        expect(contextValue.tasksError).toBe(error.message)
-        expect(contextValue.tasks[0].status).toBe(originalStatus)
+        await waitFor(() => {
+          expect(contextValue.tasksError).toBe(error.message)
+          expect(contextValue.tasks[0].status).toBe(originalStatus)
+        })
       })
     })
   })
