@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="185" failures="0" errors="0" time="8.897">
-    <testsuite name="src/__tests__/App.test.jsx" timestamp="2025-05-30T07:03:35.772Z" hostname="LAPTOP-CHKVM7S6" tests="4" failures="0" errors="0" skipped="0" time="0.088">
-        <testcase classname="src/__tests__/App.test.jsx" name="App Component Logic (via AppContent) &gt; renders LoadingOverlay when isLoadingUser is true" time="0.06">
+<testsuites name="vitest tests" tests="186" failures="1" errors="0" time="11.28">
+    <testsuite name="src/__tests__/App.test.jsx" timestamp="2025-05-30T07:14:36.987Z" hostname="LAPTOP-CHKVM7S6" tests="4" failures="0" errors="0" skipped="0" time="0.148">
+        <testcase classname="src/__tests__/App.test.jsx" name="App Component Logic (via AppContent) &gt; renders LoadingOverlay when isLoadingUser is true" time="0.096">
         </testcase>
-        <testcase classname="src/__tests__/App.test.jsx" name="App Component Logic (via AppContent) &gt; renders LoginPage when not loading and no user" time="0.008">
+        <testcase classname="src/__tests__/App.test.jsx" name="App Component Logic (via AppContent) &gt; renders LoginPage when not loading and no user" time="0.015">
         </testcase>
-        <testcase classname="src/__tests__/App.test.jsx" name="App Component Logic (via AppContent) &gt; renders LoginPage and logs warning when not loading, no user, but userError exists" time="0.009">
+        <testcase classname="src/__tests__/App.test.jsx" name="App Component Logic (via AppContent) &gt; renders LoginPage and logs warning when not loading, no user, but userError exists" time="0.021">
         </testcase>
-        <testcase classname="src/__tests__/App.test.jsx" name="App Component Logic (via AppContent) &gt; renders AppLayout (via TasksProvider) when user is authenticated" time="0.008">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/__tests__/main.test.jsx" timestamp="2025-05-30T07:03:35.781Z" hostname="LAPTOP-CHKVM7S6" tests="1" failures="0" errors="0" skipped="0" time="0.343">
-        <testcase classname="src/__tests__/main.test.jsx" name="main.jsx &gt; should get the root element and render the App component into it" time="0.338">
+        <testcase classname="src/__tests__/App.test.jsx" name="App Component Logic (via AppContent) &gt; renders AppLayout (via TasksProvider) when user is authenticated" time="0.011">
         </testcase>
     </testsuite>
-    <testsuite name="src/contexts/__tests__/TasksContext.test.jsx" timestamp="2025-05-30T07:03:35.782Z" hostname="LAPTOP-CHKVM7S6" tests="21" failures="0" errors="0" skipped="0" time="1.649">
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Initialization &gt; initializes with empty state" time="0.035">
+    <testsuite name="src/__tests__/main.test.jsx" timestamp="2025-05-30T07:14:36.993Z" hostname="LAPTOP-CHKVM7S6" tests="1" failures="0" errors="0" skipped="0" time="0.394">
+        <testcase classname="src/__tests__/main.test.jsx" name="main.jsx &gt; should get the root element and render the App component into it" time="0.392">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/contexts/__tests__/TasksContext.test.jsx" timestamp="2025-05-30T07:14:36.997Z" hostname="LAPTOP-CHKVM7S6" tests="21" failures="0" errors="0" skipped="0" time="1.632">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Initialization &gt; initializes with empty state" time="0.046">
             <system-out>
 Tasks data loaded: [
   {
@@ -34,11 +34,11 @@ Tasks data loaded: [
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Initialization &gt; handles case when user is not available" time="0.011">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Initialization &gt; handles case when user is not available" time="0.015">
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Initialization &gt; waits for user to load before loading tasks" time="0.007">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Initialization &gt; waits for user to load before loading tasks" time="0.01">
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Loading &gt; loads tasks when user becomes available" time="0.064">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Loading &gt; loads tasks when user becomes available" time="0.089">
             <system-out>
 Tasks data loaded: [
   {
@@ -57,9 +57,9 @@ Tasks data loaded: [
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Loading &gt; handles network errors during task loading" time="0.071">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Loading &gt; handles network errors during task loading" time="0.086">
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Loading &gt; can reload tasks on demand" time="0.069">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Loading &gt; can reload tasks on demand" time="0.075">
             <system-out>
 Tasks data loaded: [
   {
@@ -93,9 +93,9 @@ Tasks data loaded: [
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Loading &gt; does not reload tasks if user is not available" time="0.012">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Loading &gt; does not reload tasks if user is not available" time="0.004">
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Adding Tasks &gt; successfully adds a new task" time="0.138">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Adding Tasks &gt; successfully adds a new task" time="0.145">
             <system-out>
 Tasks data loaded: [
   {
@@ -121,7 +121,7 @@ Task created: {
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Adding Tasks &gt; handles errors when adding task" time="0.159">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Adding Tasks &gt; handles errors when adding task" time="0.135">
             <system-out>
 Tasks data loaded: [
   {
@@ -140,9 +140,9 @@ Tasks data loaded: [
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Adding Tasks &gt; requires user to be available for adding task" time="0.004">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Adding Tasks &gt; requires user to be available for adding task" time="0.008">
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Status Toggle &gt; successfully toggles task status" time="0.165">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Status Toggle &gt; successfully toggles task status" time="0.159">
             <system-out>
 Tasks data loaded: [
   {
@@ -163,7 +163,7 @@ Task 1 status toggled to done
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Status Toggle &gt; reverts optimistic update on error" time="0.17">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Status Toggle &gt; reverts optimistic update on error" time="0.143">
             <system-out>
 Tasks data loaded: [
   {
@@ -182,13 +182,13 @@ Tasks data loaded: [
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Status Toggle &gt; warns if user is not available when toggling status" time="0.004">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Status Toggle &gt; warns if user is not available when toggling status" time="0.005">
             <system-err>
 Cannot toggle task status: user not available.
 
             </system-err>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Status Toggle &gt; warns if task is not found when toggling status" time="0.081">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Status Toggle &gt; warns if task is not found when toggling status" time="0.071">
             <system-out>
 Tasks data loaded: [
   {
@@ -212,7 +212,7 @@ Cannot toggle task status: task 999 not found.
 
             </system-err>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Updating Tasks &gt; successfully updates a task" time="0.139">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Updating Tasks &gt; successfully updates a task" time="0.135">
             <system-out>
 Tasks data loaded: [
   {
@@ -233,14 +233,14 @@ Task updated: {
   id: [33m1[39m,
   title: [32m&apos;Updated Title&apos;[39m,
   status: [32m&apos;new&apos;[39m,
-  updateDate: [32m&apos;2025-05-30T07:03:32.771Z&apos;[39m
+  updateDate: [32m&apos;2025-05-30T07:14:33.505Z&apos;[39m
 }
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Updating Tasks &gt; throws error if user is not available when updating task" time="0.002">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Updating Tasks &gt; throws error if user is not available when updating task" time="0.005">
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Updating Tasks &gt; throws error if task to update is not found" time="0.074">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Updating Tasks &gt; throws error if task to update is not found" time="0.071">
             <system-out>
 Tasks data loaded: [
   {
@@ -259,7 +259,7 @@ Tasks data loaded: [
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Updating Tasks &gt; handles errors when API call fails during update" time="0.15">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Updating Tasks &gt; handles errors when API call fails during update" time="0.146">
             <system-out>
 Tasks data loaded: [
   {
@@ -278,7 +278,7 @@ Tasks data loaded: [
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Deleting Tasks &gt; successfully deletes a task" time="0.134">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Deleting Tasks &gt; successfully deletes a task" time="0.13">
             <system-out>
 Tasks data loaded: [
   {
@@ -299,9 +299,9 @@ Task deleted: [33m1[39m
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Deleting Tasks &gt; throws error if user is not available when deleting task" time="0.002">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Deleting Tasks &gt; throws error if user is not available when deleting task" time="0.003">
         </testcase>
-        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Deleting Tasks &gt; handles errors when API call fails during delete" time="0.156">
+        <testcase classname="src/contexts/__tests__/TasksContext.test.jsx" name="TasksContext &gt; Task Operations &gt; Deleting Tasks &gt; handles errors when API call fails during delete" time="0.142">
             <system-out>
 Tasks data loaded: [
   {
@@ -321,33 +321,33 @@ Tasks data loaded: [
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="src/contexts/__tests__/UserContext.test.jsx" timestamp="2025-05-30T07:03:35.803Z" hostname="LAPTOP-CHKVM7S6" tests="13" failures="0" errors="0" skipped="0" time="0.256">
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Initialization and Session Restore &gt; initializes with no user, and eventually isLoadingUser is false and no error" time="0.037">
+    <testsuite name="src/contexts/__tests__/UserContext.test.jsx" timestamp="2025-05-30T07:14:37.022Z" hostname="LAPTOP-CHKVM7S6" tests="13" failures="0" errors="0" skipped="0" time="0.45">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Initialization and Session Restore &gt; initializes with no user, and eventually isLoadingUser is false and no error" time="0.069">
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Initialization and Session Restore &gt; restores session successfully if user ID is in localStorage" time="0.018">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Initialization and Session Restore &gt; restores session successfully if user ID is in localStorage" time="0.025">
             <system-out>
 UserContext: Попытка восстановления сессии для пользователя с ID: 123
 UserContext: Сессия восстановлена, данные пользователя: { id: [32m&apos;123&apos;[39m, name: [32m&apos;Test User&apos;[39m }
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Initialization and Session Restore &gt; handles error and clears localStorage if session restore fails" time="0.012">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Initialization and Session Restore &gt; handles error and clears localStorage if session restore fails" time="0.029">
             <system-out>
 UserContext: Попытка восстановления сессии для пользователя с ID: 123
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Initialization and Session Restore &gt; does not attempt to fetch user if no ID in localStorage" time="0.015">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Initialization and Session Restore &gt; does not attempt to fetch user if no ID in localStorage" time="0.01">
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Login Function &gt; logs in successfully, updates user state, and stores ID in localStorage" time="0.011">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Login Function &gt; logs in successfully, updates user state, and stores ID in localStorage" time="0.023">
             <system-out>
 UserContext: Login successful, user data: { id: [32m&apos;456&apos;[39m, name: [32m&apos;Logged In User&apos;[39m, email: [32m&apos;test@example.com&apos;[39m }
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Login Function &gt; handles login failure, sets error, and clears user/localStorage" time="0.051">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Login Function &gt; handles login failure, sets error, and clears user/localStorage" time="0.092">
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Logout Function &gt; clears user state, removes ID from localStorage, and clears error after login" time="0.022">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; Logout Function &gt; clears user state, removes ID from localStorage, and clears error after login" time="0.025">
             <system-out>
 UserContext: Login successful, user data: { id: [32m&apos;789&apos;[39m, name: [32m&apos;User To Logout&apos;[39m, email: [32m&apos;logout@example.com&apos;[39m }
 
@@ -355,351 +355,363 @@ UserContext: User logged out
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; reloadUser Function &gt; successfully reloads user data if user is already in state" time="0.022">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; reloadUser Function &gt; successfully reloads user data if user is already in state" time="0.046">
             <system-out>
 UserContext: Login successful, user data: { id: [32m&apos;userInState1&apos;[39m, name: [32m&apos;Initial User&apos;[39m }
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; reloadUser Function &gt; successfully reloads user data using ID from localStorage if user not in state" time="0.017">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; reloadUser Function &gt; successfully reloads user data using ID from localStorage if user not in state" time="0.035">
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; reloadUser Function &gt; handles error during reloadUser and clears user/localStorage" time="0.019">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; reloadUser Function &gt; handles error during reloadUser and clears user/localStorage" time="0.036">
             <system-out>
 UserContext: Login successful, user data: { id: [32m&apos;userToFailReload&apos;[39m, name: [32m&apos;Test&apos;[39m }
 
             </system-out>
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; reloadUser Function &gt; sets error if no user ID is available for reloadUser" time="0.014">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; reloadUser Function &gt; sets error if no user ID is available for reloadUser" time="0.033">
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; useUser Hook &gt; returns context value when used within UserProvider" time="0.003">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; useUser Hook &gt; returns context value when used within UserProvider" time="0.004">
         </testcase>
-        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; useUser Hook &gt; throws error when used outside UserProvider" time="0.01">
+        <testcase classname="src/contexts/__tests__/UserContext.test.jsx" name="UserContext &gt; useUser Hook &gt; throws error when used outside UserProvider" time="0.016">
         </testcase>
     </testsuite>
-    <testsuite name="src/utils/__tests__/dateTimeUtils.test.js" timestamp="2025-05-30T07:03:35.817Z" hostname="LAPTOP-CHKVM7S6" tests="21" failures="0" errors="0" skipped="0" time="0.021">
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDeadlineForDisplay &gt; should return &quot;Не выбран&quot; for no input" time="0.002">
+    <testsuite name="src/utils/__tests__/dateTimeUtils.test.js" timestamp="2025-05-30T07:14:37.040Z" hostname="LAPTOP-CHKVM7S6" tests="21" failures="0" errors="0" skipped="0" time="0.042">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDeadlineForDisplay &gt; should return &quot;Не выбран&quot; for no input" time="0.004">
         </testcase>
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDeadlineForDisplay &gt; should return &quot;Ошибка даты&quot; for invalid date string" time="0.002">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDeadlineForDisplay &gt; should return &quot;Ошибка даты&quot; for invalid date string" time="0.004">
         </testcase>
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDeadlineForDisplay &gt; should format valid ISO string correctly" time="0.004">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDeadlineForDisplay &gt; should format valid ISO string correctly" time="0.005">
         </testcase>
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDeadlineForDisplay &gt; should format valid Date object correctly" time="0">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDeadlineForDisplay &gt; should format valid Date object correctly" time="0.001">
         </testcase>
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDateTimeForInput &gt; should return empty string for no input or invalid date" time="0.001">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDateTimeForInput &gt; should return empty string for no input or invalid date" time="0.002">
         </testcase>
         <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDateTimeForInput &gt; should format valid ISO string (which is UTC) to YYYY-MM-DDTHH:mm (maintaining UTC values)" time="0">
         </testcase>
         <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDateTimeForInput &gt; should format valid Date object to YYYY-MM-DDTHH:mm using its UTC representation" time="0.001">
         </testcase>
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; secondsToHHMM &gt; should return &quot;00:00&quot; for invalid inputs" time="0">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; secondsToHHMM &gt; should return &quot;00:00&quot; for invalid inputs" time="0.001">
         </testcase>
         <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; secondsToHHMM &gt; should convert seconds to HH:MM format" time="0.001">
         </testcase>
         <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; hhMMToSeconds &gt; should return 0 for invalid inputs" time="0.001">
         </testcase>
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; hhMMToSeconds &gt; should convert HH:MM string to seconds" time="0">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; hhMMToSeconds &gt; should convert HH:MM string to seconds" time="0.001">
         </testcase>
         <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDurationForDisplay &gt; should return &quot;Не выбрана&quot; for invalid inputs" time="0.001">
         </testcase>
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDurationForDisplay &gt; should format duration correctly" time="0">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatDurationForDisplay &gt; should format duration correctly" time="0.001">
         </testcase>
         <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatFullDateTime &gt; should return &quot;неизвестно&quot; for no input" time="0.001">
         </testcase>
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatFullDateTime &gt; should return &quot;Неверная дата&quot; for invalid date string" time="0">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatFullDateTime &gt; should return &quot;Неверная дата&quot; for invalid date string" time="0.001">
         </testcase>
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatFullDateTime &gt; should format date with toLocaleString" time="0.001">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatFullDateTime &gt; should format date with toLocaleString" time="0.002">
         </testcase>
         <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatTaskCardDateTime &gt; should return &quot;Нет дедлайна&quot; for no input" time="0.001">
         </testcase>
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatTaskCardDateTime &gt; should return input string for invalid date (fallback behavior)" time="0">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatTaskCardDateTime &gt; should return input string for invalid date (fallback behavior)" time="0.002">
         </testcase>
         <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatTaskCardDateTime &gt; should format date for task card" time="0.001">
         </testcase>
         <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatTaskCardDuration &gt; should default to &quot;0 сек&quot; for invalid or negative inputs" time="0.001">
         </testcase>
-        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatTaskCardDuration &gt; should format duration for task card" time="0">
+        <testcase classname="src/utils/__tests__/dateTimeUtils.test.js" name="dateTimeUtils &gt; formatTaskCardDuration &gt; should format duration for task card" time="0.001">
         </testcase>
     </testsuite>
-    <testsuite name="src/components/Button/__tests__/Button.test.jsx" timestamp="2025-05-30T07:03:35.828Z" hostname="LAPTOP-CHKVM7S6" tests="8" failures="0" errors="0" skipped="0" time="0.414">
-        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; renders children correctly" time="0.042">
+    <testsuite name="src/components/Button/__tests__/Button.test.jsx" timestamp="2025-05-30T07:14:37.057Z" hostname="LAPTOP-CHKVM7S6" tests="8" failures="0" errors="0" skipped="0" time="0.533">
+        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; renders children correctly" time="0.089">
         </testcase>
-        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; applies active class when isActive is true" time="0.005">
+        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; applies active class when isActive is true" time="0.009">
         </testcase>
-        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; applies secondary class when variant is secondary" time="0.005">
+        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; applies secondary class when variant is secondary" time="0.012">
         </testcase>
-        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; can be disabled" time="0.006">
+        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; can be disabled" time="0.011">
         </testcase>
-        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; handles click events" time="0.245">
+        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; handles click events" time="0.337">
         </testcase>
-        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; does not call onClick when disabled" time="0.094">
+        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; does not call onClick when disabled" time="0.048">
         </testcase>
         <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; forwards additional props to button element" time="0.008">
         </testcase>
-        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; combines multiple classes correctly" time="0.006">
+        <testcase classname="src/components/Button/__tests__/Button.test.jsx" name="Button &gt; combines multiple classes correctly" time="0.007">
         </testcase>
     </testsuite>
-    <testsuite name="src/components/Main/__tests__/Main.test.jsx" timestamp="2025-05-30T07:03:35.833Z" hostname="LAPTOP-CHKVM7S6" tests="8" failures="0" errors="0" skipped="0" time="0.214">
-        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders header with correct title for task pages" time="0.068">
+    <testsuite name="src/components/Sidebar/__tests__/Sidebar.test.jsx" timestamp="2025-05-30T07:14:37.066Z" hostname="LAPTOP-CHKVM7S6" tests="4" failures="0" errors="0" skipped="0" time="0.724">
+        <testcase classname="src/components/Sidebar/__tests__/Sidebar.test.jsx" name="Sidebar &gt; renders user profile and menu" time="0.198">
         </testcase>
-        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; does not render header for profile, achievements and shop pages" time="0.034">
+        <testcase classname="src/components/Sidebar/__tests__/Sidebar.test.jsx" name="Sidebar &gt; handles profile click correctly" time="0.283">
         </testcase>
-        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders TaskList component when active is &quot;Сегодня&quot;" time="0.008">
+        <testcase classname="src/components/Sidebar/__tests__/Sidebar.test.jsx" name="Sidebar &gt; handles menu item changes correctly" time="0.175">
         </testcase>
-        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders UserProfilePage when active is &quot;Профиль&quot;" time="0.006">
-        </testcase>
-        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders AchievementsPage when active is &quot;Достижения&quot;" time="0.005">
-        </testcase>
-        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders ShopPage when active is &quot;Магазин&quot;" time="0.005">
-        </testcase>
-        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders &quot;In development&quot; message for unimplemented pages" time="0.046">
-        </testcase>
-        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; handles task modal actions correctly" time="0.038">
+        <testcase classname="src/components/Sidebar/__tests__/Sidebar.test.jsx" name="Sidebar &gt; highlights active menu item correctly" time="0.061">
         </testcase>
     </testsuite>
-    <testsuite name="src/components/Sidebar/__tests__/Sidebar.test.jsx" timestamp="2025-05-30T07:03:35.838Z" hostname="LAPTOP-CHKVM7S6" tests="4" failures="0" errors="0" skipped="0" time="0.565">
-        <testcase classname="src/components/Sidebar/__tests__/Sidebar.test.jsx" name="Sidebar &gt; renders user profile and menu" time="0.142">
+    <testsuite name="src/components/CheckButton/__tests__/CheckButton.test.jsx" timestamp="2025-05-30T07:14:37.071Z" hostname="LAPTOP-CHKVM7S6" tests="7" failures="0" errors="0" skipped="0" time="0.265">
+        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; renders children correctly" time="0.049">
         </testcase>
-        <testcase classname="src/components/Sidebar/__tests__/Sidebar.test.jsx" name="Sidebar &gt; handles profile click correctly" time="0.211">
-        </testcase>
-        <testcase classname="src/components/Sidebar/__tests__/Sidebar.test.jsx" name="Sidebar &gt; handles menu item changes correctly" time="0.159">
-        </testcase>
-        <testcase classname="src/components/Sidebar/__tests__/Sidebar.test.jsx" name="Sidebar &gt; highlights active menu item correctly" time="0.048">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/CheckButton/__tests__/CheckButton.test.jsx" timestamp="2025-05-30T07:03:35.841Z" hostname="LAPTOP-CHKVM7S6" tests="7" failures="0" errors="0" skipped="0" time="0.363">
-        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; renders children correctly" time="0.041">
-        </testcase>
-        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; applies important class when isImportant is true" time="0.007">
+        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; applies important class when isImportant is true" time="0.006">
         </testcase>
         <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; does not apply important class when isImportant is false" time="0.008">
         </testcase>
-        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; handles click events" time="0.212">
+        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; handles click events" time="0.142">
         </testcase>
-        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; can be disabled" time="0.079">
+        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; can be disabled" time="0.048">
         </testcase>
-        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; forwards additional props to button element" time="0.007">
+        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; forwards additional props to button element" time="0.005">
         </testcase>
-        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; combines important class with base class" time="0.005">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/Modal/__tests__/Modal.test.jsx" timestamp="2025-05-30T07:03:35.846Z" hostname="LAPTOP-CHKVM7S6" tests="7" failures="0" errors="0" skipped="0" time="0.116">
-        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; renders modal content when open" time="0.044">
-        </testcase>
-        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; applies delete class when modelType is delete" time="0.009">
-        </testcase>
-        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; calls onCloseModal when dialog is closed" time="0.013">
-        </testcase>
-        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; renders in portal" time="0.008">
-        </testcase>
-        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; handles modal state changes" time="0.014">
-        </testcase>
-        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; does not show modal when initially closed" time="0.008">
-        </testcase>
-        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; cleans up event listeners on unmount" time="0.016">
+        <testcase classname="src/components/CheckButton/__tests__/CheckButton.test.jsx" name="CheckButton &gt; combines important class with base class" time="0.003">
         </testcase>
     </testsuite>
-    <testsuite name="src/components/Main/Header/__tests__/Header.test.jsx" timestamp="2025-05-30T07:03:35.851Z" hostname="LAPTOP-CHKVM7S6" tests="4" failures="0" errors="0" skipped="0" time="0.194">
-        <testcase classname="src/components/Main/Header/__tests__/Header.test.jsx" name="Header Component &gt; renders the title and initial date correctly" time="0.135">
+    <testsuite name="src/components/Modal/__tests__/Modal.test.jsx" timestamp="2025-05-30T07:14:37.080Z" hostname="LAPTOP-CHKVM7S6" tests="7" failures="0" errors="0" skipped="0" time="0.255">
+        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; renders modal content when open" time="0.122">
         </testcase>
-        <testcase classname="src/components/Main/Header/__tests__/Header.test.jsx" name="Header Component &gt; updates the date every minute" time="0.026">
+        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; applies delete class when modelType is delete" time="0.032">
         </testcase>
-        <testcase classname="src/components/Main/Header/__tests__/Header.test.jsx" name="Header Component &gt; clears the interval on unmount" time="0.011">
+        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; calls onCloseModal when dialog is closed" time="0.029">
         </testcase>
-        <testcase classname="src/components/Main/Header/__tests__/Header.test.jsx" name="Header Component &gt; renders correctly with a different title" time="0.018">
+        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; renders in portal" time="0.013">
         </testcase>
-    </testsuite>
-    <testsuite name="src/components/Main/ProjectList/__tests__/ProjectList.test.jsx" timestamp="2025-05-30T07:03:35.854Z" hostname="LAPTOP-CHKVM7S6" tests="3" failures="0" errors="0" skipped="0" time="0.125">
-        <testcase classname="src/components/Main/ProjectList/__tests__/ProjectList.test.jsx" name="ProjectList Component &gt; renders the list of hardcoded projects" time="0.038">
+        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; handles modal state changes" time="0.026">
         </testcase>
-        <testcase classname="src/components/Main/ProjectList/__tests__/ProjectList.test.jsx" name="ProjectList Component &gt; renders main container and list container with correct classes" time="0.007">
+        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; does not show modal when initially closed" time="0.007">
         </testcase>
-        <testcase classname="src/components/Main/ProjectList/__tests__/ProjectList.test.jsx" name="ProjectList Component &gt; renders the correct number of project items" time="0.078">
+        <testcase classname="src/components/Modal/__tests__/Modal.test.jsx" name="Modal &gt; cleans up event listeners on unmount" time="0.015">
         </testcase>
     </testsuite>
-    <testsuite name="src/components/Main/Task/__tests__/Task.test.jsx" timestamp="2025-05-30T07:03:35.856Z" hostname="LAPTOP-CHKVM7S6" tests="23" failures="0" errors="0" skipped="0" time="0.721">
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; renders basic task information" time="0.294">
+    <testsuite name="src/components/Main/__tests__/Main.test.jsx" timestamp="2025-05-30T07:14:37.088Z" hostname="LAPTOP-CHKVM7S6" tests="8" failures="0" errors="0" skipped="0" time="0.173">
+        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders header with correct title for task pages" time="0.068">
         </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; renders an important task with correct styles and icons" time="0.024">
+        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; does not render header for profile, achievements and shop pages" time="0.024">
         </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; renders a completed task with correct check icon" time="0.017">
+        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders TaskList component when active is &quot;Сегодня&quot;" time="0.005">
         </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; renders an important and completed task with correct icons" time="0.017">
+        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders UserProfilePage when active is &quot;Профиль&quot;" time="0.005">
         </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Event Handlers &gt; calls onToggleStatus when CheckButton is clicked" time="0.038">
+        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders AchievementsPage when active is &quot;Достижения&quot;" time="0.003">
         </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Event Handlers &gt; calls onDeleteTask when DeleteContainer (trash icon area) is clicked" time="0.015">
+        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders ShopPage when active is &quot;Магазин&quot;" time="0.006">
         </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Event Handlers &gt; does not call onDeleteTask if not provided" time="0.015">
+        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; renders &quot;In development&quot; message for unimplemented pages" time="0.023">
         </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Event Handlers &gt; calls onTaskClick when TaskInfo is clicked" time="0.013">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Event Handlers &gt; does not call onTaskClick if not provided" time="0.016">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; renders default texts for missing optional data and specific formats" time="0.064">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; renders correct avatar for sphere &quot;&apos;sport&apos;&quot;" time="0.03">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; renders correct avatar for sphere &quot;&apos;work&apos;&quot;" time="0.026">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; renders correct avatar for sphere &quot;&apos;self-development&apos;&quot;" time="0.029">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; renders correct avatar for sphere &quot;&apos;UNKNOWN&apos;&quot;" time="0.027">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats deadline correctly" time="0.011">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; handles invalid deadline string in formatDateTime gracefully" time="0.008">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 50 seconds as &apos;50 сек&apos;" time="0.014">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 60 seconds as &apos;1 мин&apos;" time="0.015">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 125 seconds as &apos;2 мин&apos;" time="0.019">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 3600 seconds as &apos;1 ч&apos;" time="0.006">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 3665 seconds as &apos;1 ч 1 мин&apos;" time="0.006">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 7200 seconds as &apos;2 ч&apos;" time="0.006">
-        </testcase>
-        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration +0 seconds as &apos;0 сек&apos;" time="0.006">
+        <testcase classname="src/components/Main/__tests__/Main.test.jsx" name="Main &gt; handles task modal actions correctly" time="0.027">
         </testcase>
     </testsuite>
-    <testsuite name="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" timestamp="2025-05-30T07:03:35.872Z" hostname="LAPTOP-CHKVM7S6" tests="7" failures="0" errors="0" skipped="0" time="0.458">
-        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; renders filter button correctly" time="0.069">
+    <testsuite name="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" timestamp="2025-05-30T07:14:37.097Z" hostname="LAPTOP-CHKVM7S6" tests="5" failures="0" errors="0" skipped="0" time="0.63">
+        <testcase classname="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" name="CreateTaskForm &gt; renders TaskFormBase with correct initial props" time="0.107">
         </testcase>
-        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; renders add task button correctly" time="0.012">
+        <testcase classname="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" name="CreateTaskForm &gt; calls addTask with correct data when form is submitted" time="0.316">
         </testcase>
-        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; applies correct classes for filter button" time="0.215">
+        <testcase classname="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" name="CreateTaskForm &gt; shows loading state when user is not available" time="0.008">
         </testcase>
-        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; applies correct classes for add task button" time="0.031">
+        <testcase classname="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" name="CreateTaskForm &gt; handles error when adding task fails" time="0.114">
         </testcase>
-        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; handles click events" time="0.09">
-        </testcase>
-        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; applies styles for different states" time="0.024">
-        </testcase>
-        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; applies correct classes for addTask type" time="0.011">
+        <testcase classname="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" name="CreateTaskForm &gt; closes form when close button is clicked" time="0.048">
         </testcase>
     </testsuite>
-    <testsuite name="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" timestamp="2025-05-30T07:03:35.876Z" hostname="LAPTOP-CHKVM7S6" tests="6" failures="0" errors="0" skipped="0" time="0.581">
-        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; renders all menu items correctly" time="0.093">
+    <testsuite name="src/features/tasks/components/__tests__/DeleteTaskConfirmationModal.test.jsx" timestamp="2025-05-30T07:14:37.104Z" hostname="LAPTOP-CHKVM7S6" tests="3" failures="0" errors="0" skipped="0" time="0.262">
+        <testcase classname="src/features/tasks/components/__tests__/DeleteTaskConfirmationModal.test.jsx" name="DeleteTaskConfirmationModal Component &gt; renders the modal with title and buttons" time="0.215">
         </testcase>
-        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; highlights active menu item" time="0.204">
+        <testcase classname="src/features/tasks/components/__tests__/DeleteTaskConfirmationModal.test.jsx" name="DeleteTaskConfirmationModal Component &gt; calls onConfirmDelete when the confirm button is clicked" time="0.024">
         </testcase>
-        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; calls onChange with correct item when clicked" time="0.205">
-        </testcase>
-        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; applies correct button type for &quot;Добавить задачу&quot;" time="0.013">
-        </testcase>
-        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; renders empty menu when no items provided" time="0.01">
-        </testcase>
-        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; handles null or undefined active item" time="0.051">
+        <testcase classname="src/features/tasks/components/__tests__/DeleteTaskConfirmationModal.test.jsx" name="DeleteTaskConfirmationModal Component &gt; calls onClose when the cancel button is clicked" time="0.022">
         </testcase>
     </testsuite>
-    <testsuite name="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" timestamp="2025-05-30T07:03:35.879Z" hostname="LAPTOP-CHKVM7S6" tests="6" failures="0" errors="0" skipped="0" time="0.398">
-        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; renders user profile correctly with all data" time="0.131">
+    <testsuite name="src/features/tasks/components/__tests__/Task.test.jsx" timestamp="2025-05-30T07:14:37.109Z" hostname="LAPTOP-CHKVM7S6" tests="17" failures="0" errors="0" skipped="0" time="0.962">
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; renders basic task information for a non-important, non-completed task" time="0.458">
         </testcase>
-        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; renders loading state when no user provided" time="0.008">
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; renders an important task with correct styles and icons" time="0.041">
         </testcase>
-        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; uses default avatar when user avatar is not provided" time="0.017">
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; renders a completed task with correct check icon" time="0.022">
         </testcase>
-        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; handles click events" time="0.202">
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; renders an important and completed task with correct icons" time="0.018">
         </testcase>
-        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; applies active styles when isActive is true" time="0.025">
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Event Handlers &gt; calls toggleTaskStatus when CheckButton is clicked" time="0.041">
         </testcase>
-        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; displays 0 XP when xp is not provided" time="0.01">
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Event Handlers &gt; calls onOpenDeleteConfirmModal when DeleteContainer is clicked" time="0.019">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Event Handlers &gt; does not throw if onOpenDeleteConfirmModal is not provided and delete is clicked" time="0.026">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Event Handlers &gt; calls onOpenUpdateModal when TaskInfo is clicked" time="0.026">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Event Handlers &gt; does not throw if onOpenUpdateModal is not provided and TaskInfo is clicked" time="0.023">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders default texts for missing optional data" time="0.064">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;&apos;sport&apos;&quot; (&apos;sportAvatar.png&apos;)" time="0.04">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;&apos;work&apos;&quot; (&apos;workAvatar.png&apos;)" time="0.049">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;&apos;self-development&apos;&quot; (&apos;selfDevelopmentAvatar.png&apos;)" time="0.03">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;&apos;sPoRt&apos;&quot; (&apos;sportAvatar.png&apos;)" time="0.029">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;&apos;unknownSphere&apos;&quot; (&apos;sportAvatar.png&apos;)" time="0.032">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;null&quot; (&apos;sportAvatar.png&apos;)" time="0.015">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;undefined&quot; (&apos;sportAvatar.png&apos;)" time="0.022">
         </testcase>
     </testsuite>
-    <testsuite name="src/features/auth/components/__tests__/LoginPage.test.jsx" timestamp="2025-05-30T07:03:35.883Z" hostname="LAPTOP-CHKVM7S6" tests="10" failures="0" errors="0" skipped="0" time="3.86">
-        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; renders login form correctly" time="0.104">
+    <testsuite name="src/features/tasks/components/__tests__/TaskList.test.jsx" timestamp="2025-05-30T07:14:37.120Z" hostname="LAPTOP-CHKVM7S6" tests="7" failures="0" errors="0" skipped="0" time="0.273">
+        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; renders list of tasks" time="0.146">
         </testcase>
-        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; handles successful login" time="0.885">
+        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; shows loading message when tasks are loading" time="0.011">
         </testcase>
-        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; handles failed login" time="0.675">
+        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; shows error message when loading fails" time="0.009">
         </testcase>
-        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; toggles password visibility" time="0.104">
+        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; shows empty message when there are no tasks" time="0.009">
         </testcase>
-        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; handles &quot;Создать профиль&quot; button click" time="0.032">
+        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; passes correct props to Task components" time="0.024">
         </testcase>
-        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; validates email field" time="0.035">
+        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; handles task update modal opening" time="0.045">
+        </testcase>
+        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; handles task deletion modal opening" time="0.02">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/features/auth/components/__tests__/LoginPage.test.jsx" timestamp="2025-05-30T07:14:37.125Z" hostname="LAPTOP-CHKVM7S6" tests="10" failures="0" errors="0" skipped="0" time="4.283">
+        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; renders login form correctly" time="0.175">
+        </testcase>
+        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; handles successful login" time="1.09">
+        </testcase>
+        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; handles failed login" time="0.744">
+        </testcase>
+        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; toggles password visibility" time="0.089">
+        </testcase>
+        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; handles &quot;Создать профиль&quot; button click" time="0.058">
+        </testcase>
+        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; validates email field" time="0.046">
         </testcase>
         <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; handles &quot;Не помню пароль&quot; link click" time="0.005">
         </testcase>
-        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; validates password field" time="0.285">
+        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; validates password field" time="0.304">
         </testcase>
-        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; disables inputs during form submission" time="0.517">
+        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; disables inputs during form submission" time="0.502">
         </testcase>
-        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; clears error message on new login attempt" time="1.216">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" timestamp="2025-05-30T07:03:35.889Z" hostname="LAPTOP-CHKVM7S6" tests="5" failures="0" errors="0" skipped="0" time="0.397">
-        <testcase classname="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" name="CreateTaskForm &gt; renders TaskFormBase with correct initial props" time="0.038">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" name="CreateTaskForm &gt; calls addTask with correct data when form is submitted" time="0.198">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" name="CreateTaskForm &gt; shows loading state when user is not available" time="0.005">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" name="CreateTaskForm &gt; handles error when adding task fails" time="0.094">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/CreateTaskForm.test.jsx" name="CreateTaskForm &gt; closes form when close button is clicked" time="0.055">
+        <testcase classname="src/features/auth/components/__tests__/LoginPage.test.jsx" name="LoginPage &gt; clears error message on new login attempt" time="1.265">
         </testcase>
     </testsuite>
-    <testsuite name="src/features/tasks/components/__tests__/DeleteTaskConfirmationModal.test.jsx" timestamp="2025-05-30T07:03:35.894Z" hostname="LAPTOP-CHKVM7S6" tests="3" failures="0" errors="0" skipped="0" time="0.19">
-        <testcase classname="src/features/tasks/components/__tests__/DeleteTaskConfirmationModal.test.jsx" name="DeleteTaskConfirmationModal Component &gt; renders the modal with title and buttons" time="0.156">
+    <testsuite name="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" timestamp="2025-05-30T07:14:37.131Z" hostname="LAPTOP-CHKVM7S6" tests="6" failures="0" errors="0" skipped="0" time="0.517">
+        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; renders user profile correctly with all data" time="0.193">
         </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/DeleteTaskConfirmationModal.test.jsx" name="DeleteTaskConfirmationModal Component &gt; calls onConfirmDelete when the confirm button is clicked" time="0.019">
+        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; renders loading state when no user provided" time="0.013">
         </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/DeleteTaskConfirmationModal.test.jsx" name="DeleteTaskConfirmationModal Component &gt; calls onClose when the cancel button is clicked" time="0.011">
+        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; uses default avatar when user avatar is not provided" time="0.02">
         </testcase>
-    </testsuite>
-    <testsuite name="src/features/tasks/components/__tests__/Task.test.jsx" timestamp="2025-05-30T07:03:35.897Z" hostname="LAPTOP-CHKVM7S6" tests="17" failures="0" errors="0" skipped="0" time="0.721">
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; renders basic task information for a non-important, non-completed task" time="0.313">
+        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; handles click events" time="0.251">
         </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; renders an important task with correct styles and icons" time="0.05">
+        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; applies active styles when isActive is true" time="0.025">
         </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; renders a completed task with correct check icon" time="0.019">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; renders an important and completed task with correct icons" time="0.026">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Event Handlers &gt; calls toggleTaskStatus when CheckButton is clicked" time="0.03">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Event Handlers &gt; calls onOpenDeleteConfirmModal when DeleteContainer is clicked" time="0.014">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Event Handlers &gt; does not throw if onOpenDeleteConfirmModal is not provided and delete is clicked" time="0.015">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Event Handlers &gt; calls onOpenUpdateModal when TaskInfo is clicked" time="0.013">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Event Handlers &gt; does not throw if onOpenUpdateModal is not provided and TaskInfo is clicked" time="0.016">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders default texts for missing optional data" time="0.056">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;&apos;sport&apos;&quot; (&apos;sportAvatar.png&apos;)" time="0.024">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;&apos;work&apos;&quot; (&apos;workAvatar.png&apos;)" time="0.019">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;&apos;self-development&apos;&quot; (&apos;selfDevelopmentAvatar.png&apos;)" time="0.037">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;&apos;sPoRt&apos;&quot; (&apos;sportAvatar.png&apos;)" time="0.027">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;&apos;unknownSphere&apos;&quot; (&apos;sportAvatar.png&apos;)" time="0.023">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;null&quot; (&apos;sportAvatar.png&apos;)" time="0.02">
-        </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/Task.test.jsx" name="Task Component &gt; Data Rendering and Defaults &gt; renders correct avatar for sphere &quot;undefined&quot; (&apos;sportAvatar.png&apos;)" time="0.015">
+        <testcase classname="src/components/Sidebar/SidebarUserProfile/__tests__/SidebarUserProfile.test.jsx" name="SidebarUserProfile &gt; displays 0 XP when xp is not provided" time="0.009">
         </testcase>
     </testsuite>
-    <testsuite name="src/features/tasks/components/__tests__/TaskList.test.jsx" timestamp="2025-05-30T07:03:35.908Z" hostname="LAPTOP-CHKVM7S6" tests="7" failures="0" errors="0" skipped="0" time="0.189">
-        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; renders list of tasks" time="0.093">
+    <testsuite name="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" timestamp="2025-05-30T07:14:37.134Z" hostname="LAPTOP-CHKVM7S6" tests="7" failures="0" errors="0" skipped="0" time="0.671">
+        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; renders filter button correctly" time="0.098">
         </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; shows loading message when tasks are loading" time="0.017">
+        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; renders add task button correctly" time="0.015">
         </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; shows error message when loading fails" time="0.007">
+        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; applies correct classes for filter button" time="0.316">
         </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; shows empty message when there are no tasks" time="0.005">
+        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; applies correct classes for add task button" time="0.053">
         </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; passes correct props to Task components" time="0.021">
+        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; handles click events" time="0.132">
         </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; handles task update modal opening" time="0.027">
+        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; applies styles for different states" time="0.037">
         </testcase>
-        <testcase classname="src/features/tasks/components/__tests__/TaskList.test.jsx" name="TaskList &gt; handles task deletion modal opening" time="0.015">
+        <testcase classname="src/components/Sidebar/SidebarButton/__tests__/SidebarButton.test.jsx" name="SidebarButton &gt; applies correct classes for addTask type" time="0.013">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" timestamp="2025-05-30T07:14:37.137Z" hostname="LAPTOP-CHKVM7S6" tests="6" failures="0" errors="0" skipped="0" time="0.703">
+        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; renders all menu items correctly" time="0.141">
+        </testcase>
+        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; highlights active menu item" time="0.281">
+        </testcase>
+        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; calls onChange with correct item when clicked" time="0.177">
+        </testcase>
+        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; applies correct button type for &quot;Добавить задачу&quot;" time="0.017">
+        </testcase>
+        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; renders empty menu when no items provided" time="0.01">
+        </testcase>
+        <testcase classname="src/components/Sidebar/SidebarMenu/__tests__/SidebarMenu.test.jsx" name="SidebarMenu &gt; handles null or undefined active item" time="0.071">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/Main/ProjectList/__tests__/ProjectList.test.jsx" timestamp="2025-05-30T07:14:37.139Z" hostname="LAPTOP-CHKVM7S6" tests="3" failures="0" errors="0" skipped="0" time="0.149">
+        <testcase classname="src/components/Main/ProjectList/__tests__/ProjectList.test.jsx" name="ProjectList Component &gt; renders the list of hardcoded projects" time="0.051">
+        </testcase>
+        <testcase classname="src/components/Main/ProjectList/__tests__/ProjectList.test.jsx" name="ProjectList Component &gt; renders main container and list container with correct classes" time="0.01">
+        </testcase>
+        <testcase classname="src/components/Main/ProjectList/__tests__/ProjectList.test.jsx" name="ProjectList Component &gt; renders the correct number of project items" time="0.086">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/Main/Task/__tests__/Task.test.jsx" timestamp="2025-05-30T07:14:37.140Z" hostname="LAPTOP-CHKVM7S6" tests="23" failures="0" errors="0" skipped="0" time="1.016">
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; renders basic task information" time="0.425">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; renders an important task with correct styles and icons" time="0.074">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; renders a completed task with correct check icon" time="0.02">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; renders an important and completed task with correct icons" time="0.021">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Event Handlers &gt; calls onToggleStatus when CheckButton is clicked" time="0.038">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Event Handlers &gt; calls onDeleteTask when DeleteContainer (trash icon area) is clicked" time="0.024">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Event Handlers &gt; does not call onDeleteTask if not provided" time="0.021">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Event Handlers &gt; calls onTaskClick when TaskInfo is clicked" time="0.031">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Event Handlers &gt; does not call onTaskClick if not provided" time="0.024">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; renders default texts for missing optional data and specific formats" time="0.063">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; renders correct avatar for sphere &quot;&apos;sport&apos;&quot;" time="0.035">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; renders correct avatar for sphere &quot;&apos;work&apos;&quot;" time="0.027">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; renders correct avatar for sphere &quot;&apos;self-development&apos;&quot;" time="0.036">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; renders correct avatar for sphere &quot;&apos;UNKNOWN&apos;&quot;" time="0.034">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats deadline correctly" time="0.022">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; handles invalid deadline string in formatDateTime gracefully" time="0.018">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 50 seconds as &apos;50 сек&apos;" time="0.018">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 60 seconds as &apos;1 мин&apos;" time="0.01">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 125 seconds as &apos;2 мин&apos;" time="0.014">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 3600 seconds as &apos;1 ч&apos;" time="0.011">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 3665 seconds as &apos;1 ч 1 мин&apos;" time="0.008">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration 7200 seconds as &apos;2 ч&apos;" time="0.014">
+        </testcase>
+        <testcase classname="src/components/Main/Task/__tests__/Task.test.jsx" name="Main Task Component (src/components/Main/Task/Task.jsx) &gt; Data Rendering, Defaults and Formatting &gt; formats duration +0 seconds as &apos;0 сек&apos;" time="0.016">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/Main/Header/__tests__/Header.test.jsx" timestamp="2025-05-30T07:14:37.151Z" hostname="LAPTOP-CHKVM7S6" tests="4" failures="0" errors="0" skipped="0" time="0.237">
+        <testcase classname="src/components/Main/Header/__tests__/Header.test.jsx" name="Header Component &gt; renders the title and initial date correctly" time="0.16">
+        </testcase>
+        <testcase classname="src/components/Main/Header/__tests__/Header.test.jsx" name="Header Component &gt; updates the date every minute" time="0.034">
+        </testcase>
+        <testcase classname="src/components/Main/Header/__tests__/Header.test.jsx" name="Header Component &gt; clears the interval on unmount" time="0.02">
+        </testcase>
+        <testcase classname="src/components/Main/Header/__tests__/Header.test.jsx" name="Header Component &gt; renders correctly with a different title" time="0.017">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/Main/TaskList/__tests__/TaskList.test.jsx" timestamp="2025-05-30T07:14:37.152Z" hostname="LAPTOP-CHKVM7S6" tests="1" failures="1" errors="0" skipped="0" time="0">
+        <testcase classname="src/components/Main/TaskList/__tests__/TaskList.test.jsx" name="src/components/Main/TaskList/__tests__/TaskList.test.jsx" time="0">
+            <failure message="[vitest] There was an error when mocking a module. If you are using &quot;vi.mock&quot; factory, make sure there are no top level variables inside, since this call is hoisted to top of the file. Read more: https://vitest.dev/api/vi.html#vi-mock" type="Error">
+Error: [vitest] There was an error when mocking a module. If you are using &quot;vi.mock&quot; factory, make sure there are no top level variables inside, since this call is hoisted to top of the file. Read more: https://vitest.dev/api/vi.html#vi-mock
+ ❯ src/components/Main/Task/Task.jsx:9:31
+
+Caused by: Caused by: ReferenceError: Cannot access &apos;mockSvgComponent&apos; before initialization
+ ❯ src/components/Main/TaskList/__tests__/TaskList.test.jsx:29:84
+ ❯ src/components/Main/Task/Task.jsx:9:31
+            </failure>
         </testcase>
     </testsuite>
 </testsuites>
