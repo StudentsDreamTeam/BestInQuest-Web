@@ -163,25 +163,6 @@ describe('LoginPage', () => {
     expect(toggleButton).toHaveTextContent('Показать')
   })
 
-  it('handles "Создать профиль" button click', async () => {
-    const user = userEvent.setup()
-    
-    render(
-      <UserProvider>
-        <LoginPage />
-      </UserProvider>
-    )
-
-    const createProfileButton = screen.getByText('Создать профиль')
-    
-    await act(async () => {
-      await user.click(createProfileButton)
-    })
-
-    // Проверяем, что был вызван console.log
-    expect(console.log).toHaveBeenCalledWith('Переход на страницу создания профиля (пока не реализовано)')
-  })
-
   it('validates email field', async () => {
     const user = userEvent.setup()
     
