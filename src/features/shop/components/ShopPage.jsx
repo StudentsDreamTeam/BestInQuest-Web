@@ -70,7 +70,7 @@ export default function ShopPage() {
       const detailedItemsPromises = shopListings.map(listing =>
         fetchShopItemDetailsById(listing.itemId)
           .then(details => ({
-            ...details, // name, description, rarity, xpMultiplier, etc. from /items/{itemId}. `details` также содержит `id` который является `itemId`.
+            ...details, 
             shopListingId: listing.id, 
             cost: listing.cost, 
             availability: listing.availability, 
@@ -129,23 +129,23 @@ export default function ShopPage() {
         // addToast({ title: "Информация", message: "Этот товар закончился.", type: "info" });
         return;
     }
-    // Предполагаем, что у user есть поле 'currency'
-    if (user.currency === undefined || user.currency < itemToBuy.cost) { 
-        alert("Недостаточно средств для покупки.");
-        // addToast({ title: "Ошибка", message: "Недостаточно средств.", type: "error" });
-        return;
-    }
+    
+    // --- УДАЛЕНА КЛИЕНТСКАЯ ПРОВЕРКА БАЛАНСА ---
+    // if (user.currency === undefined || user.currency < itemToBuy.cost) { 
+    //     alert("Недостаточно средств для покупки.");
+    //     // addToast({ title: "Ошибка", message: "Недостаточно средств.", type: "error" });
+    //     return;
+    // }
 
     try {
-      // itemToBuy содержит все необходимые поля, включая itemToBuy.id (это itemId)
       await buyShopItem(user.id, itemToBuy); 
-      alert(`Вы успешно купили "${itemToBuy.name}"!`);
-      // addToast({ title: "Успех!", message: `Вы успешно купили "${itemToBuy.name}"!`, type: "success" });
+      alert(`Попытка покупки "${itemToBuy.name}" отправлена на сервер.`);
+      // addToast({ title: "Покупка", message: `Запрос на покупку "${itemToBuy.name}" отправлен!`, type: "success" });
       
       if (reloadUser) {
-        reloadUser(); // Обновляем данные пользователя (баланс)
+        reloadUser(); 
       }
-      loadShopData(); // Перезагружаем товары магазина (доступность могла измениться)
+      loadShopData(); 
 
       if (isModalOpen) {
         handleCloseModal();
