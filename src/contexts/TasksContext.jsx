@@ -18,7 +18,7 @@ export function useTasks() {
 export function TasksProvider ({ children }) {
   const { user, isLoadingUser } = useUser();
   const [tasks, setTasks] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const loadTasks = useCallback(async (userId) => {
@@ -45,6 +45,10 @@ export function TasksProvider ({ children }) {
         setIsLoading(false);
         setError("Не удалось загрузить задачи: пользователь не определен.");
         setTasks([]);
+    } else if (isLoadingUser) {
+        setIsLoading(true);
+        setTasks([]);
+        setError(null);
     }
   }, [user, isLoadingUser, loadTasks]);
 
@@ -53,6 +57,7 @@ export function TasksProvider ({ children }) {
       throw new Error("Cannot create task: user not available.");
     }
     // setIsLoading(true);
+    setError(null);
     try {
       const newTask = await createTaskApi(taskDataFromForm, user.id);
       // setTasks(newTask);
@@ -138,6 +143,7 @@ export function TasksProvider ({ children }) {
         : STATUS_OPTIONS_MAP.DONE;
 
     const originalTasks = tasks.map(t => ({...t})); // Глубокое копирование для отката, если понадобится
+    // Optimistically update UI
     setTasks(prevTasks =>
       prevTasks
         .map(t =>
@@ -147,6 +153,7 @@ export function TasksProvider ({ children }) {
     );
 
     try {
+      setError(null); // Clear previous errors before API call
       const updatedTaskPayload = { ...task, status: newStatusValue };
       const updatedTaskFromApi = await updateTaskStatusApi(taskId, updatedTaskPayload, user.id);
       // Обновляем задачу данными с сервера, чтобы иметь актуальную updateDate и другие возможные серверные изменения
@@ -157,8 +164,8 @@ export function TasksProvider ({ children }) {
       );
       console.log(`Task ${taskId} status toggled to ${newStatusValue}`);
     } catch (error) {
+      setError(error.message); // Set error message on failure FIRST
       console.error(`Failed to toggle task ${taskId} status:`, error);
-      setError(error.message);
       setTasks(originalTasks.sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate))); // Откат и сортировка
     }
   };
