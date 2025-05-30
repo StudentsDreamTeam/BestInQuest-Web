@@ -155,7 +155,7 @@ export default function Task({ task, onOpenUpdateModal, onOpenDeleteConfirmModal
         <CheckIconToShow />
       </CheckButton>
 
-      <TaskInfo $isImportant={isTaskImportant} onClick={handleTaskInfoClick}>
+      <TaskInfo $isImportant={isTaskImportant} onClick={handleTaskInfoClick} data-testid="task-info">
         <TaskRows>
           <TaskTitle>{task.title || 'Без названия'}</TaskTitle>
           <TaskDataGrid>
