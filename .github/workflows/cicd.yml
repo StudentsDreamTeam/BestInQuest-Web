@@ -25,11 +25,10 @@ jobs:
       # - run: npm install -D @testing-library/jest-dom @testing-library/react @testing-library/user-event jsdom
       # - run: npm run lint
       - run: npm run build
-      # - run: npm run test:coverage
+      - run: npm install -D @vitest/coverage-v8
+      - run: npm run test:coverage
       - name: Run and send to SonarCloud
-        run: |
-          npx vitest run --coverage.enabled --coverage.reporter lcov --coverage.provider v8
-          sonar-scanner -Dsonar.projectKey=StudentsDreamTeam_BestInQuest-Web
+    
       
       - name: Cache SonarCloud
         uses: actions/cache@v3
