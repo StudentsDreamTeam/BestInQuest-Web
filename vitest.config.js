@@ -8,6 +8,11 @@ export default defineConfig({
     globals: true,
     deps: {
       inline: ['react']
+    },
+    coverage: {
+      provider: 'v8',
+      reporter: ['lcov'], // Только lcov для Sonar
+      reportsDirectory: './coverage'
     }
   },
   resolve: {
