@@ -130,17 +130,10 @@ export default function ShopPage() {
         return;
     }
     
-    // --- УДАЛЕНА КЛИЕНТСКАЯ ПРОВЕРКА БАЛАНСА ---
-    // if (user.currency === undefined || user.currency < itemToBuy.cost) { 
-    //     alert("Недостаточно средств для покупки.");
-    //     // addToast({ title: "Ошибка", message: "Недостаточно средств.", type: "error" });
-    //     return;
-    // }
-
     try {
       await buyShopItem(user.id, itemToBuy); 
-      alert(`Попытка покупки "${itemToBuy.name}" отправлена на сервер.`);
-      // addToast({ title: "Покупка", message: `Запрос на покупку "${itemToBuy.name}" отправлен!`, type: "success" });
+      alert(`"${itemToBuy.name}" успешно добавлен в инвентарь!`); // Более позитивное сообщение при успехе
+      // addToast({ title: "Успех!", message: `"${itemToBuy.name}" успешно добавлен в инвентарь!`, type: "success" });
       
       if (reloadUser) {
         reloadUser(); 
@@ -153,8 +146,14 @@ export default function ShopPage() {
 
     } catch (buyError) {
       console.error("Ошибка при покупке товара:", buyError);
-      alert(`Ошибка покупки: ${buyError.message || "Не удалось совершить покупку."}`);
-      // addToast({ title: "Ошибка покупки", message: buyError.message || "Не удалось совершить покупку.", type: "error" });
+      // Проверяем, содержит ли сообщение об ошибке "status 500"
+      if (buyError.message && buyError.message.includes("status 500")) {
+        alert(`Не удалось купить "${itemToBuy.name}". Возможно, этот предмет уже есть в вашем инвентаре или он уникален.`);
+        // addToast({ title: "Информация", message: `Не удалось купить "${itemToBuy.name}". Возможно, этот предмет уже есть в вашем инвентаре или он уникален.`, type: "info" });
+      } else {
+        alert(`Ошибка покупки: ${buyError.message || "Не удалось совершить покупку."}`);
+        // addToast({ title: "Ошибка покупки", message: buyError.message || "Не удалось совершить покупку.", type: "error" });
+      }
     }
   };
 
