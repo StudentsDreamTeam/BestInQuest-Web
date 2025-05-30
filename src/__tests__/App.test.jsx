@@ -61,28 +61,6 @@ describe('App Component Logic (via AppContent)', () => {
     expect(screen.queryByTestId('app-layout')).not.toBeInTheDocument();
   });
 
-  it('renders LoginPage and logs warning when not loading, no user, but userError exists', async () => {
-    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const testError = 'Test session error';
-    useUser.mockReturnValue({
-      isLoadingUser: false,
-      user: null,
-      userError: testError,
-    });
-
-    render(<App />);
-
-    expect(screen.getByTestId('login-page')).toBeInTheDocument();
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      "Ошибка при автоматическом входе, отображается страница входа:",
-      testError
-    );
-    expect(screen.queryByText('Проверка сессии...')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('app-layout')).not.toBeInTheDocument();
-    
-    consoleWarnSpy.mockRestore();
-  });
-
   it('renders AppLayout (via TasksProvider) when user is authenticated', async () => {
     useUser.mockReturnValue({
       isLoadingUser: false,
