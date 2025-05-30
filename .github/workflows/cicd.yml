@@ -20,7 +20,7 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - run: npm run build
       - run: npm install -D @vitest/coverage-v8 --legacy-peer-deps
-      - run: npm run test:coverage
+      - run: npm run test:ci
     
       
       - name: Cache SonarCloud
