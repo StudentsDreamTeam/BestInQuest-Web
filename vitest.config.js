@@ -6,16 +6,15 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.js'],
     globals: true,
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'lcov', 'clover'],
-      reportsDirectory: './coverage',
-      include: ['src/**/*.{js,jsx,ts,tsx}']
+    deps: {
+      inline: ['react']
     },
-    server: {
-      deps: {
-        inline: ['react']
-      }
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['text', 'json', 'html'],
+      // Можно добавить и другие опции, например, include/exclude:
+      // include: ['src/**/*.{js,jsx,ts,tsx}'],
+      // exclude: ['src/**/__tests__/**', 'src/setupTests.js'],
     }
   },
   resolve: {
@@ -23,4 +22,4 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   }
-})
+}) 
