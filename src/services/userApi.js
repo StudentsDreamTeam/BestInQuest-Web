@@ -130,7 +130,7 @@ export async function updateUserProfile(userId, profileData) {
   }
 
 
-  const response = await fetch(`${API_BASE_URL}/users/profile/${userId}`, {
+  const response = await fetch(`${API_BASE_URL}/users/update-profile/${userId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
