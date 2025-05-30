@@ -137,6 +137,21 @@ describe('TasksContext', () => {
 
       expect(taskApi.fetchTasksByUserId).toHaveBeenCalledWith(mockUser.id)
     })
+
+    it('does not reload tasks if user is not available', async () => {
+      useUser.mockReturnValue({ user: null, isLoadingUser: false });
+      renderComponent();
+      // Убедимся, что начальная ошибка установлена из-за отсутствия пользователя
+      await waitFor(() => {
+        expect(contextValue.tasksError).toBe('Не удалось загрузить задачи: пользователь не определен.');
+      });
+
+      taskApi.fetchTasksByUserId.mockClear(); // Очищаем мок перед вызовом reloadTasks
+
+      await contextValue.reloadTasks();
+
+      expect(taskApi.fetchTasksByUserId).not.toHaveBeenCalled();
+    });
   })
 
   describe('Task Operations', () => {
@@ -228,6 +243,140 @@ describe('TasksContext', () => {
           expect(contextValue.tasks[0].status).toBe(originalStatus)
         })
       })
+
+      it('warns if user is not available when toggling status', async () => {
+        const consoleWarnSpy = vi.spyOn(console, 'warn');
+        useUser.mockReturnValue({ user: null, isLoadingUser: false });
+        renderComponent();
+        // Не нужно ждать загрузки задач, так как пользователь null
+
+        await contextValue.toggleTaskStatus(1, STATUS_OPTIONS_MAP.NEW);
+        expect(consoleWarnSpy).toHaveBeenCalledWith('Cannot toggle task status: user not available.');
+        consoleWarnSpy.mockRestore();
+      })
+
+      it('warns if task is not found when toggling status', async () => {
+        const consoleWarnSpy = vi.spyOn(console, 'warn');
+        renderComponent();
+        await waitFor(() => expect(contextValue.tasks).toEqual(mockTasks));
+
+        await contextValue.toggleTaskStatus(999, STATUS_OPTIONS_MAP.NEW); // Non-existent ID
+        expect(consoleWarnSpy).toHaveBeenCalledWith('Cannot toggle task status: task 999 not found.');
+        consoleWarnSpy.mockRestore();
+      })
     })
+
+    describe('Updating Tasks', () => {
+      it('successfully updates a task', async () => {
+        renderComponent();
+        await waitFor(() => expect(contextValue.tasks).toEqual(mockTasks));
+
+        const taskToUpdate = mockTasks[0];
+        const updates = { title: 'Updated Title' };
+        const expectedUpdatedTask = {
+          ...taskToUpdate,
+          ...updates,
+          updateDate: expect.any(String), // updateDate будет новой
+        };
+        // Мок API должен вернуть задачу с новой updateDate
+        taskApi.updateTask.mockImplementation(async (taskId, data) => ({
+          ...taskToUpdate,
+          ...data,
+          updateDate: new Date().toISOString(), // Имитируем обновление даты сервером
+        }));
+
+        await contextValue.updateTask(taskToUpdate.id, updates);
+
+        expect(taskApi.updateTask).toHaveBeenCalledWith(
+          taskToUpdate.id,
+          expect.objectContaining(updates),
+          mockUser.id
+        );
+        await waitFor(() => {
+          const updatedTaskInState = contextValue.tasks.find(t => t.id === taskToUpdate.id);
+          expect(updatedTaskInState).toEqual(expectedUpdatedTask);
+        });
+        expect(contextValue.tasksError).toBeNull();
+      });
+
+      it('throws error if user is not available when updating task', async () => {
+        useUser.mockReturnValue({ user: null, isLoadingUser: false });
+        renderComponent();
+        await expect(contextValue.updateTask(1, { title: 'Test' }))
+          .rejects.toThrow('Cannot update task: user not available.');
+      });
+
+      it('throws error if task to update is not found', async () => {
+        renderComponent();
+        await waitFor(() => expect(contextValue.tasks).toEqual(mockTasks));
+
+        await expect(contextValue.updateTask(999, { title: 'Test' })) // Non-existent ID
+          .rejects.toThrow('Task with ID 999 not found for update.');
+      });
+
+      it('handles errors when API call fails during update', async () => {
+        renderComponent();
+        await waitFor(() => expect(contextValue.tasks).toEqual(mockTasks));
+
+        const error = new Error('Failed to update task');
+        taskApi.updateTask.mockRejectedValue(error);
+        const taskToUpdate = mockTasks[0];
+
+        await expect(contextValue.updateTask(taskToUpdate.id, { title: 'New Title' }))
+          .rejects.toThrow(error.message);
+
+        await waitFor(() => {
+          expect(contextValue.tasksError).toBe(error.message);
+        });
+        // Убедимся, что задача не изменилась в состоянии
+        const taskInState = contextValue.tasks.find(t => t.id === taskToUpdate.id);
+        expect(taskInState.title).toBe(taskToUpdate.title); 
+      });
+    });
+
+    describe('Deleting Tasks', () => {
+      it('successfully deletes a task', async () => {
+        renderComponent();
+        await waitFor(() => expect(contextValue.tasks).toEqual(mockTasks));
+
+        const taskToDelete = mockTasks[0];
+        taskApi.deleteTask.mockResolvedValue({}); // API подтверждает удаление
+
+        await contextValue.deleteTask(taskToDelete.id);
+
+        expect(taskApi.deleteTask).toHaveBeenCalledWith(taskToDelete.id, mockUser.id);
+        await waitFor(() => {
+          expect(contextValue.tasks.find(t => t.id === taskToDelete.id)).toBeUndefined();
+          expect(contextValue.tasks.length).toBe(mockTasks.length - 1);
+        });
+        expect(contextValue.tasksError).toBeNull();
+      });
+
+      it('throws error if user is not available when deleting task', async () => {
+        useUser.mockReturnValue({ user: null, isLoadingUser: false });
+        renderComponent();
+        await expect(contextValue.deleteTask(1))
+          .rejects.toThrow('Cannot delete task: user not available.');
+      });
+
+      it('handles errors when API call fails during delete', async () => {
+        renderComponent();
+        await waitFor(() => expect(contextValue.tasks).toEqual(mockTasks));
+
+        const error = new Error('Failed to delete task');
+        taskApi.deleteTask.mockRejectedValue(error);
+        const taskToDelete = mockTasks[0];
+
+        await expect(contextValue.deleteTask(taskToDelete.id))
+          .rejects.toThrow(error.message);
+
+        await waitFor(() => {
+          expect(contextValue.tasksError).toBe(error.message);
+        });
+        // Убедимся, что задача все еще на месте
+        expect(contextValue.tasks.find(t => t.id === taskToDelete.id)).toBeDefined();
+        expect(contextValue.tasks.length).toBe(mockTasks.length);
+      });
+    });
   })
 }) 

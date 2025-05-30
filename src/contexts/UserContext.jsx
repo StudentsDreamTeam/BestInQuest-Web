@@ -3,7 +3,7 @@
 import { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import { fetchUserById, loginUser as apiLoginUser } from '../services/userApi.js';
 
-const UserContext = createContext(null);
+const UserContext = createContext();
 const USER_ID_STORAGE_KEY = 'BIQ_USER_ID';
 
 export function useUser() {
