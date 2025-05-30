@@ -6,8 +6,16 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.js'],
     globals: true,
-    deps: {
-      inline: ['react']
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov', 'clover'],
+      reportsDirectory: './coverage',
+      include: ['src/**/*.{js,jsx,ts,tsx}']
+    },
+    server: {
+      deps: {
+        inline: ['react']
+      }
     }
   },
   resolve: {
@@ -15,4 +23,4 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   }
-}) 
+})
