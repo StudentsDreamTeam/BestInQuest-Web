@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "Первые шаги",
+    "description": "Завершить свою первую задачу.",
+    "iconUrl": "default_achievement_icon.png",
+    "progressCurrent": 0,
+    "progressTarget": 1,
+    "isAchieved": true
+  },
+  {
+    "id": 2,
+    "name": "Мастер спорта",
+    "description": "Выполнить 10 задач в сфере 'Спорт'.",
+    "iconUrl": "default_achievement_icon.png",
+    "progressCurrent": 0,
+    "progressTarget": 10, 
+    "isAchieved": false
+  },
+  {
+    "id": 3,
+    "name": "Трудоголик",
+    "description": "Выполнить 5 задач с приоритетом 'Критический'.",
+    "iconUrl": "default_achievement_icon.png",
+    "progressCurrent": 0,
+    "progressTarget": 5,
+    "isAchieved": true
+  },
+  {
+    "id": 4,
+    "name": "Любознательный",
+    "description": "Выполнить 3 задачи в сфере 'Саморазвитие'.",
+    "iconUrl": "default_achievement_icon.png",
+    "progressCurrent": 0,
+    "progressTarget": 3,
+    "isAchieved": false
+  },
+  {
+    "id": 5,
+    "name": "Командный игрок",
+    "description": "Поучаствовать в совместном проекте (выполнить задачу, где вы исполнитель, а автор - другой).",
+    "iconUrl": "default_achievement_icon.png",
+    "progressCurrent": 0,
+    "progressTarget": 1,
+    "isAchieved": false
+  },
+  {
+    "id": 6,
+    "name": "Марафонец",
+    "description": "Поддерживать стрик входа 5 дней подряд.",
+    "iconUrl": "placeholder_icon_url_6.png",
+    "progressCurrent": 0,
+    "progressTarget": 5,
+    "isAchieved": false
+  },
+  {
+    "id": 7,
+    "name": "Марафонец",
+    "description": "Поддерживать стрик входа 5 дней подряд.",
+    "iconUrl": "placeholder_icon_url_6.png",
+    "progressCurrent": 0,
+    "progressTarget": 5,
+    "isAchieved": false
+  },
+  {
+    "id": 8,
+    "name": "Марафонец",
+    "description": "Поддерживать стрик входа 5 дней подряд.",
+    "iconUrl": "placeholder_icon_url_6.png",
+    "progressCurrent": 0,
+    "progressTarget": 5,
+    "isAchieved": false
+  }
+]

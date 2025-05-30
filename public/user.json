@@ -1,0 +1,13 @@
+{
+  "id": 1,
+  "name": "Vasily Pupkin",
+  "email": "example@example.com",
+  "password": "very_strong_password",
+
+  "registrationDate": "2025-05-03T00:00:00",
+  "lastInDate": "2025-05-03T00:00:00",
+
+  "xp": 1300,
+  "level": 10,
+  "streak": 0
+}

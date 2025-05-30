@@ -1,0 +1,14 @@
+.button {
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+  background: #f5f5f5;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+}
+
+.button.important {
+  background-color: #9747ff;
+}

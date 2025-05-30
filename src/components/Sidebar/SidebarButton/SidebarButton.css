@@ -1,0 +1,33 @@
+.button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 1.25rem 1.25rem;
+  border: none;
+  border-radius: 1.25rem;
+
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: bold;
+
+  background: #F7F1FF;
+}
+
+.button.addTask {
+  color: #9747FF;
+}
+
+.button:hover {
+  opacity: 0.8;
+  background: #E4CFFF;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+}
+
+.button.active {
+  color: #9747FF;
+  background: #E4CFFF;
+}
