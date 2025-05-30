@@ -38,7 +38,9 @@ export default function AppLayout() {
   const { user, isLoadingUser, userError } = useUser();
   const { deleteTask: deleteTaskFromContext } = useTasks(); // isLoadingTasks, tasksError можно использовать при необходимости
 
-  const menuItems = ['Добавить задачу', 'Сегодня', 'Магазин', 'Награды', 'Инвентарь', 'Достижения'];
+  // const menuItems = ['Добавить задачу', 'Сегодня', 'Магазин', 'Награды', 'Инвентарь', 'Достижения'];
+  const menuItems = ['Добавить задачу', 'Сегодня', 'Магазин', 'Инвентарь', 'Достижения'];
+
   // 'Профиль' не будет частью menuItems, а будет управляться отдельно
   const [activeView, setActiveView] = useState('Сегодня'); // Что отображается в Main
 
