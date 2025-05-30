@@ -19,8 +19,18 @@ jobs:
           cache: npm
       - run: npm ci --legacy-peer-deps
       - run: npm run build
+      - name: Install dependencies
+        run: |
+          npm install -D \
+            vitest@1.6.1 \
+            @vitest/coverage-v8@1.6.1 \
+            @testing-library/react@16.3.0 \
+            @testing-library/jest-dom@6.1.4 \
+            @testing-library/user-event@14.5.2 \
+            --legacy-peer-deps
+          npm ci
       #- run: npm install -D @vitest/coverage-v8 --legacy-peer-deps
-      - run: npm install -D vitest@1.6.1 @vitest/coverage-v8@1.6.1 @vitest/ui@1.6.1
+      #- run: npm install -D vitest@1.6.1 @vitest/coverage-v8@1.6.1 @vitest/ui@1.6.1
       - run: npm run test:ci
     
       
