@@ -28,7 +28,7 @@ export const fetchUserInventory = async (userId) => {
 };
 
 /**
- * Загружает детали конкретного предмета по его ID.
+ * Загружает детали конкретного предмета по его ID. (ОБЩАЯ ФУНКЦИЯ)
  * @param {number|string} itemId - ID предмета.
  * @returns {Promise<object>} Объект с деталями предмета.
  * @throws {Error} Если запрос не удался.
@@ -72,7 +72,6 @@ export const sellInventoryItem = async (userId, itemId, inventoryEntryId) => {
   }
 
   try {
-    // API ожидает, что мы продаем по 1 штуке за раз, количество не передается в DELETE запросе
     const response = await fetch(`${API_BASE_URL}/inventory/sell/${userId}/${itemId}`, {
       method: 'DELETE',
     });

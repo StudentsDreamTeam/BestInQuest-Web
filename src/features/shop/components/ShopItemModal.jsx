@@ -1,16 +1,23 @@
+// === FILE: .\src\features\shop\components\ShopItemModal.jsx ===
+
 import { styled } from 'styled-components';
 import { ReactComponent as StarIcon } from '../../../assets/icons/StarIcon.svg';
 import { ReactComponent as XPIconSvg } from '../../../assets/icons/XPIcon52x28.svg';
-// TimeIcon и formatTaskCardDuration не нужны в модалке по ТЗ, но если понадобятся, можно добавить
-// import { ReactComponent as TimeIcon } from '../../../assets/icons/TimeIcon19.svg';
-// import { formatTaskCardDuration } from '../../../utils/dateTimeUtils';
+// import { ReactComponent as TimeIcon } from '../../../assets/icons/TimeIcon19.svg'; // Если нужно будет длительность
+// import { formatTaskCardDuration } from '../../../utils/dateTimeUtils'; // Если нужно будет длительность
 
 const rarityColors = {
-  common: '#9DB2BF', // Серый
-  uncommon: '#52b788', // Зеленый
-  rare: '#0077b6', // Синий
-  epic: '#9747FF', // Фиолетовый
-  legendary: '#f77f00' // Оранжевый
+  common: '#9DB2BF',
+  uncommon: '#52b788',
+  rare: '#0077b6',
+  epic: '#9747FF',
+  legendary: '#f77f00'
+};
+
+const availabilityColors = {
+  available: '#2ecc71',
+  limited: '#f39c12',
+  out_of_stock: '#e74c3c',
 };
 
 const ModalContent = styled.div`
@@ -20,9 +27,16 @@ const ModalContent = styled.div`
   align-items: center;
   text-align: center;
   background-color: #fff;
-  border-radius: 12px; /* Добавим скругление для контента внутри модалки */
-  max-height: 90vh; /* Ограничение высоты */
-  overflow-y: auto; /* Прокрутка если контент не влезает */
+  border-radius: 12px;
+  max-height: 90vh;
+  overflow-y: auto;
+`;
+
+const TopBadgesContainer = styled.div`
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  align-items: center;
 `;
 
 const ItemRarity = styled.span`
@@ -31,9 +45,12 @@ const ItemRarity = styled.span`
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   color: white;
-  background-color: ${props => rarityColors[props.$rarity] || rarityColors.common};
-  margin-bottom: 0.75rem;
+  background-color: ${props => rarityColors[props.$rarity?.toLowerCase()] || rarityColors.common};
   text-transform: capitalize;
+`;
+
+const AvailabilityBadgeModal = styled(ItemRarity)`
+  background-color: ${props => availabilityColors[props.$availability] || '#bdc3c7'};
 `;
 
 const ModalStatsRow = styled.div`
@@ -56,14 +73,14 @@ const StatItem = styled.div`
     width: 18px;
     height: 18px;
   }
-   .xp-icon svg { /* XPIconSvg имеет свои размеры, подгоняем */
+   .xp-icon svg {
     width: auto;
     height: 18px;
   }
 `;
 
 const ModalItemImage = styled.img`
-  width: 180px; /* Больше, чем в карточке */
+  width: 180px;
   height: 180px;
   object-fit: cover;
   margin-bottom: 1rem;
@@ -83,7 +100,7 @@ const ModalItemDescription = styled.p`
   color: #666;
   margin-bottom: 1.5rem;
   line-height: 1.5;
-  max-width: 400px; /* Ограничим ширину описания */
+  max-width: 400px;
 `;
 
 const ModalBuyButton = styled.button`
@@ -98,7 +115,11 @@ const ModalBuyButton = styled.button`
   transition: background-color 0.2s;
   
   &:hover {
-    background-color: #823cdf;
+    background-color: ${props => props.disabled ? '#c7a5f2' : '#823cdf'};
+  }
+  &:disabled {
+    background-color: #c7a5f2;
+    cursor: not-allowed;
   }
 `;
 
@@ -106,29 +127,39 @@ const ModalBuyButton = styled.button`
 export default function ShopItemModal({ item, onBuyClick }) {
   if (!item) return null;
 
+  const isOutOfStock = item.availability === 'out_of_stock';
+
   const handleBuy = (e) => {
     e.stopPropagation();
-    onBuyClick(item);
+    if (!isOutOfStock && onBuyClick) {
+      onBuyClick(item);
+    }
   };
 
   return (
     <ModalContent>
-      <ItemRarity $rarity={item.rarity}>{item.rarity}</ItemRarity>
+      <TopBadgesContainer>
+        {item.rarity && <ItemRarity $rarity={item.rarity}>{item.rarity}</ItemRarity>}
+        {item.availability && (
+            <AvailabilityBadgeModal $availability={item.availability}>
+                {item.availability.replace('_', ' ')}
+            </AvailabilityBadgeModal>
+        )}
+      </TopBadgesContainer>
       <ModalStatsRow>
+        {item.xpMultiplier > 1 && (
+          <StatItem title={`Множитель опыта: x${item.xpMultiplier}`} className="xp-icon">
+            <XPIconSvg />
+            <span>x{item.xpMultiplier}</span>
+          </StatItem>
+        )}
         {item.currencyMultiplier > 1 && (
           <StatItem title={`Множитель валюты: x${item.currencyMultiplier}`}>
             <StarIcon style={{ color: '#FFC711' }} />
             <span>x{item.currencyMultiplier}</span>
           </StatItem>
         )}
-        {item.xpMultiplier > 1 && (
-          <StatItem title={`Множитель опыта: x${item.xpMultiplier}`} className="xp-icon">
-            <XPIconSvg /> {/* Используем импортированный как компонент */}
-            <span>x{item.xpMultiplier}</span>
-          </StatItem>
-        )}
-        {/* Длительность не указана для модального окна в ТЗ, если нужна, можно добавить */}
-        {/* {item.duration > 0 && (
+        {/* {item.duration > 0 && ( // Если нужна длительность в модалке
           <StatItem title={`Длительность: ${formatTaskCardDuration(item.duration)}`}>
             <TimeIcon style={{ color: '#6c757d' }} />
             <span>{formatTaskCardDuration(item.duration)}</span>
@@ -138,8 +169,12 @@ export default function ShopItemModal({ item, onBuyClick }) {
       <ModalItemImage src={item.iconUrl || '/default_item_icon.png'} alt={item.name} />
       <ModalItemName>{item.name}</ModalItemName>
       <ModalItemDescription>{item.description}</ModalItemDescription>
-      <ModalBuyButton onClick={handleBuy}>
-        Купить за {item.cost} <StarIcon style={{ width: '16px', height: '16px', verticalAlign: 'text-bottom', marginLeft: '5px', color: '#FFD700' }} />
+      <ModalBuyButton onClick={handleBuy} disabled={isOutOfStock}>
+        {isOutOfStock ? 'Нет в наличии' :
+          <>
+            Купить за {item.cost} <StarIcon style={{ width: '16px', height: '16px', verticalAlign: 'text-bottom', marginLeft: '5px', color: '#FFD700' }} />
+          </>
+        }
       </ModalBuyButton>
     </ModalContent>
   );
