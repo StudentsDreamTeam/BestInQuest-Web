@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -128,7 +128,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,33 +144,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -184,7 +184,7 @@ import { TasksProvider } from './contexts/TasksContext';
 import { styled } from 'styled-components';
 &nbsp;
 // Простой компонент для отображения загрузки
-const LoadingOverlay = <span class="cstat-no" title="statement not covered" >styled.div`</span>
+const LoadingOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -199,34 +199,34 @@ const LoadingOverlay = <span class="cstat-no" title="statement not covered" >sty
   color: #333;
 `;
 &nbsp;
-function <span class="fstat-no" title="function not covered" >AppContent() {</span>
-  const { user, isLoadingUser, userError } = <span class="cstat-no" title="statement not covered" >useUser();</span>
+function AppContent() {
+  const { user, isLoadingUser, userError } = useUser();
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (isLoadingUser) {</span>
-<span class="cstat-no" title="statement not covered" >    return &lt;LoadingOverlay&gt;Проверка сессии...&lt;/LoadingOverlay&gt;;</span>
+  if (isLoadingUser) {
+    return &lt;LoadingOverlay&gt;Проверка сессии...&lt;/LoadingOverlay&gt;;
   }
 &nbsp;
   // Если была ошибка при попытке восстановить сессию и пользователь не загружен
-<span class="cstat-no" title="statement not covered" >  if (userError &amp;&amp; !user) {</span>
+  if (userError &amp;&amp; !user) {
     // Мы не показываем ошибку здесь напрямую, т.к. LoginPage сама будет пытаться сделать вход.
     // Это сообщение полезно для отладки.
-<span class="cstat-no" title="statement not covered" >    console.warn("Ошибка при автоматическом входе, отображается страница входа:", userError);</span>
+    console.warn("Ошибка при автоматическом входе, отображается страница входа:", userError);
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (!user) {</span>
-<span class="cstat-no" title="statement not covered" >    return &lt;LoginPage /&gt;;</span>
+  if (!user) {
+    return &lt;LoginPage /&gt;;
   }
 &nbsp;
   // Пользователь аутентифицирован, показываем основной layout
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     &lt;TasksProvider&gt;
       &lt;AppLayout /&gt;
     &lt;/TasksProvider&gt;
   );
 }
 &nbsp;
-export default function <span class="fstat-no" title="function not covered" >App() {</span>
-<span class="cstat-no" title="statement not covered" >  return (</span>
+export default function App() {
+  return (
     &lt;UserProvider&gt; {/* UserProvider теперь оборачивает всё приложение */}
       &lt;AppContent /&gt;
     &lt;/UserProvider&gt;
@@ -238,7 +238,7 @@ export default function <span class="fstat-no" title="function not covered" >App
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-30T06:11:15.517Z
+                at 2025-05-30T06:17:53.792Z
             </div>
         <script src="../prettify.js"></script>
         <script>
