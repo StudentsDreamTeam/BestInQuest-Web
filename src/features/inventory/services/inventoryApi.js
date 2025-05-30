@@ -2,7 +2,7 @@
 
 import { API_BASE_URL } from '../../../constants';
 
-const DEFAULT_ITEM_ICON_URL = '/default_item_icon.png'; // Та же иконка, что и для магазина
+const DEFAULT_ITEM_ICON_URL = '/default_item_icon.png'; // Убедитесь, что этот файл есть в public/
 
 /**
  * Загружает инвентарь пользователя.
@@ -46,10 +46,58 @@ export const fetchItemDetailsById = async (itemId) => {
     const itemData = await response.json();
     return {
       ...itemData,
-      iconUrl: DEFAULT_ITEM_ICON_URL, // Добавляем URL иконки по умолчанию
+      iconUrl: itemData.iconUrl || DEFAULT_ITEM_ICON_URL, // Используем иконку из API, если есть, иначе дефолтную
     };
   } catch (error) {
     console.error(`Error fetching item details for ID ${itemId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Продает предмет из инвентаря.
+ * Эндпоинт: DELETE /inventory/sell/{userId}/{itemId}
+ * @param {number|string} userId - ID пользователя, который продает.
+ * @param {number|string} itemId - ID предмета (из таблицы Items), который продается.
+ * @param {number|string} inventoryEntryId - ID записи в инвентаре (для обновления UI).
+ * @returns {Promise<object>} Ответ от API (обычно данные проданного предмета или подтверждение).
+ * @throws {Error} Если запрос не удался.
+ */
+export const sellInventoryItem = async (userId, itemId, inventoryEntryId) => {
+  if (!userId) {
+    throw new Error("User ID is required to sell an item.");
+  }
+  if (!itemId) {
+    throw new Error("Item ID is required to sell an item.");
+  }
+
+  try {
+    // API ожидает, что мы продаем по 1 штуке за раз, количество не передается в DELETE запросе
+    const response = await fetch(`${API_BASE_URL}/inventory/sell/${userId}/${itemId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      try {
+        const errorJson = JSON.parse(errorText);
+        throw new Error(`Failed to sell item: ${response.status} - ${errorJson.message || errorText}`);
+      } catch (e) {
+        throw new Error(`Failed to sell item: ${response.status} ${errorText}`);
+      }
+    }
+    
+    if (response.status === 204) {
+        return { success: true, message: "Item sold successfully.", inventoryEntryId: inventoryEntryId };
+    }
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.indexOf("application/json") !== -1) {
+        const data = await response.json();
+        return { ...data, success: true, inventoryEntryId: inventoryEntryId };
+    }
+    return { success: true, message: "Item sold successfully, no content returned.", inventoryEntryId: inventoryEntryId };
+
+  } catch (error) {
+    console.error(`Error selling item (userId: ${userId}, itemId: ${itemId}):`, error);
     throw error;
   }
 };

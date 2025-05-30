@@ -1,10 +1,11 @@
 // === FILE: .\src\features\inventory\components\InventoryPage.jsx ===
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { styled } from 'styled-components';
 import InventoryItemCard from './InventoryItemCard';
-import { fetchUserInventory, fetchItemDetailsById } from '../services/inventoryApi';
+import { fetchUserInventory, fetchItemDetailsById, sellInventoryItem } from '../services/inventoryApi';
 import { useUser } from '../../../contexts/UserContext';
+// import { useToasts } from '../../../contexts/ToastContext'; // Если используете ToastContext
 
 const PageContainer = styled.div`
   padding: 0;
@@ -30,7 +31,7 @@ const PageTitle = styled.h1`
 
 const InventoryGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Карточки чуть шире */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
   overflow-y: auto;
   flex-grow: 1;
@@ -45,77 +46,125 @@ const Message = styled.p`
 `;
 
 export default function InventoryPage() {
-  const { user, isLoadingUser } = useUser();
+  const { user, isLoadingUser, reloadUser } = useUser(); // Добавляем reloadUser
   const [inventoryItems, setInventoryItems] = useState([]);
   const [isLoadingInventory, setIsLoadingInventory] = useState(true);
   const [error, setError] = useState(null);
+  // const { addToast } = useToasts();
 
-  useEffect(() => {
-    const loadInventory = async () => {
-      if (!user || !user.id) {
-        if (!isLoadingUser) {
-          setError("Не удалось загрузить инвентарь: пользователь не определен.");
-          setIsLoadingInventory(false);
-        }
+  const loadInventory = useCallback(async () => {
+    if (!user || !user.id) {
+      if (!isLoadingUser) {
+        setError("Не удалось загрузить инвентарь: пользователь не определен.");
+        setIsLoadingInventory(false);
+      }
+      return;
+    }
+
+    setIsLoadingInventory(true);
+    setError(null);
+    try {
+      const userInventoryData = await fetchUserInventory(user.id);
+      
+      if (userInventoryData.length === 0) {
+        setInventoryItems([]);
+        setIsLoadingInventory(false);
         return;
       }
 
-      setIsLoadingInventory(true);
-      setError(null);
-      try {
-        const userInventoryData = await fetchUserInventory(user.id);
-        
-        if (userInventoryData.length === 0) {
-          setInventoryItems([]);
-          setIsLoadingInventory(false);
-          return;
-        }
-
-        // Загружаем детали для каждого предмета
-        const itemDetailsPromises = userInventoryData.map(invItem =>
-          fetchItemDetailsById(invItem.itemId)
-            .then(details => ({
-              ...details, // name, description, rarity, xpMultiplier, etc.
+      const itemDetailsPromises = userInventoryData.map(invItem =>
+        fetchItemDetailsById(invItem.itemId)
+          .then(details => ({
+            ...details, // содержит id предмета (itemId), name, description и т.д.
+            amount: invItem.amount,
+            acquireDate: invItem.acquireDate,
+            inventoryEntryId: invItem.id, // id записи в таблице inventory
+          }))
+          .catch(itemError => {
+            console.error(`Failed to load details for item ID ${invItem.itemId}:`, itemError);
+            return { 
+              id: invItem.itemId, // itemId
+              name: `Предмет ID ${invItem.itemId} (ошибка загрузки)`,
+              description: 'Не удалось загрузить описание.',
+              rarity: 'common',
               amount: invItem.amount,
               acquireDate: invItem.acquireDate,
-              inventoryEntryId: invItem.id, // ID записи в таблице inventory
-            }))
-            .catch(itemError => {
-              console.error(`Failed to load details for item ID ${invItem.itemId}:`, itemError);
-              // Возвращаем частичные данные или маркер ошибки, чтобы не сломать Promise.all
-              return { 
-                id: invItem.itemId, // Используем itemId как fallback ID
-                name: `Предмет ID ${invItem.itemId} (ошибка загрузки)`,
-                description: 'Не удалось загрузить описание.',
-                rarity: 'common',
-                amount: invItem.amount,
-                acquireDate: invItem.acquireDate,
-                inventoryEntryId: invItem.id,
-                iconUrl: '/default_item_icon.png',
-                error: true 
-              };
-            })
-        );
-        
-        const fullInventoryItems = await Promise.all(itemDetailsPromises);
-        setInventoryItems(fullInventoryItems);
+              inventoryEntryId: invItem.id,
+              iconUrl: '/default_item_icon.png',
+              error: true 
+            };
+          })
+      );
+      
+      const fullInventoryItems = await Promise.all(itemDetailsPromises);
+      setInventoryItems(fullInventoryItems);
 
-      } catch (err) {
-        console.error("Ошибка при загрузке инвентаря:", err);
-        setError(err.message);
-      } finally {
-        setIsLoadingInventory(false);
-      }
-    };
+    } catch (err) {
+      console.error("Ошибка при загрузке инвентаря:", err);
+      setError(err.message);
+      // addToast({ title: "Ошибка", message: `Не удалось загрузить инвентарь: ${err.message}`, type: "error" });
+    } finally {
+      setIsLoadingInventory(false);
+    }
+  }, [user, isLoadingUser /*, addToast */]);
 
-    if (!isLoadingUser) {
+
+  useEffect(() => {
+    if (!isLoadingUser && user) { // Загружаем инвентарь только если пользователь загружен
       loadInventory();
     }
-  }, [user, isLoadingUser]);
+  }, [isLoadingUser, user, loadInventory]);
+
+  const handleSellItem = async (itemIdToSell, inventoryEntryIdToUpdate) => {
+    if (!user || !user.id) {
+        alert("Ошибка: Пользователь не авторизован.");
+        return;
+    }
+
+    try {
+      await sellInventoryItem(user.id, itemIdToSell, inventoryEntryIdToUpdate); // Передаем userId и itemId
+      // addToast({ title: "Успех", message: "Предмет успешно продан!", type: "success" });
+      alert("Предмет успешно продан!");
+
+
+      // Обновляем состояние инвентаря локально
+      setInventoryItems(prevItems => {
+        const itemIndex = prevItems.findIndex(item => item.inventoryEntryId === inventoryEntryIdToUpdate);
+        if (itemIndex === -1) return prevItems;
+
+        const updatedItem = { ...prevItems[itemIndex] };
+        updatedItem.amount -= 1; // API продает по 1 штуке
+
+        if (updatedItem.amount <= 0) {
+          return prevItems.filter(item => item.inventoryEntryId !== inventoryEntryIdToUpdate);
+        } else {
+          const newItems = [...prevItems];
+          newItems[itemIndex] = updatedItem;
+          return newItems;
+        }
+      });
+      
+      // Обновляем данные пользователя (например, баланс), если это необходимо
+      if (reloadUser) {
+        reloadUser();
+      }
+
+    } catch (sellError) {
+      console.error("Ошибка при продаже предмета:", sellError);
+      alert(`Ошибка продажи: ${sellError.message || "Не удалось продать предмет."}`);
+      // addToast({ title: "Ошибка продажи", message: sellError.message || "Не удалось продать предмет.", type: "error" });
+    }
+  };
+
 
   if (isLoadingUser) {
     return <PageContainer><Message>Загрузка данных пользователя...</Message></PageContainer>;
   }
+  // Если пользователь не загружен после isLoadingUser = false, то показываем ошибку или просьбу войти
+  if (!user && !isLoadingUser) {
+    return <PageContainer><Message>Пользователь не найден. Пожалуйста, войдите в систему.</Message></PageContainer>;
+  }
+  
   if (isLoadingInventory) {
     return <PageContainer><Message>Загрузка инвентаря...</Message></PageContainer>;
   }
@@ -133,11 +182,9 @@ export default function InventoryPage() {
         <InventoryGrid>
           {inventoryItems.map(item => (
             <InventoryItemCard
-              // Ключ должен быть уникальным для элемента списка.
-              // item.id здесь - это id из таблицы Item, а не из таблицы Inventory.
-              // invItem.id (inventoryEntryId) - id из таблицы Inventory, он должен быть уникальным.
-              key={item.inventoryEntryId || `item-${item.id}`} 
+              key={item.inventoryEntryId || `item-${item.id}-${Math.random()}`} 
               item={item}
+              onSellItem={handleSellItem}
             />
           ))}
         </InventoryGrid>

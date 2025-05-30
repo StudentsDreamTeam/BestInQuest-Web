@@ -5,14 +5,14 @@ import { ReactComponent as StarIcon } from '../../../assets/icons/StarIcon.svg';
 import { ReactComponent as XPIconSvg } from '../../../assets/icons/XPIcon52x28.svg'; // XP Multiplier
 import { ReactComponent as TimeIcon } from '../../../assets/icons/TimeIcon19.svg'; // Duration
 import { formatTaskCardDuration, formatFullDateTime } from '../../../utils/dateTimeUtils';
+import Button from '../../../components/Button/Button';
 
-// Цвета редкости, как в ShopItemModal
 const rarityColors = {
-  common: '#9DB2BF', // Серый
-  uncommon: '#52b788', // Зеленый (добавим, если появится)
-  rare: '#0077b6', // Синий
-  epic: '#9747FF', // Фиолетовый
-  legendary: '#f77f00' // Оранжевый
+  common: '#9DB2BF',
+  uncommon: '#52b788',
+  rare: '#0077b6',
+  epic: '#9747FF',
+  legendary: '#f77f00'
 };
 
 const CardContainer = styled.div`
@@ -22,14 +22,14 @@ const CardContainer = styled.div`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  text-align: left; /* Выравнивание текста влево для лучшей читаемости */
-  min-height: 320px; /* Зададим минимальную высоту для консистентности */
-  justify-content: space-between; /* Распределяем контент */
+  text-align: left; 
+  min-height: 350px;
+  justify-content: space-between;
 `;
 
 const ItemHeader = styled.div`
   display: flex;
-  align-items: flex-start; /* Иконка и основная инфа */
+  align-items: flex-start;
   gap: 1rem;
   margin-bottom: 1rem;
 `;
@@ -64,7 +64,7 @@ const ItemRarity = styled.span`
   color: white;
   background-color: ${props => rarityColors[props.$rarity?.toLowerCase()] || rarityColors.common};
   text-transform: capitalize;
-  display: inline-block; /* Чтобы padding работал корректно */
+  display: inline-block;
   margin-bottom: 0.5rem;
 `;
 
@@ -73,7 +73,7 @@ const ItemDescription = styled.p`
   color: #666;
   line-height: 1.4;
   margin-bottom: 1rem;
-  flex-grow: 1; /* Занимает доступное пространство */
+  flex-grow: 1;
 `;
 
 const StatsGrid = styled.div`
@@ -102,11 +102,11 @@ const StatItem = styled.div`
 `;
 
 const ItemFooter = styled.div`
-  margin-top: auto; /* Прижимает футер вниз */
   font-size: 0.8rem;
   color: #777;
   border-top: 1px solid #f0f0f0;
   padding-top: 0.75rem;
+  margin-top: 1rem;
 `;
 
 const Amount = styled.span`
@@ -114,8 +114,28 @@ const Amount = styled.span`
   color: #333;
 `;
 
-export default function InventoryItemCard({ item }) {
+const ActionsContainer = styled.div`
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const SellButton = styled(Button)`
+  background-color: #e74c3c;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  margin-right: 0;
+
+  &:hover {
+    background-color: #c0392b;
+  }
+`;
+
+export default function InventoryItemCard({ item, onSellItem }) {
   const {
+    id, // Это itemId (из таблицы Items)
+    inventoryEntryId, // ID записи в инвентаре
     name,
     description,
     rarity,
@@ -127,9 +147,16 @@ export default function InventoryItemCard({ item }) {
     acquireDate,
   } = item;
 
+  const handleSellClick = () => {
+    if (onSellItem) {
+      // Передаем itemId и inventoryEntryId (для обновления UI)
+      onSellItem(id, inventoryEntryId); 
+    }
+  };
+
   return (
     <CardContainer>
-      <div> {/* Обертка для контента, чтобы футер прижимался */}
+      <div>
         <ItemHeader>
           <ItemImage src={iconUrl || '/default_item_icon.png'} alt={name} />
           <ItemInfoMain>
@@ -159,10 +186,20 @@ export default function InventoryItemCard({ item }) {
           )}
         </StatsGrid>
       </div>
-      <ItemFooter>
-        <div>Количество: <Amount>{amount}</Amount></div>
-        <div>Получено: {formatFullDateTime(acquireDate)}</div>
-      </ItemFooter>
+
+      <div>
+        <ItemFooter>
+          <div>Количество: <Amount>{amount}</Amount></div>
+          <div>Получено: {formatFullDateTime(acquireDate)}</div>
+        </ItemFooter>
+        {amount > 0 && (
+          <ActionsContainer>
+            <SellButton onClick={handleSellClick}>
+              Продать 1 шт.
+            </SellButton>
+          </ActionsContainer>
+        )}
+      </div>
     </CardContainer>
   );
 }
