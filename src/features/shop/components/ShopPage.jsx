@@ -148,10 +148,10 @@ export default function ShopPage() {
       console.error("Ошибка при покупке товара:", buyError);
       // Проверяем, содержит ли сообщение об ошибке "status 500"
       if (buyError.message && buyError.message.includes("status 500")) {
-        alert(`Не удалось купить "${itemToBuy.name}". Возможно, этот предмет уже есть в вашем инвентаре или он уникален.`);
+        // alert(`Не удалось купить "${itemToBuy.name}". Возможно, этот предмет уже есть в вашем инвентаре или он уникален.`);
         // addToast({ title: "Информация", message: `Не удалось купить "${itemToBuy.name}". Возможно, этот предмет уже есть в вашем инвентаре или он уникален.`, type: "info" });
       } else {
-        alert(`Ошибка покупки: ${buyError.message || "Не удалось совершить покупку."}`);
+        // alert(`Ошибка покупки: ${buyError.message || "Не удалось совершить покупку."}`);
         // addToast({ title: "Ошибка покупки", message: buyError.message || "Не удалось совершить покупку.", type: "error" });
       }
     }
