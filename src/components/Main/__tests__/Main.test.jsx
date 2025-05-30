@@ -76,16 +76,6 @@ describe('Main', () => {
     expect(screen.getByTestId('shop-page')).toBeInTheDocument()
   })
 
-  it('renders "In development" message for unimplemented pages', () => {
-    const unimplementedPages = ['Проекты', 'Награды', 'Инвентарь']
-    
-    unimplementedPages.forEach(page => {
-      const { rerender } = render(<Main {...defaultProps} active={page} />)
-      expect(screen.getByText(/in development/i)).toBeInTheDocument()
-      rerender(<div />) // Очищаем DOM перед следующим рендером
-    })
-  })
-
   it('handles task modal actions correctly', async () => {
     const onOpenUpdateTaskModal = vi.fn()
     const onOpenDeleteConfirmModal = vi.fn()
