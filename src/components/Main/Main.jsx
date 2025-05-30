@@ -1,20 +1,26 @@
+// === FILE: .\src\components\Main\Main.jsx ===
+
 import './Main.css';
 import Header from "./Header/Header.jsx";
 import TaskList from "../../features/tasks/components/TaskList";
-import UserProfilePage from '../../features/user/components/UserProfilePage';
+import UserProfilePage from '../../features/user/components/UserProfilePage'; // Убедитесь, что импорт есть
 import AchievementsPage from '../../features/achievements/components/AchievementsPage';
-import ShopPage from '../../features/shop/components/ShopPage'; // Новый импорт
+import ShopPage from '../../features/shop/components/ShopPage';
+import InventoryPage from '../../features/inventory/components/InventoryPage';
 
-export default function Main({ active, onOpenUpdateTaskModal, onOpenDeleteConfirmModal }) {
-  // active здесь - это activeView из AppLayout
-  let pageTitle = active; // По умолчанию заголовок равен активной вкладке
-  if (active === 'Профиль' || active === 'Достижения' || active === 'Магазин') { // Добавили 'Магазин'
-    pageTitle = ''; // Для этих страниц свой заголовок не нужен или будет внутри страницы
+export default function Main({ 
+  active, 
+  onOpenUpdateTaskModal, 
+  onOpenDeleteConfirmModal,
+  onOpenConfirmProfileModal // Принимаем новый проп
+}) {
+  let pageTitle = active; 
+  if (active === 'Профиль' || active === 'Достижения' || active === 'Магазин' || active === 'Инвентарь') {
+    pageTitle = ''; 
   }
 
   return (
     <div className='main'>
-      {/* Отображаем Header только для определенных страниц, если нужно */}
       {pageTitle && <Header title={pageTitle} />}
 
       {active === 'Сегодня' && (
@@ -23,32 +29,20 @@ export default function Main({ active, onOpenUpdateTaskModal, onOpenDeleteConfir
           onOpenDeleteConfirmModal={onOpenDeleteConfirmModal}
         />
       )}
-      {active === 'Профиль' && <UserProfilePage />}
+      {/* Теперь UserProfilePage рендерится здесь и получает проп */}
+      {active === 'Профиль' && <UserProfilePage onOpenConfirmModal={onOpenConfirmProfileModal} />} 
       {active === 'Достижения' && <AchievementsPage />}
-      {active === 'Магазин' && <ShopPage />} {/* Новая страница */}
+      {active === 'Магазин' && <ShopPage />}
+      {active === 'Инвентарь' && <InventoryPage />}
 
-      {/* Другие вкладки */}
       {active === 'Проекты' && (
         <>
-          {/* <Header title={'Проекты'} /> */}
           In development (Projects)
         </>
       )}
-      {/* {active === 'Магазин' && ( // Удаляем старую заглушку
+      {active === 'Награды' && ( 
         <>
-          In development (Shop)
-        </>
-      )} */}
-      {active === 'Награды' && (
-        <>
-          {/* <Header title={'Награды'} /> */}
           In development (Rewards)
-        </>
-      )}
-      {active === 'Инвентарь' && (
-        <>
-          {/* <Header title={'Инвентарь'} /> */}
-          In development (Inventory)
         </>
       )}
     </div>

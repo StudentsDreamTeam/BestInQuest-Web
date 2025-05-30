@@ -1,12 +1,13 @@
 // === FILE: .\src\App.jsx ===
 
+import { useState } from 'react';
 import AppLayout from './layouts/AppLayout';
 import LoginPage from './features/auth/components/LoginPage';
+import RegistrationPage from './features/auth/components/RegistrationPage'; // Новый импорт
 import { UserProvider, useUser } from './contexts/UserContext';
 import { TasksProvider } from './contexts/TasksContext';
 import { styled } from 'styled-components';
 
-// Простой компонент для отображения загрузки
 const LoadingOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -24,23 +25,44 @@ const LoadingOverlay = styled.div`
 
 function AppContent() {
   const { user, isLoadingUser, userError } = useUser();
+  const [currentAuthView, setCurrentAuthView] = useState('login'); // 'login' или 'register'
+  const [registrationMessage, setRegistrationMessage] = useState('');
+
 
   if (isLoadingUser) {
     return <LoadingOverlay>Проверка сессии...</LoadingOverlay>;
   }
 
-  // Если была ошибка при попытке восстановить сессию и пользователь не загружен
   if (userError && !user) {
-    // Мы не показываем ошибку здесь напрямую, т.к. LoginPage сама будет пытаться сделать вход.
-    // Это сообщение полезно для отладки.
-    console.warn("Ошибка при автоматическом входе, отображается страница входа:", userError);
+    console.warn("Ошибка при автоматическом входе, отображается страница входа/регистрации:", userError);
   }
 
   if (!user) {
-    return <LoginPage />;
+    if (currentAuthView === 'login') {
+      return (
+        <LoginPage
+          onSwitchToRegister={() => {
+            setRegistrationMessage(''); // Очищаем сообщение при переходе
+            setCurrentAuthView('register');
+          }}
+          registrationSuccessMessage={registrationMessage}
+        />
+      );
+    }
+    if (currentAuthView === 'register') {
+      return (
+        <RegistrationPage
+          onSwitchToLogin={() => setCurrentAuthView('login')}
+          onRegistrationSuccess={() => {
+            setRegistrationMessage('Регистрация прошла успешно! Теперь вы можете войти.');
+            setCurrentAuthView('login');
+          }}
+        />
+      );
+    }
   }
 
-  // Пользователь аутентифицирован, показываем основной layout
+  // Пользователь аутентифицирован
   return (
     <TasksProvider>
       <AppLayout />
@@ -50,7 +72,7 @@ function AppContent() {
 
 export default function App() {
   return (
-    <UserProvider> {/* UserProvider теперь оборачивает всё приложение */}
+    <UserProvider>
       <AppContent />
     </UserProvider>
   );

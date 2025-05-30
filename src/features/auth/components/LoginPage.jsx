@@ -145,7 +145,7 @@ const ErrorMessage = styled.p`
   text-align: left;
 `;
 
-export default function LoginPage() {
+export default function LoginPage({ onSwitchToRegister, registrationSuccessMessage }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -160,19 +160,12 @@ export default function LoginPage() {
     setError('');
     try {
       await login(email, password);
-      // Успешный вход обработается в App.jsx через UserContext
-      // onLoginSuccess больше не нужен здесь, так как App.jsx слушает user из context
     } catch (err) {
       console.error('Login Page: Login failed', err);
       setError(err.message || 'Ошибка входа. Пожалуйста, проверьте данные.');
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleCreateProfile = () => {
-    console.log('Переход на страницу создания профиля (пока не реализовано)');
-    // Здесь будет логика перехода на другую страницу или модальное окно
   };
 
   const toggleShowPassword = () => {
@@ -185,6 +178,7 @@ export default function LoginPage() {
       <LoginContainer>
         <Title>Best in Quest</Title>
         <Subtitle>Вход в профиль</Subtitle>
+        {registrationSuccessMessage && <ErrorMessage style={{color: "green", textAlign: "center", marginBottom: "1rem"}}>{registrationSuccessMessage}</ErrorMessage>}
         <Form onSubmit={handleSubmit}>
           <InputGroup>
             <Input
@@ -214,7 +208,7 @@ export default function LoginPage() {
           <PrimaryButton type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Вход...' : 'Войти'}
           </PrimaryButton>
-          <SecondaryButton type="button" onClick={handleCreateProfile} disabled={isSubmitting}>
+          <SecondaryButton type="button" onClick={onSwitchToRegister} disabled={isSubmitting}>
             Создать профиль
           </SecondaryButton>
         </Form>
