@@ -20,6 +20,7 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - run: npm run build
       #- run: npm install -D @vitest/coverage-v8 --legacy-peer-deps
+      - run: npm install -D vitest@1.6.1 @vitest/coverage-v8@1.6.1 @vitest/ui@1.6.1
       - run: npm run test:ci
     
       
