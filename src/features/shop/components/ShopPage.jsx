@@ -70,15 +70,15 @@ export default function ShopPage() {
       const detailedItemsPromises = shopListings.map(listing =>
         fetchShopItemDetailsById(listing.itemId)
           .then(details => ({
-            ...details, // name, description, rarity, xpMultiplier, etc. from /items/{itemId}
-            shopListingId: listing.id, // id из /shop
-            cost: listing.cost, // cost из /shop
-            availability: listing.availability, // availability из /shop
+            ...details, // name, description, rarity, xpMultiplier, etc. from /items/{itemId}. `details` также содержит `id` который является `itemId`.
+            shopListingId: listing.id, 
+            cost: listing.cost, 
+            availability: listing.availability, 
           }))
           .catch(itemError => {
             console.error(`Failed to load details for item ID ${listing.itemId} (shop listing ID ${listing.id}):`, itemError);
             return {
-              id: listing.itemId, // itemId
+              id: listing.itemId, 
               shopListingId: listing.id,
               name: `Товар ID ${listing.itemId} (ошибка загрузки)`,
               description: 'Не удалось загрузить описание.',
@@ -129,22 +129,23 @@ export default function ShopPage() {
         // addToast({ title: "Информация", message: "Этот товар закончился.", type: "info" });
         return;
     }
-    if (user.currency < itemToBuy.cost) { // Предполагаем, что в user есть поле currency
+    // Предполагаем, что у user есть поле 'currency'
+    if (user.currency === undefined || user.currency < itemToBuy.cost) { 
         alert("Недостаточно средств для покупки.");
         // addToast({ title: "Ошибка", message: "Недостаточно средств.", type: "error" });
         return;
     }
 
     try {
-      await buyShopItem(user.id, itemToBuy.shopListingId);
+      // itemToBuy содержит все необходимые поля, включая itemToBuy.id (это itemId)
+      await buyShopItem(user.id, itemToBuy); 
       alert(`Вы успешно купили "${itemToBuy.name}"!`);
       // addToast({ title: "Успех!", message: `Вы успешно купили "${itemToBuy.name}"!`, type: "success" });
       
-      // Обновить данные пользователя (баланс) и, возможно, доступность товара
       if (reloadUser) {
-        reloadUser();
+        reloadUser(); // Обновляем данные пользователя (баланс)
       }
-      loadShopData(); // Перезагружаем товары магазина, т.к. доступность могла измениться
+      loadShopData(); // Перезагружаем товары магазина (доступность могла измениться)
 
       if (isModalOpen) {
         handleCloseModal();
@@ -157,7 +158,7 @@ export default function ShopPage() {
     }
   };
 
-  if (isLoadingUser) { // Сначала ждем загрузки пользователя
+  if (isLoadingUser) {
     return <PageContainer><Message>Загрузка данных пользователя...</Message></PageContainer>;
   }
   if (isLoading) {
@@ -191,7 +192,7 @@ export default function ShopPage() {
         {selectedItem && (
           <ShopItemModal 
             item={selectedItem} 
-            onBuyClick={handleBuyItem} // Передаем обработчик покупки в модалку
+            onBuyClick={handleBuyItem}
           />
         )}
       </Modal>
