@@ -3,5 +3,5 @@ RUN apk add --no-cache curl
 WORKDIR /app/front
 EXPOSE 5173
 COPY ./ ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 CMD ["npm", "run", "dev"]
