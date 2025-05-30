@@ -21,7 +21,7 @@ import { ReactComponent as TrashImportantIcon } from '../../../assets/icons/Tras
 import { ReactComponent as TimeIcon } from '../../../assets/icons/TimeIcon19.svg';
 import { ReactComponent as TimeImportantIcon } from '../../../assets/icons/TimeImportantIcon19.svg';
 
-import { IMPORTANT_PRIORITIES } from '../../../constants'; // DIFFICULTY_LABELS не используется здесь
+import { IMPORTANT_PRIORITIES_VALUES } from '../../../constants';
 
 const TaskContainer = styled.div`
   display: flex;
@@ -106,7 +106,7 @@ const getSphereAvatar = (sphere) => {
 
 
 export default function Task({ task, onDeleteTask, onToggleStatus, onTaskClick }) {
-  const isTaskImportant = IMPORTANT_PRIORITIES.includes(task.priority?.toUpperCase());
+  const isTaskImportant = IMPORTANT_PRIORITIES_VALUES.includes(task.priority?.toLowerCase());
   const isTaskCompleted = task.status?.toUpperCase() === 'DONE';
 
   const handleToggleComplete = (e) => {
@@ -187,7 +187,7 @@ export default function Task({ task, onDeleteTask, onToggleStatus, onTaskClick }
         <CheckIconToShow />
       </CheckButton>
 
-      <TaskInfo $isImportant={isTaskImportant} onClick={handleTaskInfoClick}>
+      <TaskInfo $isImportant={isTaskImportant} onClick={handleTaskInfoClick} data-testid="task-info-main">
         <div className="task-rows">
           <div className="task-title">{task.title || 'Без названия'}</div>
 
